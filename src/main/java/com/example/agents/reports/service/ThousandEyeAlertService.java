@@ -32,4 +32,7 @@ public interface ThousandEyeAlertService {
     public JSONObject getThousandEyeAlerts(String startTime, String endTime, String agentName,
                                            String application, String domainName);
     List<ThousandEyeAlert> getAlertsByTimeRange(String startTime, String endTime);
+
+    List<ThousandEyeAlert> findByTimeGap(String ahead, String startdate);
+
 }

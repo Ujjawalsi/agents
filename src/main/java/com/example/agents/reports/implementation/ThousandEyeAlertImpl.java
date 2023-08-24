@@ -269,6 +269,11 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
         return thousandEyeAlertRepo.findByTimeRange(startTime,endTime);
     }
 
+    @Override
+    public List<ThousandEyeAlert> findByTimeGap(String ahead, String startdate) {
+      return thousandEyeAlertRepo.findByTimingGap(ahead, startdate);
+    }
+
     public static String getBody(HttpServletRequest request) throws IOException {
 
         String body = null;

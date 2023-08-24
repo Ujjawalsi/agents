@@ -63,5 +63,8 @@ public interface ThousandEyeAlertRepo extends JpaRepository<ThousandEyeAlert, Lo
     List<ThousandEyeAlert> findByTimeRange(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
 
-
+    @Query(value = "SELECT * FROM ms_thousandeye_alert WHERE alert IS NOT NULL AND " +
+            "SUBSTRING(alert, '\"dateStartZoned\":\"(.*?)\"') >= :ahead AND " +
+            "SUBSTRING(alert, '\"dateStartZoned\":\"(.*?)\"') <= :startdate", nativeQuery = true)
+    List<ThousandEyeAlert> findByTimingGap(@Param("ahead") String ahead, @Param("startdate") String startdate);
 }

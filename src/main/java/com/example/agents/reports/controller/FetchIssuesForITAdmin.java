@@ -13,6 +13,8 @@ import java.text.SimpleDateFormat;
 
 import com.example.agents.agentsandmonitors.AgentsAndMonitorsModel;
 import com.example.agents.agentsandmonitors.AgentsAndMonitorsService;
+import com.example.agents.application.entities.Application;
+import com.example.agents.application.service.ApplicationService;
 import com.example.agents.dnacNetworkHealthData.DnacNetworkHealthDataModel;
 import com.example.agents.dnacNetworkHealthData.DnacNetworkHealthDataService;
 import com.example.agents.endpointAgent.EndPointAgentsService;
@@ -88,6 +90,9 @@ public class FetchIssuesForITAdmin {
 
     @Autowired
     private EndPointAgentsService endPointAgentsService;
+
+    @Autowired
+    private ApplicationService applicationService;
 
 
     @Autowired
@@ -1210,33 +1215,32 @@ try {
     }
 
 
-    /*
-
     @RequestMapping(value = "/getApplicationTrend", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String getApplicationTrend(@RequestParam(value = "appName", required = true) String name) {
         JSONArray arr = new JSONArray();
-        DB db = null;
         try {
-            MongoDBConnection mongoDB = new MongoDBConnection();
-            db = mongoDB.getMongoConnection();
-            DBCollection collection = db.getCollection("ms_thousandeye_alert");
-            DBCollection collectionname = db.getCollection("applications");
 
             // boolean flag=false;
+//
+//            BasicDBObject query = new BasicDBObject();
+//            List<BasicDBObject> andConditions = new ArrayList<>();
+//            andConditions.add(new BasicDBObject("app_name", name));
+//            query.put("$and", andConditions);
+//            DBCursor csr = collectionname.find(query);
+//            int exists = csr.count();
 
-            BasicDBObject query = new BasicDBObject();
-            List<BasicDBObject> andConditions = new ArrayList<>();
-            andConditions.add(new BasicDBObject("app_name", name));
-            query.put("$and", andConditions);
-            DBCursor csr = collectionname.find(query);
-            int exists = csr.count();
+            List<Application>applications = applicationService.findByName(name);
+            int exists = applications.size();
+
+
 
 //
 //	   // Query 2: "alert.dateEndZoned" field does not exist
 //	   andConditions.add(new BasicDBObject("alert.dateEndZoned", new BasicDBObject("$exists", false)));
 //	   query.put("$and", andConditions);
+
             long currentTimestamp = System.currentTimeMillis();
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(currentTimestamp);
@@ -1259,7 +1263,7 @@ try {
             Date prevdate = currentDate;
             int result = aheaddate.compareTo(currentDateString);
             String previous = dateFormat.format(prevdate);
-            List<DBObject> alerts = new ArrayList<>();
+            List<JSONObject> alerts = new ArrayList<>();
 
             boolean breakthrough = false;
 
@@ -1268,29 +1272,50 @@ try {
                 aheaddate = calendar.getTime();
                 JSONObject jobj = new JSONObject();
                 String ahead = dateFormat.format(aheaddate);
-                BasicDBObject intquery = new BasicDBObject();
-                List<BasicDBObject> al = new ArrayList<>();
-                List<BasicDBObject> bl = new ArrayList<>();
-
-                al.add(new BasicDBObject("alert.testName", name));
-                al.add(new BasicDBObject("alert.dateStartZoned", new BasicDBObject("$lte", ahead)));
-                al.add(new BasicDBObject("alert.dateStartZoned", new BasicDBObject("$gte", startdate)));
-                bl.add(new BasicDBObject("alert.dateEndZoned", new BasicDBObject("$exists", false)));
-                bl.add(new BasicDBObject("alert.dateEndZoned", new BasicDBObject("$gt", ahead)));
-
-                // intquery.put("$and", andConditions);
-
-                intquery.put("$or", bl);
-                intquery.put("$and", al);
-                DBCursor cursor = collection.find(intquery);
-                long length = cursor.count();
+                JSONObject intquery = new JSONObject();
+//                List<JSONObject> al = new ArrayList<>();
+//                List<JSONObject> bl = new ArrayList<>();
+//
+//                al.add(new BasicDBObject("alert.testName", name));
+//                al.add(new BasicDBObject("alert.dateStartZoned", new BasicDBObject("$lte", ahead)));
+//                al.add(new BasicDBObject("alert.dateStartZoned", new BasicDBObject("$gte", startdate)));
+//                bl.add(new BasicDBObject("alert.dateEndZoned", new BasicDBObject("$exists", false)));
+//                bl.add(new BasicDBObject("alert.dateEndZoned", new BasicDBObject("$gt", ahead)));
+//
+//                // intquery.put("$and", andConditions);
+//
+//                intquery.put("$or", bl);
+//                intquery.put("$and", al);
+//                DBCursor cursor = collection.find(intquery);
+//                long length = cursor.count();
 //	    	while(cursor.hasNext())
 //	    	{
 //	    	DBObject dbobj=cursor.next();
 //	    	    	BasicDBObject value=(BasicDBObject) dbobj.get("alert");
 //	    	        alerts.add(value);
 //	    	}
+//
+     	List<ThousandEyeAlert> filterListByNameaAndTime = new ArrayList<>();
+        List<ThousandEyeAlert> thousandEyeAlerts= thousandEyeAlertService.findByTimeGap(ahead, startdate);
+                for (ThousandEyeAlert alert: thousandEyeAlerts) {
+               JSONObject jsonObject  =  new JSONObject(alert.getAlert());
+                    String testName = jsonObject.getString("testName");
+                    if (testName.equalsIgnoreCase(name)){
+                     if (jsonObject.has("dateEndZoned")){
+                         String dateEndZoned = jsonObject.getString("dateEndZoned");
 
+                         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+                         Date dateEndZonedChange = dateFormatter.parse(dateEndZoned);
+                         if (aheaddate.before(dateEndZonedChange)){
+                             filterListByNameaAndTime.add(alert);
+                         }
+                     }else{
+                         filterListByNameaAndTime.add(alert);
+                     }
+                    }
+                }
+
+                long length = filterListByNameaAndTime.size();
                 if (length > 0)
                     breakthrough = true;
 
@@ -1309,15 +1334,11 @@ try {
 
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (db != null)
-                db.getMongo().close();
         }
-
         return "";
     }
 
-     */
+
 //anushk
 
 //    private synchronized JSONObject getThousandEyeAlerts(String startTime, String endTime, String agentName,
