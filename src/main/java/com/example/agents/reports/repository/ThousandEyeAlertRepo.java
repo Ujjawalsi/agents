@@ -43,17 +43,6 @@ public interface ThousandEyeAlertRepo extends JpaRepository<ThousandEyeAlert, Lo
             nativeQuery = true)
     List<ThousandEyeAlert> findAlertsForApplicationIssues(String startTime, String endTime, String enterpriseAgentName, String application);
 
-    @Query(value = "SELECT * FROM ms_thousandeye_alert WHERE data->> severity='critical' AND date ='date'", nativeQuery = true)
-    List<ThousandEyeAlert> findBySeverityAndDateLessThanEqual(String critical, Date date);
-
-    @Query(value = "SELECT * FROM ms_thousandeye_alert WHERE data->> severity='critical' AND date ='date'", nativeQuery = true)
-    List<ThousandEyeAlert> findBySeverityAndDateStartZonedBetween(String critical, String seconddate, String firstdate);
-
-    @Query(value = "SELECT alert FROM ThousandEyeAlert alert " +
-            "WHERE alert.severity = ?1 AND alert.call = ?2 AND alert.date = ?3", nativeQuery = true)
-    List<ThousandEyeAlert> getCoudnByServerity(String critical, int i, Date date);
-
-
     @Query(value = "SELECT * FROM thousand_eye_alert\n" +
             "WHERE date_start_zoned BETWEEN :startTime AND :endTime\n" +
             "  AND alert_agents_agent_name LIKE '%' || :agentName || '%'\n" +
@@ -67,10 +56,6 @@ public interface ThousandEyeAlertRepo extends JpaRepository<ThousandEyeAlert, Lo
 
     @Query(value = "SELECT t FROM ThousandEyeAlert t WHERE t.startTime >= startTime AND t.endTime <= endTime AND t.agentName = agentName AND t.application = application AND t.domainName = domainName", nativeQuery = true)
     List<ThousandEyeAlert> findApplicationIssues(String startTime, String endTime, String enterpriseAgentName, String application);
-//    @Query(value = "SELECT * FROM ms_thousandeye_alert  WHERE dateStartZoned >= :startTime AND dateStartZoned <= :endTime", nativeQuery = true)
-
-//    @Query(value = "SELECT * FROM ms_thousandeye_alert WHERE alert IS NOT NULL AND (alert ->> 'dateStartZoned')::text >= :startTime AND (alert ->> 'dateStartZoned')::text <= :endTime", nativeQuery = true)
-//    List<ThousandEyeAlert> findByTimeRange(@Param("startTime")String startTime, @Param("endTime") String endTime);
 
     @Query(value = "SELECT * FROM ms_thousandeye_alert WHERE alert IS NOT NULL AND " +
             "SUBSTRING(alert, '\"dateStartZoned\":\"(.*?)\"') >= :startTime AND " +

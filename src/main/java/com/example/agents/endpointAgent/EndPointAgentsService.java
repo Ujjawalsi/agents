@@ -70,8 +70,7 @@ public class EndPointAgentsService {
     }
 
  public List<EndpointAgentModel> getAll(){
-	 List<EndpointAgentModel> endpointAgentList = endpointAgentRepository.findAll();
-	 return endpointAgentList;
+     return endpointAgentRepository.findAll();
 
  }
 

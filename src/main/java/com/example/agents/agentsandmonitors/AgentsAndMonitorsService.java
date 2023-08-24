@@ -57,10 +57,6 @@ public class AgentsAndMonitorsService {
     }
 
 
-    public  List<AgentsAndMonitorsModel> getAll(){
-        return repository.findAll();
-    }
-
     public List<AgentsAndMonitorsModel> findByTimeRange(LocalDateTime startTime, LocalDateTime endTime) {
       return repository.findByTimeRange(startTime, endTime);
     }

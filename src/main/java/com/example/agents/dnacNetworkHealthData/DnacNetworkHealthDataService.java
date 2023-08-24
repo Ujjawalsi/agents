@@ -130,19 +130,5 @@ public class DnacNetworkHealthDataService {
        return dnacRepository.findByTimeRange(olddate, newdate);
 	}
 
-
-
-//	public JSONArray getDnacOneDayNetworkData(String start_time, String end_time){
-//		List<DnacNetworkHealthDataModel> list = dnacRepository.findByTimeStampLessThanEqualAndTimeStampGreaterThanEqual(end_time, start_time);
-//
-//		JSONArray jsonarray = new JSONArray();
-//		for (DnacNetworkHealthDataModel data: list) {
-//
-//			jsonarray.put(data);
-//
-//		}
-//		return jsonarray;
-//	}
-
 }
 

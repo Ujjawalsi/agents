@@ -125,20 +125,6 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
             String[] _userPassword = _decodePass.split(":");
             String _username = _userPassword[0];
             String _password = _userPassword[1];
-            System.out.println("Username ---->>>" + _username);
-            System.out.println("password ---->" + _password);
-
-//            Constant constant = new Constant();
-//            System.out.println("Constant Username ---->>>" + constant.USERNAME);
-//            System.out.println("COnstant password ------>>" + constant.PASSWORD);
-//
-//            System.out.println("Constant p Username ---->>>" + constant.getDnacUserName());
-//            System.out.println("COnstant p  password ------>>" + constant.getDnacPassword());
-//
-//            System.out.println("Constant p Username ---->>>" + constant.getName());
-//            System.out.println("COnstant p  password ------>>" + constant.getPass());
-
-
            if (_username.equalsIgnoreCase(Constant.USERNAME) && _password.equalsIgnoreCase(Constant.PASSWORD)) {
             _body = getBody(l_request);
             JSONObject _json = new JSONObject(_body);
@@ -163,8 +149,7 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
                     String jsonString = _json.toString();
                     System.out.println("AWAWW-->>>00" + jsonString);
                     ThousandEyeAlert thousandEyeAlert = new ThousandEyeAlert();
-//                       thousandEyeAlert .setData(jsonString);
-//                      thousandEyeAlert.setId(1L);
+
                     thousandEyeAlert.setAlert(String.valueOf(_json.getJSONObject("alert")));
                     thousandEyeAlert.setEventId(_json.getString("eventId"));
                     thousandEyeAlert.setEventType(_json.getString("eventType"));
@@ -189,41 +174,6 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
     }
 
     @Override
-    public List<ThousandEyeAlert> getAlertsBySeverityAndDate(String sevtype, Date date) {
-
-        if ("0".equals(sevtype)) {
-            return thousandEyeAlertRepo.findBySeverityAndDateLessThanEqual("Critical", date);
-        } else if ("1".equals(sevtype)) {
-            return thousandEyeAlertRepo.findBySeverityAndDateLessThanEqual("Major", date);
-        } else if ("2".equals(sevtype)) {
-            return thousandEyeAlertRepo.findBySeverityAndDateLessThanEqual("Minor", date);
-        } else if ("3".equals(sevtype)) {
-            return thousandEyeAlertRepo.findBySeverityAndDateLessThanEqual("Info", date);
-        } else {
-            return new ArrayList<>();
-        }
-    }
-
-    @Override
-    public List<ThousandEyeAlert> findBySeverityAndDateStartZonedBetween(String critical, String seconddate, String firstdate) {
-        return thousandEyeAlertRepo.findBySeverityAndDateStartZonedBetween(critical, seconddate, firstdate);
-    }
-
-    @Override
-    public List<ThousandEyeAlert> getCountBySeverity(String critical, int i, Date date) {
-
-        return thousandEyeAlertRepo.getCoudnByServerity(critical,i,date);
-    }
-
-    @Override
-    public List<ThousandEyeAlert> combineAlertLists(List<ThousandEyeAlert> critlist, List<ThousandEyeAlert> majlist, List<ThousandEyeAlert> minlist, List<ThousandEyeAlert> infolist) {
-        critlist.addAll(majlist);
-        critlist.addAll(minlist);
-        critlist.addAll(infolist);
-        return critlist;
-    }
-
-    @Override
     public void addAlertName(List<JSONObject> sevalert, HashSet<String> appname, List<JSONObject> allalerts) {
         for (int i = 0; i < sevalert.size(); i++) {
             allalerts.add(sevalert.get(i));
@@ -234,22 +184,6 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
         }
 
     }
-
-    @Override
-    public Set<String> extractAppNames(List<ThousandEyeAlert> alerts, HashSet<String> appname) {
-        return null;
-    }
-
-    @Override
-    public List<ThousandEyeAlert> getAlertsById(List<ThousandEyeAlert> alerts, String id) {
-        return null;
-    }
-
-    @Override
-    public List<ThousandEyeAlert> filterAlertsByName(List<ThousandEyeAlert> alerts, String name) {
-        return null;
-    }
-
     @Override
     public JSONArray categorizeAlerts(List<JSONObject> allalerts, HashSet<String> appname) {
         JSONArray categorize = new JSONArray();
@@ -481,19 +415,12 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
             Vm vm = new Vm();
             UserInfo userInfo = new UserInfo();
             List<DnacEndpoint> endPoint = new ArrayList<DnacEndpoint>();
-
-//System.out.println("Json type")
             for (int i = 0; i < _jsonResponse.length(); i++) {
                 JSONObject _jObj = _jsonResponse.getJSONObject(i);
                 JSONObject _alertJson = _jObj.getJSONObject("alert");
                 JSONArray _agentsArray = _alertJson.getJSONArray("agents");
                 System.out.println("_agentsArray: " + _agentsArray);
-//	if((_agentsArray.length())==0) {
-//
-//
-//
-//	thousandEndpointList.clear();
-//	}
+
                 for (int j = 0; j < _agentsArray.length(); j++) {
                     ThousandEndpoint thousandEndpoint = new ThousandEndpoint();
                     String _agentName = _agentsArray.getJSONObject(j).getString("agentName");

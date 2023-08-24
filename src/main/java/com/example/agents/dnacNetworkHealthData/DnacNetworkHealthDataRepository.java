@@ -16,6 +16,5 @@ public interface DnacNetworkHealthDataRepository extends JpaRepository<DnacNetwo
 
     @Query(value = "SELECT * FROM dnac_network_health_data WHERE time_stamp >= :newdate AND time_stamp <= :olddate" , nativeQuery = true)
     List<DnacNetworkHealthDataModel> findByTimeRange(@Param("olddate") Date olddate, @Param("newdate") Date newdate);
-    // No need to define custom queries unless necessary
 }
 
