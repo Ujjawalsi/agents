@@ -17,8 +17,10 @@ import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import org.springframework.context.annotation.PropertySource;
@@ -43,7 +45,7 @@ public class DnacNetworkHealthDataService {
     @Autowired
     private DnacNetworkHealthDataRepository dnacRepository;
 
-//    @Scheduled(cron = "0 */1 * * * ?") // Run every 15 minutes
+    @Scheduled(cron = "0 */1 * * * ?") // Run every 15 minutes
     private void getNetworkHealth() {
         try {
             String token = getAuthTokenFromDNAC();
@@ -52,10 +54,13 @@ public class DnacNetworkHealthDataService {
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 String responseBody = response.getBody();
-                LocalDateTime timeStamp = LocalDateTime.now();
+
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String formattedDate = simpleDateFormat.format(new Date());
+				Date timeStamp = simpleDateFormat.parse(formattedDate);
+				System.out.println(timeStamp);
 
                 DnacNetworkHealthDataModel dnacData = new DnacNetworkHealthDataModel();
-             //   JSONObject jsonobj=new JSONObject(responseBody);
                 ObjectMapper objectMapper = new ObjectMapper();
                 JsonNode jsonNode = objectMapper.readTree(responseBody);
                 
@@ -67,7 +72,6 @@ public class DnacNetworkHealthDataService {
                     // Now you have the "response" JSON as a string
                     System.out.println("Response JSON: " + responseJson);
                 dnacData.setResponse(responseJson);
-             //   System.out.println("Response body------"+responseBody);
                 dnacData.setTimeStamp(timeStamp);
 
                 dnacRepository.save(dnacData);
@@ -122,18 +126,23 @@ public class DnacNetworkHealthDataService {
 	}
 
 
-
-	public JSONArray getDnacOneDayNetworkData(String start_time, String end_time){
-		List<DnacNetworkHealthDataModel> list = dnacRepository.findByTimeStampLessThanEqualAndTimeStampGreaterThanEqual(end_time, start_time);
-
-		JSONArray jsonarray = new JSONArray();
-		for (DnacNetworkHealthDataModel data: list) {
-
-			jsonarray.put(data);
-
-		}
-		return jsonarray;
+ public   List<DnacNetworkHealthDataModel> getDnacOneDayNetworkData(Date olddate, Date newdate) {
+       return dnacRepository.findByTimeRange(olddate, newdate);
 	}
+
+
+
+//	public JSONArray getDnacOneDayNetworkData(String start_time, String end_time){
+//		List<DnacNetworkHealthDataModel> list = dnacRepository.findByTimeStampLessThanEqualAndTimeStampGreaterThanEqual(end_time, start_time);
+//
+//		JSONArray jsonarray = new JSONArray();
+//		for (DnacNetworkHealthDataModel data: list) {
+//
+//			jsonarray.put(data);
+//
+//		}
+//		return jsonarray;
+//	}
 
 }
 

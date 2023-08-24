@@ -2,6 +2,7 @@ package com.example.agents.dnacNetworkHealthData;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "dnac_network_health_data")
@@ -14,7 +15,8 @@ public class DnacNetworkHealthDataModel {
     @Column(name = "response", columnDefinition = "text")
     private String response;
 
-    private LocalDateTime timeStamp;
+	@Column(name = "time_stamp")
+    private Date timeStamp;
     public Long getId() {
 		return id;
 	}
@@ -31,11 +33,11 @@ public class DnacNetworkHealthDataModel {
 		this.response = response;
 	}
 
-	public LocalDateTime getTimeStamp() {
+	public Date getTimeStamp() {
 		return timeStamp;
 	}
 
-	public void setTimeStamp(LocalDateTime timeStamp) {
+	public void setTimeStamp(Date timeStamp) {
 		this.timeStamp = timeStamp;
 	}
 

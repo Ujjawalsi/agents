@@ -224,13 +224,11 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
     }
 
     @Override
-    public void addAlertName(List<ThousandEyeAlert> sevalert, HashSet<String> appname, List<ThousandEyeAlert> allalerts) {
+    public void addAlertName(List<JSONObject> sevalert, HashSet<String> appname, List<JSONObject> allalerts) {
         for (int i = 0; i < sevalert.size(); i++) {
             allalerts.add(sevalert.get(i));
-            ThousandEyeAlert dbobj= sevalert.get(i);
-            String value = dbobj.getAlert();
-            JSONObject jsonObject =new JSONObject(value);
-            String fieldValue = jsonObject.getString("testName");
+            JSONObject dbobj = sevalert.get(i);
+            String fieldValue = dbobj.getString("testName");
             System.out.println(fieldValue);
             appname.add(fieldValue);
         }
@@ -253,7 +251,7 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
     }
 
     @Override
-    public JSONArray categorizeAlerts(List<ThousandEyeAlert> allalerts, HashSet<String> appname) {
+    public JSONArray categorizeAlerts(List<JSONObject> allalerts, HashSet<String> appname) {
         JSONArray categorize = new JSONArray();
         for (String element : appname) {
             JSONObject newapp = new JSONObject();
@@ -261,13 +259,10 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
             int major = 0;
             int minor = 0;
             int info = 0;
-            for (ThousandEyeAlert alert : allalerts) {
-//                String fieldValue = alert.getTestName();
-//                String severity = alert.getSeverity();
-
-                JSONObject jsonObject = new JSONObject(alert);
-                String fieldValue = jsonObject.getString("testName");
-                String severity = jsonObject.getString("severity");
+            for (int i = 0; i < allalerts.size(); i++) {
+                JSONObject dbobj = allalerts.get(i);
+                String fieldValue = dbobj.getString("testName");
+                String severity = dbobj.getString("severity");
                 if (element.equals(fieldValue)) {
                     if (severity.equals("Critical"))
                         critical++;
@@ -333,6 +328,11 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
             e.printStackTrace();
         }
         return rtnString;
+    }
+
+    @Override
+    public List<ThousandEyeAlert> getAlertsByTimeRange(String startTime, String endTime) {
+        return thousandEyeAlertRepo.findByTimeRange(startTime,endTime);
     }
 
     public static String getBody(HttpServletRequest request) throws IOException {

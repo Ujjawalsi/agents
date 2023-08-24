@@ -50,7 +50,7 @@ public class CreateReports {
     private DnacClientService dnacClientService;
 
 //    @Scheduled(cron = "0 */15 * ? * *")
-@Scheduled(cron = "0 */1 * * * ?")
+//@Scheduled(cron = "0 */1 * * * ?")
 public void create() {
         System.out.println("Auto Scheduler Start :: ::  ");
         createReportInDNAC("Scheduler BullsEye");

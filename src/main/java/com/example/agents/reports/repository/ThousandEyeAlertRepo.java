@@ -3,6 +3,7 @@ package com.example.agents.reports.repository;
 import com.example.agents.reports.entities.ThousandEyeAlert;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -66,4 +67,16 @@ public interface ThousandEyeAlertRepo extends JpaRepository<ThousandEyeAlert, Lo
 
     @Query(value = "SELECT t FROM ThousandEyeAlert t WHERE t.startTime >= startTime AND t.endTime <= endTime AND t.agentName = agentName AND t.application = application AND t.domainName = domainName", nativeQuery = true)
     List<ThousandEyeAlert> findApplicationIssues(String startTime, String endTime, String enterpriseAgentName, String application);
+//    @Query(value = "SELECT * FROM ms_thousandeye_alert  WHERE dateStartZoned >= :startTime AND dateStartZoned <= :endTime", nativeQuery = true)
+
+//    @Query(value = "SELECT * FROM ms_thousandeye_alert WHERE alert IS NOT NULL AND (alert ->> 'dateStartZoned')::text >= :startTime AND (alert ->> 'dateStartZoned')::text <= :endTime", nativeQuery = true)
+//    List<ThousandEyeAlert> findByTimeRange(@Param("startTime")String startTime, @Param("endTime") String endTime);
+
+    @Query(value = "SELECT * FROM ms_thousandeye_alert WHERE alert IS NOT NULL AND " +
+            "SUBSTRING(alert, '\"dateStartZoned\":\"(.*?)\"') >= :startTime AND " +
+            "SUBSTRING(alert, '\"dateStartZoned\":\"(.*?)\"') <= :endTime", nativeQuery = true)
+    List<ThousandEyeAlert> findByTimeRange(@Param("startTime") String startTime, @Param("endTime") String endTime);
+
+
+
 }

@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 
 import com.example.agents.agentsandmonitors.AgentsAndMonitorsModel;
 import com.example.agents.agentsandmonitors.AgentsAndMonitorsService;
+import com.example.agents.dnacNetworkHealthData.DnacNetworkHealthDataModel;
 import com.example.agents.dnacNetworkHealthData.DnacNetworkHealthDataService;
 import com.example.agents.endpointAgent.EndPointAgentsService;
 import com.example.agents.endpointAgent.EndpointAgentModel;
@@ -347,7 +348,7 @@ public class FetchIssuesForITAdmin {
 
 
     // fetchAgentsSummaryCount
-    //Done -----> Ask
+    //Done -----> Done
     @RequestMapping(value = "/fetchAgentsSummaryCount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
@@ -677,7 +678,7 @@ public class FetchIssuesForITAdmin {
 
 
 
-
+//DOne ----> complete
     // fetchDnacClientHealthCount
     @RequestMapping(value = "/fetchDnacClientHealthCount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -784,6 +785,8 @@ public class FetchIssuesForITAdmin {
         return j_obj2.toString();
     }
 
+
+    //Done---> Complete
     // fetchDnacClientHealth
     @RequestMapping(value = "/fetchDnacClientHealth", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -815,15 +818,29 @@ public class FetchIssuesForITAdmin {
             throw new RuntimeException(e);
         }
 
-        FetchIssuesForITAdmin fs = new FetchIssuesForITAdmin();
-     //   JSONArray j_arr = (JSONArray) fs.getDnacClientData(start_time, end_time);
         JSONArray j_arr = dnacClientService.getDnacClientData(startTime, endTime);
         for (int i = 0; i < j_arr.length(); i++) {
             JSONObject jobj = j_arr.getJSONObject(i);
 
-            String deviceType = jobj.getString("deviceType");
-            int healthScore = jobj.getInt("averageHealthScore_min");
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode;
+            try {
+                rootNode = objectMapper.readTree(String.valueOf(jobj));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
 
+            String jsonDocument = rootNode.get("jsonDocument").asText();
+            JsonNode innerNode;
+            try {
+                innerNode = objectMapper.readTree(jsonDocument);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+
+            String deviceType = innerNode.get("deviceType").asText();
+
+            int healthScore = innerNode.get("averageHealthScore_min").asInt();
             if ((deviceType.equalsIgnoreCase(type)) && (health.equalsIgnoreCase("poor")) && (healthScore < 4)) {
                 j_array.put(jobj);
             } else if ((deviceType.equalsIgnoreCase(type)) && (health.equalsIgnoreCase("fair"))
@@ -944,83 +961,9 @@ public class FetchIssuesForITAdmin {
         return jarr.toString();
     }
 
-    // santosh dnac client report 21-06-23
-//    public JSONArray getDnacClientData(String start_time, String end_time) {
-//        JSONArray jsonarray = new JSONArray();
-//
-//        DB db = null;
-//        try {
-//            DateTimeUtil _util = new DateTimeUtil();
-//            System.out.println("Dnac start_time: " + start_time);
-//            start_time = _util.convertIST2UTC(start_time);
-//            System.out.println("Dnac Parsed start_time: " + start_time);
-//            System.out.println("Dnac end_time: " + end_time);
-//            end_time = _util.convertIST2UTC(end_time);
-//            System.out.println("Dnac Parsed end_time: " + end_time);
-//            MongoDBConnection mongoDB = new MongoDBConnection();
-//            db = mongoDB.getMongoConnection();
-//            DBCollection collection = db.getCollection("dnac_clients_reports_data");
-//            BasicDBObject gtQuery = new BasicDBObject();
-//            BasicDBObject andQuery = new BasicDBObject();
-//            List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
-//            gtQuery.put("start_Time", new BasicDBObject("$lte", end_time));
-//            gtQuery.put("end_Time", new BasicDBObject("$gte", start_time));
-//            obj.add(gtQuery);
-//            andQuery.put("$and", obj);
-//            DBCursor cursor = collection.find(andQuery);
-//
-//            System.out.println(cursor.count());
-//            while (cursor.hasNext()) {
-//                DBObject doc = cursor.next();
-//                jsonarray.put((new JSONObject(doc.toString())));
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            if (db != null)
-//                db.getMongo().close();
-//        }
-//
-//
-//        return jsonarray;
-//    }
 
-    // dnac 15min data
-//    public JSONArray getDnacOneDayClientData(String start_time, String end_time) {
-//        JSONArray jsonarray = new JSONArray();
-//
-//        DB db = null;
-//        try {
-//            MongoDBConnection mongoDB = new MongoDBConnection();
-//            db = mongoDB.getMongoConnection();
-//            DBCollection collection = db.getCollection("dnac_clients_reports_data");
-//            BasicDBObject gtQuery = new BasicDBObject();
-//            BasicDBObject gttQuery = new BasicDBObject();
-//            BasicDBObject andQuery = new BasicDBObject();
-//            List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
-//            gtQuery.put("end_Time", new BasicDBObject("$lte", start_time));
-//            gttQuery.put("end_Time", new BasicDBObject("$gte", end_time));
-//            obj.add(gtQuery);
-//            obj.add(gttQuery);
-//            andQuery.put("$and", obj);
-//            DBCursor cursor = collection.find(andQuery);
-//
-////	System.out.println(cursor.count());
-//            while (cursor.hasNext()) {
-//                DBObject doc = cursor.next();
-//                jsonarray.put((new JSONObject(doc.toString())));
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            if (db != null)
-//                db.getMongo().close();
-//        }
-//
-//
-//        return jsonarray;
-//    }
 
+//Done--completed
     @RequestMapping(value = "/fetchDnacNetworkHealthDay", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
@@ -1030,6 +973,7 @@ public class FetchIssuesForITAdmin {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         FetchIssuesForITAdmin fs = new FetchIssuesForITAdmin();
         JSONArray jArray = new JSONArray();
+        List<DnacNetworkHealthDataModel> dataModelList = new ArrayList<>();
         for (int i = 0; i < 96; i++) {
             double poorPercent = 0;
             double fairPercent = 0;
@@ -1044,34 +988,32 @@ public class FetchIssuesForITAdmin {
             Calendar calendar1 = Calendar.getInstance();
             calendar1.setTime(date);
             calendar1.add(Calendar.MINUTE, -15);
-//	calendar1.add(Calendar.MINUTE, -120);
             Date endDDate = calendar1.getTime();
-            String olddate = dateFormat.format(date);
-            String newdate = dateFormat.format(endDDate);
-
-//	System.out.println("d1" + olddate + "   d2" + newdate);
-
+            Date olddate = date;
+            Date newdate = endDDate;
             date = endDDate;
-//            jArray = fs.getDnacOneDayNetworkData(olddate, newdate);
-            jArray=    dnacNetworkHealthDataService.getDnacOneDayNetworkData(olddate,newdate);
+           dataModelList =    dnacNetworkHealthDataService.getDnacOneDayNetworkData(olddate,newdate);
+            System.out.println(dataModelList.size());
 
-            for (int j = 0; j < jArray.length(); j++) {
-                JSONObject jObj = new JSONObject();
-                jObj = jArray.getJSONObject(j);
-                JSONArray j_arr = jObj.getJSONArray("response");
-                for (int k = 0; k < j_arr.length(); k++) {
-                    JSONObject j_arr_obj = (JSONObject) j_arr.getJSONObject(k);
-                    double count_poor = j_arr_obj.getInt("badCount");
-                    double count_fair = j_arr_obj.getInt("fairCount");
-                    double count_good = j_arr_obj.getInt("goodCount");
-                    double count_nohealth = j_arr_obj.getInt("noHealthCount");
-                    double count_total = j_arr_obj.getInt("totalCount");
-                    poor_count += count_poor;
-                    fair_count += count_fair;
-                    good_count += count_good;
-                    nohealth_count += count_nohealth;
-                    total_count += count_total;
+            for (DnacNetworkHealthDataModel model : dataModelList) {
+                String jObj =  model.getResponse();
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode rootNode = null;
+                try {
+                    rootNode = objectMapper.readTree(jObj);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
                 }
+                int count_fair = rootNode.get("fairCount").asInt();
+                int count_poor = rootNode.get("badCount").asInt();
+                int count_good = rootNode.get("goodCount").asInt();
+                int count_nohealth = rootNode.get("noHealthCount").asInt();
+                int count_total = rootNode.get("totalCount").asInt();
+                poor_count += count_poor;
+                fair_count += count_fair;
+                good_count += count_good;
+                nohealth_count += count_nohealth;
+                total_count += count_total;
 
             }
 
@@ -1085,11 +1027,7 @@ public class FetchIssuesForITAdmin {
             int fPercent = (int) fairPercent;
             int gPercent = (int) goodPercent;
             int hPercent = (int) noHealthPercent;
-//	System.out.println("dhdhdhd"+goodPercent);
-//	System.out.println("poor_device "+pPercent);
-//	System.out.println("fair_device "+fPercent);
-//	System.out.println("good_device "+gPercent);
-//	System.out.println("total_device "+total_device);
+
             JSONObject jRes = new JSONObject();
             jRes.put("jarrdevice_poor_percent", pPercent);
             jRes.put("jarrdevice_fair_percent", fPercent);
@@ -1099,12 +1037,6 @@ public class FetchIssuesForITAdmin {
             jRes.put("jarrdevice_fair_count", fair_count);
             jRes.put("jarrdevice_good_count", good_count);
             jRes.put("jarrdevice_total_count", total_count);
-//	jRes.put("jarrdevice_poor", jarrdevice_poor);
-//	jRes.put("jarrdevice_fair", jarrdevice_fair);    // this for
-//	jRes.put("jarrdevice_good", jarrdevice_good);
-            jarr.put(jRes);
-//	System.out.println("jRes  ==="+jRes.toString());
-//	System.out.println("jarr  ==="+jarr.toString());
 
         }
         System.out.println("jarr  ===" + jarr.toString());
@@ -1113,182 +1045,82 @@ public class FetchIssuesForITAdmin {
         return jarr.toString();
     }
 
-    // dnac network health data fetch from db
-//    public JSONArray getDnacOneDayNetworkData(String start_time, String end_time) {
-//        JSONArray jsonarray = new JSONArray();
-//
-//        DB db = null;
-//        try {
-//            MongoDBConnection mongoDB = new MongoDBConnection();
-//            db = mongoDB.getMongoConnection();
-//            DBCollection collection = db.getCollection("dnac_network_health_data");
-//            BasicDBObject gtQuery = new BasicDBObject();
-//            BasicDBObject gttQuery = new BasicDBObject();
-//            BasicDBObject andQuery = new BasicDBObject();
-//            List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
-//            gtQuery.put("time_stamp", new BasicDBObject("$lte", start_time));
-//            gttQuery.put("time_stamp", new BasicDBObject("$gte", end_time));
-//            obj.add(gtQuery);
-//            obj.add(gttQuery);
-//            andQuery.put("$and", obj);
-//            DBCursor cursor = collection.find(andQuery);
-//
-////	System.out.println(cursor.count());
-//            while (cursor.hasNext()) {
-//                DBObject doc = cursor.next();
-//                jsonarray.put((new JSONObject(doc.toString())));
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            if (db != null)
-//                db.getMongo().close();
-//        }
-//
-//
-//        return jsonarray;
-//    }
-
-    // santosh
-//anushk-
 
 
-
-//    @RequestMapping(value = "/getalertsall", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseBody
-//    @CrossOrigin(origins = "*")
-//    public String getAlertsall(@RequestParam(value = "sevtype", required = false) String sevtype,
-//                               @RequestParam(value = "date", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date date) {
-//        JSONObject severity = new JSONObject();
-//        DB db = null;
-//        try {
-//            MongoDBConnection mongoDB = new MongoDBConnection();
-//            db = mongoDB.getMongoConnection();
-//            DBCollection collection = db.getCollection("ms_thousandeye_alert");
-//            BasicDBObject andQuery = new BasicDBObject();
-//
-//            severity.put("Info", getCountBySeverity(collection, "Info", 0, date).size());
-//            List<DBObject> infoList = getCountBySeverity(collection, "Info", 0, date);
-//
-//            severity.put("Major", getCountBySeverity(collection, "Major", 0, date).size());
-//            List<DBObject> majorList = getCountBySeverity(collection, "Major", 0, date);
-//
-//            severity.put("Minor", getCountBySeverity(collection, "Minor", 0, date).size());
-//            List<DBObject> minorList = getCountBySeverity(collection, "Minor", 0, date);
-//
-//            severity.put("Critical", getCountBySeverity(collection, "Critical", 0, date).size());
-//            List<DBObject> criticalList = getCountBySeverity(collection, "Critical", 0, date);
-//
-//            severity.put("All", criticalList.size() + minorList.size() + majorList.size() + infoList.size());
-//
-//            if (sevtype.equals("0"))
-//                return criticalList.toString();
-//
-//            if (sevtype.equals("1"))
-//                return majorList.toString();
-//
-//            if (sevtype.equals("2"))
-//                return minorList.toString();
-//
-//            if (sevtype.equals("3"))
-//                return infoList.toString();
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            if (db != null)
-//                db.getMongo().close();
-//        }
-//
-//        return severity.toString();
-//
-//    }
-
-
-
+//Done --complete
     @RequestMapping(value = "/getalertsall", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String getAlertsall(@RequestParam(value = "sevtype", required = false) String sevtype,
                                                @RequestParam(value = "date", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date date) {
-        List<ThousandEyeAlert> bySeverityAndDate = thousandEyeAlertService.getAlertsBySeverityAndDate(sevtype, date);
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            return mapper.writeValueAsString(bySeverityAndDate);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return "{}"; // Return empty JSON object in case of an error
+
+        JSONObject severityFinal = new JSONObject();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.MINUTE, -10);
+            Date endDDate = calendar.getTime();
+            String endTime = dateFormat.format(date);
+            String startTime = dateFormat.format(endDDate);
+            List<ThousandEyeAlert> thousandEyeAlerts = thousandEyeAlertService.getAlertsByTimeRange(startTime,endTime);
+try {
+    JSONArray activeAlert = new JSONArray();
+    List<JSONObject> infoList = new ArrayList<>();
+    List<JSONObject> majorList = new ArrayList<>();
+    List<JSONObject> minorList = new ArrayList<>();
+    List<JSONObject> criticalList = new ArrayList<>();
+
+    for (ThousandEyeAlert alert : thousandEyeAlerts) {
+        JSONObject jsonObject = new JSONObject(alert.getAlert());
+        if (!jsonObject.has("dateEndZoned")) {
+            activeAlert.put(jsonObject);
         }
+    }
+
+    for (int i = 0; i < activeAlert.length(); i++) {
+        JSONObject jsonObject = activeAlert.getJSONObject(i);
+        String severity = jsonObject.getString("severity");
+        if (severity.equalsIgnoreCase("Info")) {
+            infoList.add(jsonObject);
+        } else if (severity.equalsIgnoreCase("Major")) {
+            majorList.add(jsonObject);
+        } else if (severity.equalsIgnoreCase("Minor")) {
+            minorList.add(jsonObject);
+        } else if (severity.equalsIgnoreCase("Critical")) {
+            criticalList.add(jsonObject);
+        }
+
+    }
+
+    severityFinal.put("Info", infoList.size());
+    severityFinal.put("Major", majorList.size());
+    severityFinal.put("Minor", minorList.size());
+    severityFinal.put("Critical", criticalList.size());
+    severityFinal.put("All", infoList.size()+ majorList.size()+ minorList.size()+criticalList.size());
+    if (sevtype.equals("0"))
+        return criticalList.toString();
+
+    if (sevtype.equals("1"))
+        return majorList.toString();
+
+    if (sevtype.equals("2"))
+        return minorList.toString();
+
+    if (sevtype.equals("3"))
+        return infoList.toString();
+
+      }catch (Exception e){
+    e.printStackTrace();
+    }
+        return severityFinal.toString();
+
+
     }
 
 
 
-    public List<ThousandEyeAlert> getCountBySeverity(String severity, int call, Date date) {
-        // {newcode}
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.MINUTE, -10);
-        Date beforeDate = calendar.getTime();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String firstdate = dateFormat.format(date);
-        String seconddate = dateFormat.format(beforeDate);
-        // {newcode}
-
-//   System.out.println(firstdate+ "/n" +seconddate);
-//
-//        BasicDBObject query = new BasicDBObject();
-//        List<BasicDBObject> andConditions = new ArrayList<>();
-//
-//        // Query 1: "alert.severity" matches a specific value
-//        andConditions.add(new BasicDBObject("alert.severity", severity));
-//
-//        // Query 2: "alert.dateEndZoned" field does not exist
-//        andConditions.add(new BasicDBObject("alert.dateEndZoned", new BasicDBObject("$exists", false)));
-//
-//        // Query 3: "alert.dateStartZoned" is greater than "secondDate" and less than
-//        // "firstDate"
-//        andConditions.add(new BasicDBObject("alert.dateStartZoned",
-//                new BasicDBObject("$gt", seconddate).append("$lt", firstdate)));
-//
-//        query.put("$and", andConditions);
-//
-//        DBCursor cursor = collection.find(query);
-
-        List<ThousandEyeAlert> alerts = new ArrayList<>();
-
-        if ("0".equals(severity)) {
-            alerts = thousandEyeAlertService.findBySeverityAndDateStartZonedBetween("Critical", seconddate, firstdate);
-        } else if ("1".equals(severity)) {
-            alerts = thousandEyeAlertService.findBySeverityAndDateStartZonedBetween("Major", seconddate, firstdate);
-        } else if ("2".equals(severity)) {
-            alerts = thousandEyeAlertService.findBySeverityAndDateStartZonedBetween("Minor", seconddate, firstdate);
-        }
-
-
-//        List<DBObject> result0 = new ArrayList<>();
-//        List<DBObject> result1 = new ArrayList<>();
-
-        List<ThousandEyeAlert> result0 = new ArrayList<>();
-        List<ThousandEyeAlert> result1 = new ArrayList<>();
-
-
-//        while (cursor.hasNext()) {
-//            DBObject dbobj = cursor.next();
-//            BasicDBObject value = (BasicDBObject) dbobj.get("alert");
-//            result0.add(value);
-//            result1.add(dbobj);
-//        }
-
-        for (ThousandEyeAlert alert : alerts) {
-          //  JSONObject value = new JSONObject("alert", String.valueOf(alert));
-            JSONObject jsonObject = new JSONObject(alert);
-      ThousandEyeAlert value = (ThousandEyeAlert) jsonObject.get("alert");
-            result0.add(value);
-            result1.add(value);
-        }
-
-        return (call == 0) ? result0 : result1;
-    }
+    //Done--complete
 
     @RequestMapping(value = "/gettopalerts", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -1297,179 +1129,86 @@ public class FetchIssuesForITAdmin {
                             @RequestParam(value = "alertId", required = false) String Id,
                             @RequestParam(value = "date", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date date) {
 
-       // DB db = null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MINUTE, -10);
+        Date endDDate = calendar.getTime();
+        String endTime = dateFormat.format(date);
+        String startTime = dateFormat.format(endDDate);
+        List<ThousandEyeAlert> thousandEyeAlerts = thousandEyeAlertService.getAlertsByTimeRange(startTime,endTime);
+
         try {
+            JSONArray activeAlert = new JSONArray();
+            List<JSONObject> infoList = new ArrayList<>();
+            List<JSONObject> majorList = new ArrayList<>();
+            List<JSONObject> minorList = new ArrayList<>();
+            List<JSONObject> criticalList = new ArrayList<>();
 
-//            MongoDBConnection mongoDB = new MongoDBConnection();
-//            db = mongoDB.getMongoConnection();
-//            DBCollection collection = db.getCollection("ms_thousandeye_alert");
-//            List<DBObject> critlist = getCountBySeverity(collection, "Critical", 1, date);
-//            List<DBObject> majlist = getCountBySeverity(collection, "Major", 1, date);
-//            List<DBObject> minlist = getCountBySeverity(collection, "Minor", 1, date);
-//            List<DBObject> infolist = getCountBySeverity(collection, "Info", 1, date);
+            for (ThousandEyeAlert alert : thousandEyeAlerts) {
+                JSONObject jsonObject = new JSONObject(alert.getAlert());
+                if (!jsonObject.has("dateEndZoned")) {
+                    activeAlert.put(jsonObject);
+                }
+            }
 
-            List<ThousandEyeAlert> critlist = getCountBySeverity("Critical", 1, date);
-            List<ThousandEyeAlert> majlist = getCountBySeverity("Major", 1, date);
-            List<ThousandEyeAlert>  minlist=  getCountBySeverity("Minor", 1, date);
-            List<ThousandEyeAlert> infolist=  getCountBySeverity("Info", 1, date);
-
-
-            List<ThousandEyeAlert> allalerts = new ArrayList<>();
+            for (int i = 0; i < activeAlert.length(); i++) {
+                JSONObject jsonObject = activeAlert.getJSONObject(i);
+                String severity = jsonObject.getString("severity");
+                if (severity.equalsIgnoreCase("Info")) {
+                    infoList.add(jsonObject);
+                } else if (severity.equalsIgnoreCase("Major")) {
+                    majorList.add(jsonObject);
+                } else if (severity.equalsIgnoreCase("Minor")) {
+                    minorList.add(jsonObject);
+                } else if (severity.equalsIgnoreCase("Critical")) {
+                    criticalList.add(jsonObject);
+                }
+            }
+            List<JSONObject> allalerts = new ArrayList<>();
             HashSet<String> appname = new HashSet<>();
 
-            thousandEyeAlertService.addAlertName(critlist, appname, allalerts);
-            thousandEyeAlertService.addAlertName(majlist, appname, allalerts);
-           thousandEyeAlertService.addAlertName(minlist, appname, allalerts);
-            thousandEyeAlertService.addAlertName(infolist, appname, allalerts);
+            thousandEyeAlertService.addAlertName(criticalList, appname, allalerts);
+            thousandEyeAlertService.addAlertName(majorList, appname, allalerts);
+            thousandEyeAlertService.addAlertName(minorList, appname, allalerts);
+            thousandEyeAlertService.addAlertName(infoList, appname, allalerts);
 
             if (Id != null && (!Id.isEmpty())) {
                 JSONArray alertArray = new JSONArray();
                 for (int i = 0; i < allalerts.size(); i++) {
 
-
-//                    DBObject dbobj = allalerts.get(i);
-//                    BasicDBObject value = (BasicDBObject) dbobj.get("alert");
-//                    DBObject dbbb = (DBObject) value;
-//                    String alertValue = value.getString("alertId");
-
-
-                ThousandEyeAlert  dbobj = allalerts.get(i);
-                    JSONObject value = new JSONObject(dbobj.getAlert());
+                    JSONObject value = allalerts.get(i);
                     String alertValue=  value.getString("alertId");
-
                     if (alertValue.equals(Id)) {
                         alertArray.put(value);
 
                     }
-
                 }
                 return alertArray.toString();
-
             }
             if (name != null && (!name.isEmpty())) {
-                // System.out.println(name);
-
                 JSONArray alertArray = new JSONArray();
                 for (int i = 0; i < allalerts.size(); i++) {
-//
-//                    DBObject dbobj = allalerts.get(i);
-//                    BasicDBObject value = (BasicDBObject) dbobj.get("alert");
-//                    String alertValue = value.getString("alertId");
-//
-//                    String fieldValue = value.getString("testName");
-
-                 ThousandEyeAlert  dbobj = allalerts.get(i);
-                 JSONObject value = new JSONObject(dbobj.getAlert());
+                    JSONObject value = allalerts.get(i);
                  String alertValue = value.getString("alertId");
                  String fieldValue = value.getString("testName");
 
                     if (fieldValue.equals(name)) {
                         alertArray.put(value);
                     }
-
-                }
-                return alertArray.toString();
-
+                }return alertArray.toString();
             }
-
             return thousandEyeAlertService.categorizeAlerts(allalerts, appname).toString();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return "";
+        return "Error occurs";
 
 
     }
 
-
-
-//    @RequestMapping(value = "/gettopalerts", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-//    @CrossOrigin(origins = "*")
-//    public String topalerts(@RequestParam(value = "alertName", required = false) String name,
-//                            @RequestParam(value = "alertId", required = false) String id,
-//                            @RequestParam(value = "date") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date date) {
-//
-//        List<ThousandEyeAlert> critlist = thousandEyeAlertService.getCountBySeverity("Critical", 1, date);
-//        List<ThousandEyeAlert> majlist = thousandEyeAlertService.getCountBySeverity("Major", 1, date);
-//        List<ThousandEyeAlert> minlist = thousandEyeAlertService.getCountBySeverity("Minor", 1, date);
-//        List<ThousandEyeAlert> infolist = thousandEyeAlertService.getCountBySeverity("Info", 1, date);
-//        List<ThousandEyeAlert> allalerts = thousandEyeAlertService.combineAlertLists(critlist, majlist, minlist, infolist);
-//        HashSet<String> appname = new HashSet<>();
-//
-//        thousandEyeAlertService.addAlertName(critlist, appname, allalerts);
-//        thousandEyeAlertService.addAlertName(majlist, appname, allalerts);
-//        thousandEyeAlertService.addAlertName(minlist, appname, allalerts);
-//        thousandEyeAlertService.addAlertName(infolist, appname, allalerts);
-
-//        if (id != null && !id.isEmpty()) {
-//            return thousandEyeAlertService.getAlertsById(allalerts, id).toString();
-//        }
-//
-//        if (name != null && !name.isEmpty()) {
-//            return thousandEyeAlertService.filterAlertsByName(allalerts, name).toString();
-//        }
-//
-//        return thousandEyeAlertService.extractAppNames(allalerts, appname).toString();
-//    }
-
-
-
-
-
-//    public void addAlertName(List<ThousandEyeAlert> sevalert, HashSet<String> appname, List<ThousandEyeAlert> allalerts) {
-//        for (int i = 0; i < sevalert.size(); i++) {
-//            allalerts.add(sevalert.get(i));
-////            BasicDBObject dbobj = (BasicDBObject) sevalert.get(i);
-//         ThousandEyeAlert dbobj= sevalert.get(i);
-////            BasicDBObject value = (BasicDBObject) dbobj.get("alert");
-//            String value = dbobj.getAlert();
-//            JSONObject jsonObject =new JSONObject(value);
-//            String fieldValue = jsonObject.getString("testName");
-//            // System.out.println(fieldValue);
-//            appname.add(fieldValue);
-//        }
-//
-//    }
-
-//    public JSONArray categorizeAlerts(List<DBObject> allalerts, HashSet<String> appname) {
-//        JSONArray categorize = new JSONArray();
-//        Iterator<String> iterator = appname.iterator();
-//        while (iterator.hasNext()) {
-//            String element = iterator.next();
-//            JSONObject newapp = new JSONObject();
-//            int critical = 0;
-//            int major = 0;
-//            int minor = 0;
-//            int info = 0;
-//            for (int i = 0; i < allalerts.size(); i++) {
-//                DBObject dbobj = allalerts.get(i);
-//                BasicDBObject value = (BasicDBObject) dbobj.get("alert");
-//                String fieldValue = value.getString("testName");
-//                String severity = value.getString("severity");
-//                if (element.equals(fieldValue)) {
-//                    if (severity.equals("Critical"))
-//                        critical++;
-//                    else if (severity.equals("Major"))
-//                        major++;
-//                    else if (severity.equals("Minor"))
-//                        minor++;
-//                    else if (severity.equals("Info"))
-//                        info++;
-//                }
-//
-//            }
-//            newapp.put("testName", element);
-//            newapp.put("Critical", critical);
-//            newapp.put("Major", major);
-//            newapp.put("Minor", minor);
-//            newapp.put("Info", info);
-//            newapp.put("GrandTotal", critical + major + minor + info);
-//
-//            categorize.put(newapp);
-//        }
-//        return categorize;
-//    }
 
     /*
 
