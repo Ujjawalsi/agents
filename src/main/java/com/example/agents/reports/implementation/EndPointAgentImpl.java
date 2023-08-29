@@ -20,9 +20,10 @@ public class EndPointAgentImpl implements EndPointAgentService {
 
     }
 
-    @Override
-    public List<EndpointAgentModel> findByAgentNameOrClientUserName(String agentName) {
 
-        return endPointAgentRepo.findByAgentNameOrClientUserName(agentName);
+    @Override
+    public List<EndpointAgentModel> findByAgentName(String agentName) {
+        List<EndpointAgentModel> agentModels = endPointAgentRepo.finByAgent(agentName);
+        return null;
     }
 }

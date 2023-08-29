@@ -13,19 +13,6 @@ import java.util.List;
 @Repository
 public interface DnacClientRepo extends JpaRepository<DnacClient, Long > {
 
-
-    @Query(
-            value = "SELECT * FROM dnac_clients_reports_data " +
-                    "WHERE username ILIKE %:userName% " +
-                    "AND CAST(json_document->>'start_Time' AS timestamp) <= :endTime " +
-                    "AND CAST(json_document->>'end_Time' AS timestamp) >= :startTime",
-            nativeQuery = true
-    )
-    List<DnacClient> findByUsernameContainingIgnoreCaseAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(String userName, String endTime, String startTime);
-
-
-
-
     @Query(value = "SELECT * FROM dnac_clients_reports_data WHERE start_time >= :newdate AND end_time <= :olddate" , nativeQuery = true)
     List<DnacClient> findByTimeRange(@Param("newdate") Date newdate, @Param("olddate") Date olddate);
 

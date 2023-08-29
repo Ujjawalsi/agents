@@ -1,15 +1,10 @@
 package com.example.agents.agentsandmonitors;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import com.example.agents.agentsandmonitors.AgentsAndMonitorsModel;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,18 +13,16 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.example.agents.agentsandmonitors.AgentsAndMonitorsRepository;
-import com.vel.common.connector.service.IBUSAPIConnectorService;
+import com.example.agents.vel.common.connector.service.IBUSAPIConnectorService;
 @Component
 @EnableScheduling
-@PropertySource("classpath:com/vel/common/connector/service/constants.properties")
 public class AgentsAndMonitorsService {
 
-    @Value("${te_agents_api}")
-    private String te_agents_api;
+//    @Value("${te_agents_api}")
+//    private String te_agents_api;
 
-    @Value("${te_api_key}")
-    private String te_api_key;
+//    @Value("${te_api_key}")
+//    private String te_api_key;
 
     @Autowired
     IBUSAPIConnectorService service;
@@ -37,7 +30,7 @@ public class AgentsAndMonitorsService {
     @Autowired
     private AgentsAndMonitorsRepository repository;
 
-//  @Scheduled(cron = "0 */1 * * * ?")
+  @Scheduled(cron = "0 */1 * * * ?")
     private void excuteAgentsAndMonitorsAPI() throws Exception {
         HttpHeaders _headerSet = new HttpHeaders();
         _headerSet.setContentType(MediaType.APPLICATION_JSON);

@@ -1,4 +1,4 @@
-package com.vel.common.connector.service.impl;
+package com.example.agents.vel.common.connector.service.impl;
 
 
 import java.security.KeyManagementException;
@@ -16,7 +16,6 @@ import javax.net.ssl.X509TrustManager;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -26,7 +25,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.vel.common.connector.service.IBUSAPIConnectorService;
+import com.example.agents.vel.common.connector.service.IBUSAPIConnectorService;
 /**
  * 
  * @author Ranvijay

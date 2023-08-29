@@ -11,10 +11,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.example.agents.endpointAgent.EndpointAgentRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vel.common.connector.service.IBUSAPIConnectorService;
-import com.example.agents.endpointAgent.EndpointAgentModel;
+import com.example.agents.vel.common.connector.service.IBUSAPIConnectorService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,7 +31,7 @@ public class EndPointAgentsService {
     private ObjectMapper objectMapper = new ObjectMapper();
 
    // @Scheduled(cron = "0 */15 * * * ?")
-//	@Scheduled(cron = "0 */1 * * * ?")
+	@Scheduled(cron = "0 */1 * * * ?")
 //
     private void executeAgentsAPI() {
         HttpHeaders headers = new HttpHeaders();
@@ -58,6 +56,8 @@ public class EndPointAgentsService {
 	                endpointAgents.add(endpointAgent);
 	            }
 
+				endpointAgentRepository.deleteAll();
+
 	            endpointAgentRepository.saveAll(endpointAgents);
 	            System.out.println("Working scenario");
 	        }
@@ -75,4 +75,25 @@ public class EndPointAgentsService {
  }
 
 
+	public String getDomainName(String checkIssuesWithUser) {
+		String _domainName = null;
+		try{
+		String name = checkIssuesWithUser.replace(".", " ");
+		List<EndpointAgentModel> models = endpointAgentRepository.findByName(name);
+			System.out.println(models.size());
+
+		if (!models.isEmpty()) {
+			EndpointAgentModel endpointAgent = models.get(0);// Assuming there's only one matching entry
+			String jsonDocument = endpointAgent.getAgentData();
+			System.out.println(jsonDocument);
+
+			JSONObject jsonObject = new JSONObject(jsonDocument);
+			_domainName = jsonObject.getString("agentName");
+			System.out.println(_domainName);
+		}
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+        return _domainName;
+	}
 }

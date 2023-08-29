@@ -14,9 +14,9 @@ public interface DnacClientService {
 
     void save(List<DnacClient> jsonObject);
 
-    List<DnacClient> findByUsernameContainingIgnoreCaseAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(String userName, String endTime, String startTime);
-
     JSONArray getDnacOneDayClientData(Date olddate, Date newdate);
 
     JSONArray getDnacClientData(Date startTime, Date endTime);
+
+    List<DnacClient> getDnacData(String agentName, String startTime, String endTime, String application);
 }

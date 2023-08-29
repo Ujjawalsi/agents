@@ -9,7 +9,10 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,12 +30,6 @@ public class DnacClientImpl implements DnacClientService {
         dnacClientRepo.saveAll(jsonObject);
 
     }
-
-    @Override
-    public List<DnacClient> findByUsernameContainingIgnoreCaseAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(String userName, String endTime, String startTime) {
-        return dnacClientRepo.findByUsernameContainingIgnoreCaseAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(userName,endTime,startTime);
-    }
-
 
     @Override
     public JSONArray getDnacOneDayClientData(Date olddate, Date newdate) {
@@ -55,5 +52,37 @@ public class DnacClientImpl implements DnacClientService {
         }
 
         return jsonArray;
+    }
+
+    @Override
+    public List<DnacClient> getDnacData(String agentName, String startTime, String endTime, String application) {
+        List<DnacClient> jsonarray = new ArrayList<>();
+        System.out.println("username to get table from: "+agentName);
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date start_Time = null;
+            Date end_Time = null;
+            try {
+                start_Time = simpleDateFormat.parse(startTime);
+                end_Time = simpleDateFormat.parse(endTime);
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+
+            List<DnacClient> dnacClients = dnacClientRepo.findByTimeRangeGap(start_Time, end_Time);
+            for (DnacClient client: dnacClients) {
+                JSONObject jsonObject = new JSONObject(client.getJsonDocument());
+                String username = jsonObject.getString("username");
+                List<String> userNameList = List.of(username.split(""));
+                List<String> agentNameList = List.of(agentName.split(""));
+                if (userNameList.containsAll(agentNameList)) {
+                    jsonarray.add(client);
+                }
+            }
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonarray;
     }
 }

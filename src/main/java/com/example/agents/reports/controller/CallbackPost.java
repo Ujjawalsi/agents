@@ -37,7 +37,7 @@ public class CallbackPost {
     @Autowired
     private ThousandEyeAlertService thousandEyeAlertService;
 
-    @PostMapping("/reports-callback")
+    @PostMapping("BullsEye/reports-callback")
     public ResponseEntity<String> readURL(HttpServletRequest l_request) {
         if (l_request != null) {
             Enumeration<String> authorizationHeader = l_request.getHeaderNames();

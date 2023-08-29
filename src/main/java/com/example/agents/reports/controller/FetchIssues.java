@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.TimeZone;
 
+import com.example.agents.constant.Constant;
+import com.example.agents.endpointAgent.EndPointAgentsService;
 import com.example.agents.endpointAgent.EndpointAgentModel;
 import com.example.agents.reports.entities.DnacClient;
 import com.example.agents.reports.entities.ThousandEyeAlert;
@@ -16,8 +18,6 @@ import com.example.agents.reports.service.EndPointAgentService;
 import com.example.agents.reports.service.ThousandEyeAlertService;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.kie.api.runtime.KieContainer;
-import org.kie.api.runtime.KieSession;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -45,10 +45,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 @RestController
-@PropertySource("classpath:com/vel/common/connector/service/constants.properties")
+//@PropertySource("classpath:com/example/agents/vel/common/connector/service/constants.properties")
 public class FetchIssues {
-    @Value("${Enterprise_Agent}")
-    String enterprise_Agent;
+//    @Value("${Enterprise_Agent}")
+//    String enterprise_Agent;
 
 
 //    @Autowired
@@ -61,6 +61,9 @@ public class FetchIssues {
 
     @Autowired
     private DnacClientService dnacClientService;
+
+    @Autowired
+    private EndPointAgentsService endPointAgentsService;
 
     static Logger root = (Logger) LoggerFactory
             .getLogger(Logger.ROOT_LOGGER_NAME);
@@ -88,7 +91,7 @@ public class FetchIssues {
                                      @RequestParam(value="end_time", required=true) String end_time,
                                      @RequestParam(value="email", required=true) String email
     ) throws JsonProcessingException {
-        System.out.println("enterprise_Agent: "+enterprise_Agent);
+        System.out.println("enterprise_Agent: "+ Constant.Enterprise_Agent);
         TimeZone timeZone = TimeZone.getTimeZone("IST");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         simpleDateFormat.setTimeZone(timeZone);
@@ -98,7 +101,7 @@ public class FetchIssues {
         if (domainName==null)
             domainName=agent_name;
         ThousandEyeAlertBean bean = getThousandEyeAlerts(start_time, end_time, ""+agent_name, application, domainName);
-        JSONArray _jsonDnac = getDnacData(agent_name, start_time, end_time, email);
+        List<DnacClient> _jsonDnac = dnacClientService.getDnacData(agent_name, start_time, end_time, email);
         bean = processDnacJSONData(bean, _jsonDnac);
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String json = ow.writeValueAsString(bean);
@@ -161,7 +164,7 @@ public class FetchIssues {
     public String getDomainName(String agent_name) {
         String _domainName = null;
         try {
-            List<EndpointAgentModel> agentList = endPointAgentService.findByAgentNameOrClientUserName(agent_name);
+            List<EndpointAgentModel> agentList = endPointAgentService.findByAgentName(agent_name);
             if (!agentList.isEmpty()) {
                 EndpointAgentModel endpointAgent = agentList.get(0);// Assuming there's only one matching entry
                 String jsonDocument = endpointAgent.getAgentData();
@@ -713,7 +716,7 @@ public class FetchIssues {
 
         start_time = _util.convertIST2UTC(start_time);
         end_time = _util.convertIST2UTC(end_time);
-        getDnacData(user_name, start_time, end_time, email);
+        dnacClientService.getDnacData(user_name, start_time, end_time, email);
         return email;
 
     }
@@ -730,7 +733,7 @@ public class FetchIssues {
         try {
             String user = user_name;
             Properties prop = new Properties();
-            InputStream input=AuthenticateUserAPI.class.getClassLoader().getResourceAsStream("com/vel/ldap/ldap.properties");
+            InputStream input=AuthenticateUserAPI.class.getClassLoader().getResourceAsStream("com/example/agents/vel/ldap/ldap.properties");
             try {
                 prop.load(input);
             } catch (IOException e) {
@@ -787,69 +790,17 @@ public class FetchIssues {
 
     }
 
-
-
-
-
-
-
-    public JSONArray getDnacData(String user_name, String start_time, String end_time, String email) {
-        JSONArray jsonarray = new JSONArray();
-        System.out.println("username to get table from: "+user_name);
-        try {
-            DateTimeUtil _util = new DateTimeUtil();
-            System.out.println("Dnac start_time: "+start_time);
-            start_time = _util.convertIST2UTC(start_time);
-            System.out.println("Dnac Parsed start_time: "+start_time);
-            System.out.println("Dnac end_time: "+end_time);
-            end_time = _util.convertIST2UTC(end_time);
-            System.out.println("Dnac Parsed end_time: "+end_time);
-//            MongoDBConnection mongoDB = new MongoDBConnection();
-//            DB db = mongoDB.getMongoConnection();
-//            DBCollection collection = db.getCollection("dnac_clients_reports_data");
-//            BasicDBObject gtQuery = new BasicDBObject();
-//            BasicDBObject andQuery = new BasicDBObject();
-//            List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
-//            gtQuery.put("start_Time", new BasicDBObject("$lte", end_time));
-//            gtQuery.put("end_Time", new BasicDBObject("$gte", start_time));
-//            obj.add(gtQuery);
-//            Document regexQuery = new Document();
-//            regexQuery.append("$regex", ".*" + Pattern.quote(user_name) + ".*").append("$options","i");
-//            obj.add(new BasicDBObject("username", regexQuery));
-//            andQuery.put("$and", obj);
-//            DBCursor cursor =  collection.find(andQuery);
-//
-////			System.out.println(cursor.count());
-//            while(cursor.hasNext()) {
-//                DBObject doc = cursor.next();
-//                jsonarray.put((new JSONObject(doc.toString())));
-//            }
-
-
-            List<DnacClient> dnacDataList = dnacClientService.findByUsernameContainingIgnoreCaseAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(
-                    user_name, end_time, start_time);
-
-            for (DnacClient client: dnacDataList) {
-                jsonarray.put(client);
-
-            }
-
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-        return jsonarray;
-
-    }
-    private ThousandEyeAlertBean processDnacJSONData(ThousandEyeAlertBean bean, JSONArray _jsonDnac) {
+    private ThousandEyeAlertBean processDnacJSONData(ThousandEyeAlertBean bean, List<DnacClient> _jsonDnac) {
         // TODO Auto-generated method stub
         List<EndpointPerformance> endpointPrfList = bean.getEndpointPerformance();
         try {
-            for (int i=0; i<_jsonDnac.length(); i++) {
+            for (DnacClient dnacClient : _jsonDnac) {
                 if(endpointPrfList.size()>0)
                     endpointPrfList.remove(0);
                 EndpointPerformance endPoint = new EndpointPerformance();
-                JSONObject _json = _jsonDnac.getJSONObject(i);
-                int averageHealthScore_min = Integer.parseInt(_json.getString("averageHealthScore_min"));
+//                JSONObject _json = _jsonDnac.getJSONObject(i);
+                JSONArray _json = new JSONArray(dnacClient.getJsonDocument());
+                int averageHealthScore_min = Integer.parseInt(_json.getString(Integer.parseInt("averageHealthScore_min")));
 //				if(averageHealthScore_min>5 && averageHealthScore_min < 8) {
 //					endPoint.setStartTime(_json.getString("start_Time"));
 //					endPoint.setDateEnd(_json.getString("end_Time"));
@@ -857,14 +808,14 @@ public class FetchIssues {
 //					endPoint.setMessage("Endpoint for the given time is not performing optimally");
 //				}else
                 if(averageHealthScore_min>7) {
-                    endPoint.setStartTime(_json.getString("start_Time"));
-                    endPoint.setDateEnd(_json.getString("end_Time"));
+                    endPoint.setStartTime(_json.getString(Integer.parseInt("start_Time")));
+                    endPoint.setDateEnd(_json.getString(Integer.parseInt("end_Time")));
                     endPoint.setIssueName("Fair Health: "+ averageHealthScore_min);
                     endPoint.setMessage("Endpoint for the given time is performing optimally");
                 }
                 else {
-                    endPoint.setStartTime(_json.getString("start_Time"));
-                    endPoint.setDateEnd(_json.getString("end_Time"));
+                    endPoint.setStartTime(_json.getString(Integer.parseInt("start_Time")));
+                    endPoint.setDateEnd(_json.getString(Integer.parseInt("end_Time")));
                     endPoint.setIssueName("Poor Health: "+ averageHealthScore_min);
                     endPoint.setMessage("Endpoint for the given time is not performing optimally");
 

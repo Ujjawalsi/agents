@@ -1,6 +1,5 @@
 package com.example.agents.dnacNetworkHealthData;
 
-import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -8,37 +7,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import com.example.agents.dnacNetworkHealthData.DnacNetworkHealthDataModel;
-import com.example.agents.dnacNetworkHealthData.DnacNetworkHealthDataRepository;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.vel.common.connector.service.IBUSAPIConnectorService;
+import com.example.agents.vel.common.connector.service.IBUSAPIConnectorService;
 import org.json.JSONObject;
-
-
-import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.beans.factory.annotation.Value;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import static com.example.agents.constant.Constant.*;
 
 @Component
 @EnableScheduling
-@PropertySource("classpath:com/vel/common/connector/service/dnacconstants.properties")
 public class DnacNetworkHealthDataService {
-	@Value("${dnac_auth_api}")
-    String dnac_auth_api;
-	@Value("${dnac_user_name}")
-    String dnac_user_name;
-	@Value("${dnac_password}")
-	String dnac_password;
-	@Value("${dnac_network_health_api}")
-	String dnac_network_health_api;
+//	@Value("${dnac_auth_api}")
+//    String dnac_auth_api;
+//	@Value("${dnac_user_name}")
+//    String dnac_user_name;
+//	@Value("${dnac_password}")
+//	String dnac_password;
+//	@Value("${dnac_network_health_api}")
+//	String dnac_network_health_api;
     @Autowired
     private IBUSAPIConnectorService service;
 
@@ -95,14 +86,14 @@ public class DnacNetworkHealthDataService {
 		String _responseString=null;
 		String _token = null;
 		try {
-			if(dnac_user_name == null || dnac_password == null) {
-				Properties prop = new Properties();
-				InputStream input=getClass().getClassLoader().getResourceAsStream("com/vel/resources/constant.properties");
-				prop.load(input);
-				dnac_user_name = prop.getProperty("dnac_user_name");
-				dnac_password = prop.getProperty("dnac_password");
-				dnac_auth_api = prop.getProperty("dnac_auth_api");
-			}
+//			if(Constant.dnac_user_name == null || dnac_password == null) {
+//				Properties prop = new Properties();
+//				InputStream input=getClass().getClassLoader().getResourceAsStream("com/example/agents/vel/resources/constant.properties");
+//				prop.load(input);
+//				dnac_user_name = prop.getProperty("dnac_user_name");
+//				dnac_password = prop.getProperty("dnac_password");
+//				dnac_auth_api = prop.getProperty("dnac_auth_api");
+//			}
 			HttpHeaders _httpHeaders = null;
 			_httpHeaders = prepareAuthHeaders(dnac_user_name,dnac_password);
 			_response =service.CallPostRequest(_httpHeaders, "", dnac_auth_api);
