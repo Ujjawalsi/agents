@@ -7,7 +7,4 @@ import java.util.List;
 public interface EndPointAgentService {
 
   List<EndpointAgentModel> findByAgentNameContainingIgnoreCase(String domainName);
-
-
-  List<EndpointAgentModel> findByAgentName(String agentName);
 }

@@ -16,14 +16,7 @@ public class EndPointAgentImpl implements EndPointAgentService {
     @Override
     public List<EndpointAgentModel> findByAgentNameContainingIgnoreCase(String domainName) {
 
-        return endPointAgentRepo.findByAgentNameContainingIgnoreCase(domainName);
+        return endPointAgentRepo.findByName(domainName);
 
-    }
-
-
-    @Override
-    public List<EndpointAgentModel> findByAgentName(String agentName) {
-        List<EndpointAgentModel> agentModels = endPointAgentRepo.finByAgent(agentName);
-        return null;
     }
 }

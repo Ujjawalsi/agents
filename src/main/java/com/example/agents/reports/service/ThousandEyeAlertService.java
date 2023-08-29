@@ -17,11 +17,11 @@ public interface ThousandEyeAlertService {
 
     void save(ThousandEyeAlert thousandEyeAlert);
 
-    List<ThousandEyeAlert> findAlertsByCriteria(String startTime, String endTime, String agentName, String application, String domainName);
+    List<ThousandEyeAlert> findAlertsByCriteria(String endTime,String application);
 
-    List<ThousandEyeAlert> findAlertsByCriteria1(String startTime, String endTime, String agentName, String application, String domainName);
+    List<ThousandEyeAlert> findAlertsByCriteria1(String startTime, String endTime,String application);
 
-    List<ThousandEyeAlert> findAlertsForApplicationIssues(String startTime, String endTime, String enterpriseAgentName, String application);
+    List<ThousandEyeAlert> findAlertsForApplicationIssues(String startTime, String endTime,String application);
 
     void process(HttpServletRequest l_request);
 
@@ -29,10 +29,12 @@ public interface ThousandEyeAlertService {
 
     public JSONArray categorizeAlerts(List<JSONObject> allalerts, HashSet<String> appname);
 
+
     public JSONObject getThousandEyeAlerts(String startTime, String endTime, String agentName,
                                            String application, String domainName);
     List<ThousandEyeAlert> getAlertsByTimeRange(String startTime, String endTime);
 
     List<ThousandEyeAlert> findByTimeGap(String ahead, String startdate);
 
+    String droolsRulesEngine(List<String> issuesList);
 }

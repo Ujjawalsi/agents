@@ -15,33 +15,11 @@ public interface ThousandEyeAlertRepo extends JpaRepository<ThousandEyeAlert, Lo
     @Query(value = "SELECT * FROM ms_thousandeye_alert WHERE  new_event_id ='newEventId' " , nativeQuery = true)
     ThousandEyeAlert findByNewEventId(String newEventId);
 
-    @Query(value = "SELECT * FROM ms_thousandeye_alert " +
-            "WHERE (data->>'start_time')::timestamp >= :startTime::timestamp " +
-            "AND (data->>'end_time')::timestamp <= :endTime::timestamp " +
-            "AND (data->>'agent_name') ILIKE %:agentName% " +
-            "AND (data->>'application') ILIKE %:application% " +
-            "AND (data->>'domain_name') ILIKE %:domainName%",
-            nativeQuery = true)
-    List<ThousandEyeAlert> findAlertsByCriteria(String startTime, String endTime, String agentName, String application, String domainName);
+    @Query(value = "SELECT * FROM ms_thousandeye_alert WHERE alert IS NOT NULL AND " +
+            "SUBSTRING(alert, '\"dateStart\":\"(.*?)\"') <= :endTime AND " +
+            "SUBSTRING(alert, '\"testName\":\"(.*?)\"') = :application", nativeQuery = true)
+    List<ThousandEyeAlert> findAlertsByCriteria(@Param("endTime") String endTime,@Param("application") String application);
 
-
-    @Query(value = "SELECT * FROM ms_thousandeye_alert " +
-            "WHERE (data->>'start_time')::timestamp >= :startTime::timestamp " +
-            "AND (data->>'end_time')::timestamp <= :endTime::timestamp " +
-            "AND (data->>'agent_name') ILIKE %:agentName% " +
-            "AND (data->>'application') ILIKE %:application% " +
-            "AND (data->>'domain_name') ILIKE %:domainName%",
-            nativeQuery = true)
-    List<ThousandEyeAlert> findAlertsByCriteria1(String startTime, String endTime, String agentName, String application, String domainName);
-
-
-    @Query(value = "SELECT * FROM ms_thousandeye_alert " +
-            "WHERE (data->>'start_time')::timestamp >= :startTime::timestamp " +
-            "AND (data->>'end_time')::timestamp <= :endTime::timestamp " +
-            "AND (data->>'agent_name') ILIKE %:enterpriseAgentName% " +
-            "AND (data->>'application') ILIKE %:application% ",
-            nativeQuery = true)
-    List<ThousandEyeAlert> findAlertsForApplicationIssues(String startTime, String endTime, String enterpriseAgentName, String application);
 
     @Query(value = "SELECT * FROM ms_thousandeye_alert WHERE alert IS NOT NULL AND " +
             "SUBSTRING" +

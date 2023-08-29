@@ -54,15 +54,6 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
 
     @Autowired
     private KieContainer kieContainer;
-//
-//    private final KieContainer kieContainer;
-//
-//    @Autowired
-//    public ThousandEyeAlertImpl(KieContainer kieContainer) {
-//        this.kieContainer = kieContainer;
-//    }
-
-
     @Autowired
     private InventoryDataRepository inventoryDataRepository;
 
@@ -101,19 +92,19 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
     }
 
     @Override
-    public List<ThousandEyeAlert> findAlertsByCriteria(String startTime, String endTime, String agentName, String application, String domainName) {
-     return thousandEyeAlertRepo.findAlertsByCriteria(startTime, endTime, agentName, application, domainName);
+    public List<ThousandEyeAlert> findAlertsByCriteria(String endTime, String application) {
+        return thousandEyeAlertRepo.findAlertsByCriteria(endTime, application);
 
     }
 
     @Override
-    public List<ThousandEyeAlert> findAlertsByCriteria1(String startTime, String endTime, String agentName, String application, String domainName) {
-       return thousandEyeAlertRepo.findAlertsByCriteria1(startTime, endTime, agentName, application, domainName);
+    public List<ThousandEyeAlert> findAlertsByCriteria1(String startTime, String endTime,String application) {
+       return thousandEyeAlertRepo.findByTimeGapAndTestName(startTime, endTime,application);
     }
 
     @Override
-    public List<ThousandEyeAlert> findAlertsForApplicationIssues(String startTime, String endTime, String enterpriseAgentName, String application) {
-        return thousandEyeAlertRepo.findAlertsForApplicationIssues(startTime, endTime, enterpriseAgentName, application);
+    public List<ThousandEyeAlert> findAlertsForApplicationIssues(String startTime, String endTime,String application) {
+        return thousandEyeAlertRepo.findByTimeGapAndTestName(startTime, endTime,application);
     }
 
     @Override
@@ -943,20 +934,6 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
         }
         return issueList;
     }
-
-
-//    public String droolsRulesEngine(List<String> issuesList) {
-//        System.out.println("Alerts:: " + issuesList);
-//        KieSession kieSession = kieContainer.newKieSession("resources.rules");
-//       BullseyeDroolsModel bullseyeDroolsModel = new BullseyeDroolsModel(issuesList);
-//        kieSession.insert(bullseyeDroolsModel);
-//        kieSession.fireAllRules();
-//        kieSession.dispose();
-////         return new JSONObject().put("The RCA for this application is ",
-////         bullseyeDroolsModel.getRca()).toString();
-//        return bullseyeDroolsModel.getRca();
-//    }
-
 
     public String droolsRulesEngine(List<String>issuesList) {
         System.out.println("Alerts:: "+ issuesList);

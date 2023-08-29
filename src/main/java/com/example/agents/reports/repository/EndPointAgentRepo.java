@@ -13,9 +13,7 @@ import java.util.List;
 public interface EndPointAgentRepo extends JpaRepository<EndpointAgentModel, Long> {
 
 
-    @Query(value = "SELECT * FROM ms_endpoint_agents WHERE agentData->>userName ILIKE %domainName% ", nativeQuery = true)
-    List<EndpointAgentModel> findByAgentNameContainingIgnoreCase(String domainName);
+    @Query(value = "SELECT * FROM ms_endpoint_agents WHERE UPPER(CAST(agent_data AS JSON)->>'agentName') = UPPER(:name)", nativeQuery = true)
+    List<EndpointAgentModel> findByName(@Param("name") String name);
 
-    @Query(value = "SELECT * FROM ms_endpoint_agents WHERE CAST(agent_data AS JSON)->>'agentName' = :agentName ", nativeQuery = true)
-    List<EndpointAgentModel> finByAgent(@Param("agentName") String agentName);
 }
