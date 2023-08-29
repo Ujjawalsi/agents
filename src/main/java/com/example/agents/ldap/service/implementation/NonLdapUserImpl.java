@@ -14,6 +14,13 @@ public class NonLdapUserImpl implements NonLdapUserService {
     @Override
     public NonLdapUser findByUserNameAndPassword(String userName, String password) {
 
-        return nonLdapUserRepo.findByUserNameAndPassword(userName, password);
+     NonLdapUser user =  nonLdapUserRepo.findByUserNameAndPassword(userName, password);
+        System.out.println(user);
+        return user;
+    }
+
+    @Override
+    public NonLdapUser addUser(NonLdapUser nonLdapUser) {
+        return nonLdapUserRepo.save(nonLdapUser);
     }
 }

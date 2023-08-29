@@ -3,6 +3,8 @@ package com.example.agents.ldap.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "non_ldap_users")
@@ -12,8 +14,9 @@ public class NonLdapUser {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "_id")
     private Long id ;
-    @Column(name = "user_name")
+    @Column(name = "user_name", unique = true)
     private String userName;
+    @Column(unique = true)
     private String password;
-    private String role;
+    private List<String> role;
 }

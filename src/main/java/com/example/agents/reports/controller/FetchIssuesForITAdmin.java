@@ -1,12 +1,8 @@
 package com.example.agents.reports.controller;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -19,6 +15,7 @@ import com.example.agents.dnacNetworkHealthData.DnacNetworkHealthDataModel;
 import com.example.agents.dnacNetworkHealthData.DnacNetworkHealthDataService;
 import com.example.agents.endpointAgent.EndPointAgentsService;
 import com.example.agents.endpointAgent.EndpointAgentModel;
+import com.example.agents.constant.Constant;
 import com.example.agents.reports.entities.ThousandEyeAlert;
 import com.example.agents.reports.repository.ThousandEyeAlertRepo;
 import com.example.agents.reports.service.DnacClientService;
@@ -29,15 +26,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.kie.api.runtime.KieContainer;
-import org.kie.api.runtime.KieSession;
-import org.postgresql.gss.GSSOutputStream;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -52,18 +45,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.agents.customDate.DateTimeUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 
-import com.example.agents.thousandeye.itadmin.bean.CloudWatch;
 import com.example.agents.thousandeye.itadmin.bean.DnacEndpoint;
 import com.example.agents.thousandeye.itadmin.bean.ITAdminBean;
-import com.example.agents.thousandeye.itadmin.bean.ThousandEndpoint;
-import com.example.agents.thousandeye.itadmin.bean.ThousandEnterprise;
-import com.example.agents.thousandeye.itadmin.bean.UserInfo;
-import com.example.agents.thousandeye.itadmin.bean.Vm;
-import com.vel.common.connector.service.impl.BUSAPIConnectorImpl;
-import com.example.agents.drools.config.model.BullseyeDroolsModel;
-import com.example.agents.ldap.controller.AuthenticateUserAPI;
+import com.example.agents.vel.common.connector.service.impl.BUSAPIConnectorImpl;
 import com.example.agents.ldap.GetUserDetailFromLDAPByEmail;
 
 import ch.qos.logback.classic.Level;
@@ -71,13 +56,13 @@ import ch.qos.logback.classic.Logger;
 
 @Component
 @Controller
-@PropertySource("classpath:com/vel/common/connector/service/constants.properties")
+//@PropertySource("classpath:com/example/agents/vel/common/connector/service/constants.properties")
 public class FetchIssuesForITAdmin {
 
-    @Value("${dnac_health_api}")
-    String dnac_health_api;
-    @Value("${awsFlag}")
-    boolean awsFlag;
+//    @Value("${dnac_health_api}")
+//    String dnac_health_api;
+//    @Value("${awsFlag}")
+//    boolean awsFlag;
 
 //	Properties prop = new Properties();
 //	InputStream input=getClass().getClassLoader().getResourceAsStream("com/vel/te/scheduler/constants.properties");
@@ -123,7 +108,8 @@ public class FetchIssuesForITAdmin {
         root.setLevel(Level.INFO);
     }
 
-    @RequestMapping(value = "/fetchIssuesAdmin", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    //Mostly Done --- please check before or after ....during final run
+    @RequestMapping(value = "BullsEye/fetchIssuesAdmin", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String fetchIssuesFromTEITadmin(@RequestParam(value = "application", required = false) String application,
@@ -132,16 +118,17 @@ public class FetchIssuesForITAdmin {
                                            @RequestParam(value = "end_time", required = true) String end_time,
                                            @RequestParam(value = "email", required = true) String email) {
         String checkIssuesWithUser = "";
-        Properties prop = new Properties();
-        InputStream input=AuthenticateUserAPI.class.getClassLoader().getResourceAsStream("com/vel/ldap/ldap.properties");
-        try {
-            prop.load(input);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        String flag = prop.getProperty("isLdap");
-        if (flag.equals("true")) {
+//        Properties prop = new Properties();
+//        InputStream input=AuthenticateUserAPI.class.getClassLoader().getResourceAsStream("com/example/agents/ldap/ldap.properties");
+//        try {
+//            prop.load(input);
+//        } catch (IOException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//        String flag = prop.getProperty("isLdap");
+
+        if (Constant.flag.equals("true")) {
             GetUserDetailFromLDAPByEmail l = new GetUserDetailFromLDAPByEmail();
             checkIssuesWithUser = l.getEmailDetailFromLdap(email);
         }else {
@@ -151,7 +138,10 @@ public class FetchIssuesForITAdmin {
             return new JSONArray().toString();
         }
         System.out.println("checkIssuesWithUser: " + checkIssuesWithUser);
-        String domainName = new FetchIssues().getDomainName(checkIssuesWithUser);
+
+//        String domainName = new FetchIssues().getDomainName(checkIssuesWithUser);
+      String domainName = endPointAgentsService.getDomainName(checkIssuesWithUser);
+
         System.out.println("domainName: " + domainName);
         if (domainName == null) {
             return new JSONArray().toString();
@@ -354,7 +344,7 @@ public class FetchIssuesForITAdmin {
 
     // fetchAgentsSummaryCount
     //Done -----> Done
-    @RequestMapping(value = "/fetchAgentsSummaryCount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/BullsEye/fetchAgentsSummaryCount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public ResponseEntity<String> fetchAgentsSummaryCount(@RequestParam(value = "start_time", required = false) String start_time,
@@ -401,7 +391,7 @@ public class FetchIssuesForITAdmin {
 
 //Complete Done
     // fetchAgentsSummary
-    @RequestMapping(value = "/fetchAgentsSummary", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "BullsEye/fetchAgentsSummary", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public ResponseEntity<String> fetchAgentsSummary(@RequestParam(value = "type", required = true) String type // type_values:
@@ -411,7 +401,9 @@ public class FetchIssuesForITAdmin {
 //	@RequestParam(value = "start_time", required = true) String start_time)
     ) {
 
-        JSONArray jsonarray = new JSONArray();
+        JSONArray jsonarrayEnabled = new JSONArray();
+        JSONArray jsonarrayDisabled = new JSONArray();
+        JSONArray jsonOverAll = new JSONArray();
         int disabled_agent = 0;
         int enabled_agent = 0;
         int free = 0;
@@ -423,10 +415,12 @@ public class FetchIssuesForITAdmin {
 
             if ("disabled".equalsIgnoreCase(status)) {
                 disabled_agent++;
-                jsonarray.put(new JSONObject(user)); // Add the user to the JSON array
+                jsonarrayDisabled.put(new JSONObject(user.getAgentData())); // Add the user to the JSON array
+                jsonOverAll.put(new JSONObject(user.getAgentData()));
             } else if ("enabled".equalsIgnoreCase(status)) {
                 enabled_agent++;
-                jsonarray.put(new JSONObject(user)); // Add the user to the JSON array
+                jsonarrayEnabled.put(new JSONObject(user.getAgentData())); // Add the user to the JSON array
+                jsonOverAll.put(new JSONObject(user.getAgentData()));
             } else {
                 free++;
             }
@@ -434,11 +428,11 @@ public class FetchIssuesForITAdmin {
         JSONObject jobj2 = new JSONObject();
 
         if (type.equalsIgnoreCase("enabled")) {
-            jobj2.put(type, jsonarray);
+            jobj2.put(type, jsonarrayEnabled);
         } else if (type.equalsIgnoreCase("disabled")) {
-            jobj2.put(type, jsonarray);
+            jobj2.put(type, jsonarrayDisabled);
         } else if (type.equalsIgnoreCase("overall")) {
-            jobj2.put(type, jsonarray);
+            jobj2.put(type, jsonOverAll);
         }
 
         System.out.println("json_array_disabled: " + disabled_agent);
@@ -451,7 +445,7 @@ public class FetchIssuesForITAdmin {
 
 
 //Done --> Complete
-    @GetMapping("/fetchUsageSummaryCount")
+    @GetMapping("BullsEye/fetchUsageSummaryCount")
     public ResponseEntity<String> fetchUsageSummaryCount(
             @RequestParam(value = "start_time", required = true) String start_time,
             @RequestParam(value = "end_time", required = true) String end_time) {
@@ -518,7 +512,7 @@ public class FetchIssuesForITAdmin {
 
     // fetchUsageSummary
     //Done ----> Completed
-    @RequestMapping(value = "/fetchUsageSummary", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "BullsEye/fetchUsageSummary", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String fetchUsageSummary(@RequestParam(value = "type", required = false) String type,
@@ -565,7 +559,7 @@ public class FetchIssuesForITAdmin {
 
     // fetchAgentsMonitorsCount
     //Done -----complete
-    @GetMapping("/fetchAgentsMonitorsCount")
+    @GetMapping("/BullsEye/fetchAgentsMonitorsCount")
     public ResponseEntity<String> fetchAgentsMonitorsCount(
             @RequestParam(value = "start_time", required = true) String start_time,
             @RequestParam(value = "end_time", required = true) String end_time) {
@@ -625,7 +619,7 @@ public class FetchIssuesForITAdmin {
 
 
     //Done ---complete
-    @GetMapping("/fetchAgentsMonitors")
+    @GetMapping("BullsEye/fetchAgentsMonitors")
     public ResponseEntity<String> fetchAgentsMonitors(
             @RequestParam(value = "type", required = true) String type,
             @RequestParam(value = "start_time", required = true) String start_time,
@@ -638,42 +632,77 @@ public class FetchIssuesForITAdmin {
         LocalDateTime endTime = LocalDateTime.parse(formattedTimestampStr1, formatter);
 
         List<AgentsAndMonitorsModel> agentsAndMonitorsModelList = agentsAndMonitorsService.findByTimeRange(startime,endTime);
+        System.out.println(agentsAndMonitorsModelList.size());
 
 
         JSONObject jobjRes = new JSONObject();
         JSONArray jArrayRes = new JSONArray();
-        JSONArray json_array = new JSONArray();
+//        JSONArray json_online= new JSONArray();
+//        JSONArray json_offline= new JSONArray();
+//        JSONArray json_disabled= new JSONArray();
 
-        for (AgentsAndMonitorsModel agentMonitor : agentsAndMonitorsModelList) {
+        JSONArray jsonArray = new JSONArray(agentsAndMonitorsModelList);
 
-            List<String> agentStates = new ArrayList<>();
-            JSONObject jsonObject1 = new JSONObject(agentMonitor.getJsonDocument());
-            JSONArray agents = jsonObject1.getJSONArray("agents");
-            for (int i = 0; i < agents.length(); i++) {
-              JSONObject   agent = agents.getJSONObject(i);
-                String agentState = agent.optString("agentState", "NoAgent");
-                if (agentState.equalsIgnoreCase("online")){
-                    json_array.put(agent);
-                } else if (agentState.equalsIgnoreCase("offline")) {
-                    json_array.put(agent);
-                } else if (agentState.equalsIgnoreCase("disabled")) {
-                    json_array.put(agent);
+       for (AgentsAndMonitorsModel agentMonitor : agentsAndMonitorsModelList) {
 
-                }
-                System.out.println("Agent State: " + agentState);
-                agentStates.add(agentState);
-            }
+//            List<String> agentStates = new ArrayList<>();
+//            JSONObject jsonObject1 = new JSONObject(agentMonitor.getJsonDocument());
+//            JSONArray agents = jsonObject1.getJSONArray("agents");
+////            for (int i = 0; i < agents.length(); i++) {
+////              JSONObject   agent = agents.getJSONObject(i);
+////                String agentState = agent.optString("agentState", "NoAgent");
+////                if (agentState.equalsIgnoreCase("online")){
+////                    json_online.put(agent);
+////                } else if (agentState.equalsIgnoreCase("offline")) {
+////                    json_offline.put(agent);
+////                } else if (agentState.equalsIgnoreCase("disabled")) {
+////                    json_disabled.put(agent);
+////
+////                }
+////                System.out.println("Agent State: " + agentState);
+////                agentStates.add(agentState);
+//
+//
+//
+//            }
 
-            for (String state : agentStates) {
-                if ((state.equalsIgnoreCase("online")) && (type.equalsIgnoreCase("online"))) {
-                    jArrayRes.put(json_array);
-                } else if (state.equalsIgnoreCase("offline") && (type.equalsIgnoreCase("offline"))) {
-                    jArrayRes.put(json_array);
-                } else if (state.equalsIgnoreCase("disabled") && (type.equalsIgnoreCase("disabled"))) {
-                    jArrayRes.put(json_array);
+//            for (String state : agentStates) {
+//                if ((state.equalsIgnoreCase("online")) && (type.equalsIgnoreCase("online"))) {
+//                    jArrayRes.put(json_online);
+//                } else if (state.equalsIgnoreCase("offline") && (type.equalsIgnoreCase("offline"))) {
+//                    jArrayRes.put(json_offline);
+//                } else if (state.equalsIgnoreCase("disabled") && (type.equalsIgnoreCase("disabled"))) {
+//                    jArrayRes.put(json_disabled);
+//                }
+//            }
+
+
+           JSONObject jsonObject = new JSONObject(agentMonitor.getJsonDocument());
+           System.out.println(jsonObject);
+            JSONArray agents = jsonObject.getJSONArray("agents");
+            for (int j = 0; j < agents.length(); j++) {
+                JSONObject jsonObject1 = agents.getJSONObject(j);
+                if (jsonObject1.has("agentState")) {
+                    String agentState = jsonObject1.getString("agentState");
+                    if ((agentState.equalsIgnoreCase("online")) && (type.equalsIgnoreCase("online"))) {
+                        jArrayRes.put(jsonObject1);
+                    } else if (agentState.equalsIgnoreCase("offline") && (type.equalsIgnoreCase("offline"))) {
+                        jArrayRes.put(jsonObject1);
+                    } else if (agentState.equalsIgnoreCase("disabled") && (type.equalsIgnoreCase("disabled"))) {
+                        jArrayRes.put(jsonObject1);
+                    }
                 }
             }
         }
+//            if (type.equalsIgnoreCase("online")) {
+//                jArrayRes.put(json_online);
+//            } else if (type.equalsIgnoreCase("offline")) {
+//                jArrayRes.put(json_offline);
+//            } else if (type.equalsIgnoreCase("disabled")) {
+//                jArrayRes.put(json_disabled);
+//
+//            }
+//        }
 
         jobjRes.put(type, jArrayRes);
 
@@ -685,7 +714,7 @@ public class FetchIssuesForITAdmin {
 
 //DOne ----> complete
     // fetchDnacClientHealthCount
-    @RequestMapping(value = "/fetchDnacClientHealthCount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "BullsEye/fetchDnacClientHealthCount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String fetchDnacClientHealthCount(@RequestParam(value = "application", required = false) String application,
@@ -793,7 +822,7 @@ public class FetchIssuesForITAdmin {
 
     //Done---> Complete
     // fetchDnacClientHealth
-    @RequestMapping(value = "/fetchDnacClientHealth", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "BullsEye/fetchDnacClientHealth", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String fetchDnacClientHealth(@RequestParam(value = "health", required = true) String health,
@@ -867,7 +896,7 @@ public class FetchIssuesForITAdmin {
 
     // fetchDnacClientHealth 96 work in progress
     //Done ---Complete
-    @RequestMapping(value = "/fetchDnacClientHealthDay", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "BullsEye/fetchDnacClientHealthDay", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String fetchDnacClientHealthDay(@RequestParam(value = "type", required = true) String type,
@@ -969,7 +998,7 @@ public class FetchIssuesForITAdmin {
 
 
 //Done--completed
-    @RequestMapping(value = "/fetchDnacNetworkHealthDay", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "BullsEye/fetchDnacNetworkHealthDay", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String fetchDnacNetworkHealthDay(
@@ -1043,6 +1072,9 @@ public class FetchIssuesForITAdmin {
             jRes.put("jarrdevice_good_count", good_count);
             jRes.put("jarrdevice_total_count", total_count);
 
+
+            jarr.put(jRes);
+
         }
         System.out.println("jarr  ===" + jarr.toString());
 
@@ -1053,7 +1085,7 @@ public class FetchIssuesForITAdmin {
 
 
 //Done --complete
-    @RequestMapping(value = "/getalertsall", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "BullsEye/getalertsall", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String getAlertsall(@RequestParam(value = "sevtype", required = false) String sevtype,
@@ -1127,7 +1159,7 @@ try {
 
     //Done--complete
 
-    @RequestMapping(value = "/gettopalerts", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "BullsEye/gettopalerts", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String topalerts(@RequestParam(value = "alertName", required = false) String name,
@@ -1215,31 +1247,16 @@ try {
     }
 
 
-    @RequestMapping(value = "/getApplicationTrend", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+//Done ----but check when we have data in thousand eye alert
+    @RequestMapping(value = "BullsEye/getApplicationTrend", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String getApplicationTrend(@RequestParam(value = "appName", required = true) String name) {
         JSONArray arr = new JSONArray();
         try {
 
-            // boolean flag=false;
-//
-//            BasicDBObject query = new BasicDBObject();
-//            List<BasicDBObject> andConditions = new ArrayList<>();
-//            andConditions.add(new BasicDBObject("app_name", name));
-//            query.put("$and", andConditions);
-//            DBCursor csr = collectionname.find(query);
-//            int exists = csr.count();
-
             List<Application>applications = applicationService.findByName(name);
             int exists = applications.size();
-
-
-
-//
-//	   // Query 2: "alert.dateEndZoned" field does not exist
-//	   andConditions.add(new BasicDBObject("alert.dateEndZoned", new BasicDBObject("$exists", false)));
-//	   query.put("$and", andConditions);
 
             long currentTimestamp = System.currentTimeMillis();
             Calendar calendar = Calendar.getInstance();
@@ -1251,14 +1268,9 @@ try {
             calendar.set(currentYear, currentMonth, currentDay);
             Date currentDate = calendar.getTime();
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            // Create a Date object using the current timestamp
             Date currentDateString = new Date(currentTimestamp);
-
-            // Format the current timestamped Date object into a string
             String enddate = dateFormat.format(currentDateString);
-            // Format the current day's Date object into a string
             String startdate = dateFormat.format(currentDate);
-
             Date aheaddate = currentDate;
             Date prevdate = currentDate;
             int result = aheaddate.compareTo(currentDateString);
@@ -1268,33 +1280,12 @@ try {
             boolean breakthrough = false;
 
             while (result <= 0 && exists > 0) {
+
                 calendar.add(Calendar.MINUTE, +15);
                 aheaddate = calendar.getTime();
                 JSONObject jobj = new JSONObject();
                 String ahead = dateFormat.format(aheaddate);
                 JSONObject intquery = new JSONObject();
-//                List<JSONObject> al = new ArrayList<>();
-//                List<JSONObject> bl = new ArrayList<>();
-//
-//                al.add(new BasicDBObject("alert.testName", name));
-//                al.add(new BasicDBObject("alert.dateStartZoned", new BasicDBObject("$lte", ahead)));
-//                al.add(new BasicDBObject("alert.dateStartZoned", new BasicDBObject("$gte", startdate)));
-//                bl.add(new BasicDBObject("alert.dateEndZoned", new BasicDBObject("$exists", false)));
-//                bl.add(new BasicDBObject("alert.dateEndZoned", new BasicDBObject("$gt", ahead)));
-//
-//                // intquery.put("$and", andConditions);
-//
-//                intquery.put("$or", bl);
-//                intquery.put("$and", al);
-//                DBCursor cursor = collection.find(intquery);
-//                long length = cursor.count();
-//	    	while(cursor.hasNext())
-//	    	{
-//	    	DBObject dbobj=cursor.next();
-//	    	    	BasicDBObject value=(BasicDBObject) dbobj.get("alert");
-//	    	        alerts.add(value);
-//	    	}
-//
      	List<ThousandEyeAlert> filterListByNameaAndTime = new ArrayList<>();
         List<ThousandEyeAlert> thousandEyeAlerts= thousandEyeAlertService.findByTimeGap(ahead, startdate);
                 for (ThousandEyeAlert alert: thousandEyeAlerts) {

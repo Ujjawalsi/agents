@@ -1,14 +1,11 @@
 package com.example.agents.teUsage;
 
-import com.example.agents.inventoryData.UpdateInventoryService;
-import com.example.agents.teUsage.TeUsageRepository;
-
 // ...
 
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vel.common.connector.service.IBUSAPIConnectorService;
+import com.example.agents.vel.common.connector.service.IBUSAPIConnectorService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,16 +20,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import static com.example.agents.constant.Constant.*;
+
 @Component
 @EnableScheduling
-@PropertySource("classpath:com/vel/common/connector/service/constants.properties")
+//@PropertySource("classpath:com/example/agents/vel/common/connector/service/constants.properties")
 public class TeUsageService {
 
-    @Value("${te_usage_api_key}")
-    private String te_usage_api_key;
+//    @Value("${te_usage_api_key}")
+//    private String te_usage_api_key;
     
-    @Value("${te_usage_api}")
-    private String te_usage_api;
+//    @Value("${te_usage_api}")
+//    private String te_usage_api;
 
     @Autowired
     IBUSAPIConnectorService service;

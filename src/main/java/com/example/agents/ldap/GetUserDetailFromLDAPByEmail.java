@@ -1,5 +1,6 @@
 package com.example.agents.ldap;
 
+import com.example.agents.constant.Constant;
 import com.example.agents.ldap.controller.AuthenticateUserAPI;
 import org.springframework.stereotype.Component;
 
@@ -7,6 +8,8 @@ import javax.naming.Context;
 import javax.naming.ldap.LdapContext;
 import java.io.InputStream;
 import java.util.Properties;
+
+import static com.example.agents.constant.Constant.*;
 
 @Component
 //@PropertySource("classpath:com/vel/ldap/ldap.properties")
@@ -21,15 +24,17 @@ public class GetUserDetailFromLDAPByEmail {
     public String getEmailDetailFromLdap(String l_email) {
         String userName="";
         try {
-            Properties prop = new Properties();
-            InputStream input= AuthenticateUserAPI.class.getClassLoader().getResourceAsStream("com/example/agents/ldap/ldap.properties");
-            prop.load(input);
-            String domain = prop.getProperty("DOMAIN");
-            String ldapUser = prop.getProperty("ldapUser");
-            String ldapPassword = prop.getProperty("ldapPassword");
-            LdapContext context = ActiveDirectory.getConnection(ldapUser, ldapPassword, domain);
+//            Properties prop = new Properties();
+//            InputStream input= AuthenticateUserAPI.class.getClassLoader().getResourceAsStream("com/example/agents/ldap/ldap.properties");
+//            prop.load(input);
+//            String domain = prop.getProperty("DOMAIN");
+//            String ldapUser = prop.getProperty("ldapUser");
+//            String ldapPassword = prop.getProperty("ldapPassword");
+//            String domain = DOMAIN;
+//            String ldapUser =Constant.ldapUser;
+            LdapContext context = ActiveDirectory.getConnection(ldapUser, ldapPassword, DOMAIN);
             context.addToEnvironment(Context.REFERRAL, "follow");
-            userName =ActiveDirectory.getUserID(domain,l_email, context);
+            userName =ActiveDirectory.getUserID(DOMAIN,l_email, context);
             System.out.println("userName= "+userName);
 
 

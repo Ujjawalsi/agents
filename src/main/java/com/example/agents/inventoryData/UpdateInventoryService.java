@@ -1,11 +1,8 @@
 package com.example.agents.inventoryData;
 
-import jakarta.persistence.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,10 +11,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.example.agents.inventoryData.InventoryDataRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vel.common.connector.service.IBUSAPIConnectorService;
-import com.example.agents.inventoryData.InventoryDataModel;
+import com.example.agents.vel.common.connector.service.IBUSAPIConnectorService;
 
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
@@ -25,9 +20,10 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
+import static com.example.agents.constant.Constant.*;
+
 @Component
 @EnableScheduling
-@PropertySource("classpath:com/vel/common/connector/service/constants.properties")
 public class UpdateInventoryService {
 
     @Autowired
@@ -38,20 +34,20 @@ public class UpdateInventoryService {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    @Value("${dnac_auth_api}")
-    String dnac_auth_api;
+//    @Value("${dnac_auth_api}")
+//    String dnac_auth_api;
 
-    @Value("${dnac_user_name}")
-    String dnac_user_name;
+//    @Value("${dnac_user_name}")
+//    String dnac_user_name;
 
-    @Value("${dnac_password}")
-    String dnac_password;
+//    @Value("${dnac_password}")
+//    String dnac_password;
 
-    @Value("${dnac_inventory_api}")
-    String dnac_inventory_api;
+//    @Value("${dnac_inventory_api}")
+//    String dnac_inventory_api;
 
   //  @Scheduled(cron = "0 10 11 * * *")
-//  @Scheduled(cron = "0 */1 * * * ?")
+  @Scheduled(cron = "0 */1 * * * ?")
     public void updateDeviceInventory() {
         System.out.println("Updating Device Inventory!!");
         try {

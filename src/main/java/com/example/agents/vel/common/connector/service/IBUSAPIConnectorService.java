@@ -1,4 +1,4 @@
-package com.vel.common.connector.service;
+package com.example.agents.vel.common.connector.service;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
