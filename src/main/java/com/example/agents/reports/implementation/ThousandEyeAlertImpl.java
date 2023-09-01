@@ -1,4 +1,5 @@
 package com.example.agents.reports.implementation;
+import com.example.agents.drools.config.configuration.*;
 
 import com.example.agents.customDate.DateTimeUtil;
 import com.example.agents.drools.config.model.BullseyeDroolsModel;
@@ -64,6 +65,9 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
 
     @Autowired
     private DnacClientService dnacClientService;
+
+    @Autowired
+    private DroolsConfiguration droolsConfiguration;
 
 
 
@@ -303,6 +307,7 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
 
 
             List<String> issuesList = createIssuesList(rtnString);
+            System.out.println(issuesList);
             String rca = droolsRulesEngine(issuesList);
             System.out.println("issuesList: " + issuesList);
             System.out.println("Root Cause: " + rca);
@@ -935,14 +940,15 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
         return issueList;
     }
 
-    public String droolsRulesEngine(List<String>issuesList) {
-        System.out.println("Alerts:: "+ issuesList);
+    public String droolsRulesEngine(List<String> issuesList) {
+        System.out.println("Alerts:: " + issuesList);
         KieSession kieSession = kieContainer.newKieSession();
         BullseyeDroolsModel bullseyeDroolsModel = new BullseyeDroolsModel(issuesList);
         kieSession.insert(bullseyeDroolsModel);
         kieSession.fireAllRules();
         kieSession.dispose();
-        //		return new JSONObject().put("The RCA for this application is ", bullseyeDroolsModel.getRca()).toString();
+        // return new JSONObject().put("The RCA for this application is ",
+        // bullseyeDroolsModel.getRca()).toString();
         return bullseyeDroolsModel.getRca();
     }
 

@@ -1,0 +1,427 @@
+package com.example.agents.drools.config.model
+
+import com.example.agents.drools.config.model.BullseyeDroolsModel;
+
+
+rule "All"
+when
+    $bullseye: BullseyeDroolsModel(
+    alerts.contains("Any KPI breach") || alerts.size()==0
+    )
+then
+    $bullseye.setRca("Unable to Find RCA");
+end
+
+rule "End User - Campus -17"
+when
+    $bullseye: BullseyeDroolsModel(
+    alerts.contains("AWS_CPU_resources") || alerts.contains("None")
+    )
+then
+    $bullseye.setRca("Ignore");
+end
+
+rule "End User - Campus -18"
+when
+    $bullseye: BullseyeDroolsModel(
+    alerts.contains("AWS_Memory_resources") || alerts.contains("None")
+    )
+then
+    $bullseye.setRca("Ignore");
+end
+
+rule "End User - Remote -19"
+when
+    $bullseye: BullseyeDroolsModel(
+    alerts.contains("AWS_CPU_resources") || alerts.contains("None")
+    )
+then
+    $bullseye.setRca("Ignore");
+end
+
+rule "End User - Remote -20"
+when
+    $bullseye: BullseyeDroolsModel
+    (alerts.contains("AWS_Memory_resources") || alerts.contains("None")
+    )
+then
+    $bullseye.setRca("Ignore");
+end
+
+rule "End User– Remote -1"
+    when
+       $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_endpoint_memory_utilization"),
+            alerts.contains("TE_endpoint_cpu_utilization"),
+            alerts.contains("TE_endpoint_pageloadtime"),
+            alerts.contains("Any KPI breach")
+        )
+    then
+       $bullseye.setRca("Endpoint resources overutilized");
+end
+
+rule "End User– Remote -2"
+    when
+       $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_endpoint_memory_utilization"),
+            alerts.contains("TE_endpoint_pageloadtime"),
+            alerts.size() == 2
+        )
+    then
+       $bullseye.setRca("Endpoint_memory_utilization");
+end
+
+
+rule "End User– Remote -3"
+    when
+       $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_endpoint_cpu_utilization"),
+            alerts.contains("TE_endpoint_pageloadtime"),
+            alerts.size() == 2
+        )
+    then
+    $bullseye.setRca("Endpoint_cpu_utilization");
+end
+
+rule "End User– Remote -4"
+    when
+       $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_endpoint_cpu_utilization"),
+            alerts.size() == 1
+        )
+    then
+    $bullseye.setRca("Ignore");
+end
+
+rule "End User– Remote -5"
+    when
+        $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_endpoint_memory_utilization"),
+            alerts.size() == 1
+        )
+    then
+    $bullseye.setRca("Ignore");
+end
+
+rule "End User– Remote -6"
+    when
+        $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_endpoint_signal_quality"),
+            alerts.contains("TE_endpoint_throughput"),
+            alerts.contains("Any KPI breach")
+        )
+    then
+    $bullseye.setRca("Endpoint_Wi-Fi Signal Quality");
+end
+
+rule "End User– Remote -7"
+    when
+        $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_endpoint_signal_quality"),
+            alerts.contains("TE_endpoint_packet_loss"),
+            alerts.contains("Any KPI breach")
+        )
+    then
+    $bullseye.setRca("Endpoint_Wi-Fi Signal Quality");
+end
+
+rule "End User– Remote -8"
+    when
+        $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_endpoint_signal_quality"),
+            alerts.contains("TE_endpoint_Latency"),
+            alerts.contains("Any KPI breach")
+        )
+    then
+    $bullseye.setRca("Endpoint_Wi-Fi Signal Quality");
+end
+
+rule "End User– Remote -9"
+    when
+        $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_endpoint_signal_quality"),
+            alerts.size() == 1
+        )
+    then
+    $bullseye.setRca("Ignore");
+end
+
+rule "End User– Remote -10"
+    when
+        $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_endpoint_packet_loss"),
+            alerts.contains("Any KPI breach"),
+            alerts.size() == 2
+        )
+    then
+    $bullseye.setRca("End to End Packet loss");
+end
+
+rule "End User - Remote -17"
+    when
+          $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_endpoint_pageloadtime"),
+            alerts.contains("AWS_CPU_resources"),
+            alerts.contains("Any KPI breach")
+        )
+    then
+    $bullseye.setRca("Application Infrastructure");
+end
+
+rule "End User - Remote -18"
+    when
+       $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_endpoint_pageloadtime"),
+            alerts.contains("AWS_Memory_resources"),
+            alerts.contains("Any KPI breach")
+        )
+    then
+    $bullseye.setRca("Application Infrastructure");
+end
+
+rule "End User – Campus -1"
+    when
+        $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_Ent_agent_packet_loss"),
+            alerts.contains("Any KPI breach"),
+            alerts.size() == 2
+        )
+    then
+    $bullseye.setRca("End to End Packet loss");
+end
+
+rule "End User – Campus -2"
+    when
+         $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_Ent_agent_Latency"),
+            alerts.contains("Any KPI breach"),
+            alerts.size() == 2
+        )
+    then
+    $bullseye.setRca("End to End latency");
+end
+
+rule "End User – Campus -3"
+    when
+        $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_Ent_agent_packet_loss"),
+            alerts.contains("DNAC_AP_Health"),
+            alerts.contains("Any KPI breach")
+        )
+    then
+    $bullseye.setRca("Wi-Fi AP Health");
+end
+
+rule "End User – Campus -4"
+    when
+         $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_Ent_agent_Latency"),
+            alerts.contains("DNAC_AP_Health"),
+            alerts.contains("Any KPI breach")
+        )
+    then
+    $bullseye.setRca("Wi-Fi AP Health");
+end
+
+rule "End User – Campus -5"
+    when
+         $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_Ent_agent_packet_loss"),
+            alerts.contains("DNAC_Client_health"),
+            alerts.contains("Any KPI breach")
+        )
+    then
+    $bullseye.setRca("Wi-Fi Client Health");
+end
+
+rule "End User – Campus -6"
+    when
+        $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_Ent_agent_Latency"),
+            alerts.contains("DNAC_Client_health"),
+            alerts.contains("Any KPI breach"),
+            alerts.size() == 3
+        )
+    then
+    $bullseye.setRca("Wi-Fi Client Health");
+end
+
+rule "End User – Campus -13"
+    when
+       $bullseye: BullseyeDroolsModel(
+            alerts.contains("DNAC_AP_Health"),
+            alerts.contains("Any KPI breach"),
+            alerts.size() == 2
+        )
+    then
+    $bullseye.setRca("Wi-Fi AP Health");
+end
+
+rule "End User – Campus -14"
+    when
+       $bullseye: BullseyeDroolsModel(
+            alerts.contains("DNAC_Client_health"),
+            alerts.contains("Any KPI breach"),
+            alerts.size() == 2
+        )
+    then
+    $bullseye.setRca("Wi-Fi Client Health");
+end
+
+rule "End User – Campus -15"
+    when
+       $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_Ent_agent_pageloadtime"),
+            alerts.contains("AWS_CPU_resources"),
+            alerts.contains("Any KPI breach")
+        )
+    then
+    $bullseye.setRca("Application Infrastructure");
+end
+
+rule "End User – Campus -16"
+    when
+       $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_Ent_agent_pageloadtime"),
+            alerts.contains("AWS_Memory_resources"),
+            alerts.contains("Any KPI breach")
+        )
+    then
+    $bullseye.setRca("Application Infrastructure");
+end
+
+rule "End User – Campus -19"
+    when
+      $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_Ent_agent_ssl_error"),
+            alerts.contains("Any KPI breach"),
+            alerts.size() == 2
+        )
+    then
+    $bullseye.setRca("Application reachability issue");
+end
+
+rule "End User – Campus -20"
+    when
+       $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_Ent_agent_ssl_error"),
+            alerts.contains("None"),
+            alerts.size() == 2
+        )
+    then
+    $bullseye.setRca("Application reachability issue");
+end
+
+rule "End User– Remote -11"
+    when
+       $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_endpoint_Error_4xx"),
+            alerts.contains("Any KPI breach"),
+            alerts.size() == 4
+        )
+    then
+    $bullseye.setRca("Application reachability issue");
+end
+
+rule "End User– Remote -12"
+    when
+       $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_endpoint_Error_4xx"),
+            alerts.contains("None"),
+            alerts.size() == 1
+        )
+    then
+    $bullseye.setRca("Application reachability issue");
+end
+
+rule "End User– Remote -13"
+    when
+       $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_endpoint_Error_5xx"),
+            alerts.contains("Any KPI breach"),
+            alerts.size() == 4
+        )
+    then
+    $bullseye.setRca("Application reachability issue");
+end
+
+rule "End User– Remote -14"
+    when
+       $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_endpoint_Error_5xx"),
+            alerts.contains("None"),
+            alerts.size() == 1
+        )
+    then
+    $bullseye.setRca("Application reachability issue");
+end
+
+rule "End User – Campus -7"
+    when
+       $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_endpoint_Error_4xx"),
+            alerts.contains("Any KPI breach"),
+            alerts.size() == 4
+        )
+    then
+    $bullseye.setRca("Application reachability issue");
+end
+
+rule "End User – Campus -8"
+    when
+       $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_endpoint_Error_4xx"),
+            alerts.contains("None"),
+            alerts.size() == 1
+        )
+    then
+    $bullseye.setRca("Application reachability issue");
+end
+rule "End User – Campus -9"
+    when
+      $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_endpoint_Error_5xx"),
+            alerts.contains("Any KPI breach"),
+            alerts.size() == 4
+        )
+    then
+    $bullseye.setRca("Application reachability issue");
+end
+
+rule "End User – Campus -10"
+    when
+       $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_endpoint_Error_5xx"),
+            alerts.contains("None"),
+            alerts.size() == 1
+        )
+    then
+    $bullseye.setRca("Application reachability issue");
+end
+
+rule "End User - Remote -21"
+    when
+       $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_endpoint_SSL_Error"),
+            alerts.contains("Any KPI breach"),
+            alerts.size() == 9
+        )
+    then
+    $bullseye.setRca("Application reachability issue");
+end
+
+rule "End User - Remote -22"
+    when
+       $bullseye: BullseyeDroolsModel(
+            alerts.contains("TE_endpoint_SSL_Error"),
+            alerts.contains("None"),
+            alerts.size() == 1
+        )
+    then
+    $bullseye.setRca("Application reachability issue");
+end
+
+
+
+
+

@@ -74,7 +74,7 @@ public class FetchIssues {
         //				issue.getUTCTime(14,"LAPTOP-EU8R3HO0");
     }
     //http://10.18.1.53:8080/BullsEye/fetchIssues?l_time=15&host_name=LAPTOP-EU8R3HO0&application=&start_time=2022-09-19%2013:00:00&end_time=2022-09-19%2017:29:48&email=
-    @RequestMapping(value="/fetchIssues", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value="/BullsEye/fetchIssues", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String  fetchIssuesFromTE(@RequestParam(value="application", required=false) String application,
@@ -343,12 +343,7 @@ public class FetchIssues {
             List<ApplicationPerformance> appPrfList = new ArrayList<ApplicationPerformance>();
             List<NetworkPathToApplication> networkPathList = new ArrayList<NetworkPathToApplication>();
             List<GatewayConnectivity> gatewayConnectList = new ArrayList<GatewayConnectivity>();
-//            for (int i=0; i<_jsonResponse.(); i++) {
-//                JSONObject _jObj = _jsonResponse.getJSONObject(i);
-//                JSONObject _alertJson =_jObj.getJSONObject("alert");
-//                JSONArray _agentsArray = _alertJson.getJSONArray("agents");
             for (ThousandEyeAlert alert : _jsonResponse) {
-//                JSONObject _jObj = _jsonResponse.getJSONObject(i);
                 JSONObject _jObj =new JSONObject(alert.getAlert());
 
                 System.out.println(_jObj);
@@ -522,7 +517,7 @@ public class FetchIssues {
 
 
 
-    @RequestMapping(value="/fetchDnacIssues", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value="/BullsEye/fetchDnacIssues", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String  fetchIssuesFromDnac(@RequestParam(value="application", required=false) String application,
@@ -541,7 +536,7 @@ public class FetchIssues {
     }
 
 
-    @RequestMapping(value="/fetchUserInfo", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value="/BullsEye/fetchUserInfo", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String  fetchUserInfo(
@@ -566,8 +561,11 @@ public class FetchIssues {
             System.out.println("domainName : "+domainName);
 
             List<EndpointAgentModel> endPointAgentList = endPointAgentService.findByAgentNameContainingIgnoreCase(domainName);
+        System.out.println(endPointAgentList);
             for (EndpointAgentModel agent: endPointAgentList) {
-                jsonarray.put(agent);
+                JSONObject jsonObject = new JSONObject(agent.getAgentData());
+                 jsonarray.put(jsonObject);
+
 
             }
 

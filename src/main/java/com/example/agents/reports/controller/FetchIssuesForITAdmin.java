@@ -391,7 +391,7 @@ public class FetchIssuesForITAdmin {
 
 //Complete Done
     // fetchAgentsSummary
-    @RequestMapping(value = "BullsEye/fetchAgentsSummary", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/BullsEye/fetchAgentsSummary", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public ResponseEntity<String> fetchAgentsSummary(@RequestParam(value = "type", required = true) String type // type_values:
@@ -445,7 +445,7 @@ public class FetchIssuesForITAdmin {
 
 
 //Done --> Complete
-    @GetMapping("BullsEye/fetchUsageSummaryCount")
+    @GetMapping("/BullsEye/fetchUsageSummaryCount")
     public ResponseEntity<String> fetchUsageSummaryCount(
             @RequestParam(value = "start_time", required = true) String start_time,
             @RequestParam(value = "end_time", required = true) String end_time) {
@@ -512,7 +512,7 @@ public class FetchIssuesForITAdmin {
 
     // fetchUsageSummary
     //Done ----> Completed
-    @RequestMapping(value = "BullsEye/fetchUsageSummary", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/BullsEye/fetchUsageSummary", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String fetchUsageSummary(@RequestParam(value = "type", required = false) String type,
@@ -619,7 +619,7 @@ public class FetchIssuesForITAdmin {
 
 
     //Done ---complete
-    @GetMapping("BullsEye/fetchAgentsMonitors")
+    @GetMapping("/BullsEye/fetchAgentsMonitors")
     public ResponseEntity<String> fetchAgentsMonitors(
             @RequestParam(value = "type", required = true) String type,
             @RequestParam(value = "start_time", required = true) String start_time,
@@ -637,45 +637,10 @@ public class FetchIssuesForITAdmin {
 
         JSONObject jobjRes = new JSONObject();
         JSONArray jArrayRes = new JSONArray();
-//        JSONArray json_online= new JSONArray();
-//        JSONArray json_offline= new JSONArray();
-//        JSONArray json_disabled= new JSONArray();
 
         JSONArray jsonArray = new JSONArray(agentsAndMonitorsModelList);
 
        for (AgentsAndMonitorsModel agentMonitor : agentsAndMonitorsModelList) {
-
-//            List<String> agentStates = new ArrayList<>();
-//            JSONObject jsonObject1 = new JSONObject(agentMonitor.getJsonDocument());
-//            JSONArray agents = jsonObject1.getJSONArray("agents");
-////            for (int i = 0; i < agents.length(); i++) {
-////              JSONObject   agent = agents.getJSONObject(i);
-////                String agentState = agent.optString("agentState", "NoAgent");
-////                if (agentState.equalsIgnoreCase("online")){
-////                    json_online.put(agent);
-////                } else if (agentState.equalsIgnoreCase("offline")) {
-////                    json_offline.put(agent);
-////                } else if (agentState.equalsIgnoreCase("disabled")) {
-////                    json_disabled.put(agent);
-////
-////                }
-////                System.out.println("Agent State: " + agentState);
-////                agentStates.add(agentState);
-//
-//
-//
-//            }
-
-//            for (String state : agentStates) {
-//                if ((state.equalsIgnoreCase("online")) && (type.equalsIgnoreCase("online"))) {
-//                    jArrayRes.put(json_online);
-//                } else if (state.equalsIgnoreCase("offline") && (type.equalsIgnoreCase("offline"))) {
-//                    jArrayRes.put(json_offline);
-//                } else if (state.equalsIgnoreCase("disabled") && (type.equalsIgnoreCase("disabled"))) {
-//                    jArrayRes.put(json_disabled);
-//                }
-//            }
-
 
            JSONObject jsonObject = new JSONObject(agentMonitor.getJsonDocument());
            System.out.println(jsonObject);
@@ -694,15 +659,6 @@ public class FetchIssuesForITAdmin {
                 }
             }
         }
-//            if (type.equalsIgnoreCase("online")) {
-//                jArrayRes.put(json_online);
-//            } else if (type.equalsIgnoreCase("offline")) {
-//                jArrayRes.put(json_offline);
-//            } else if (type.equalsIgnoreCase("disabled")) {
-//                jArrayRes.put(json_disabled);
-//
-//            }
-//        }
 
         jobjRes.put(type, jArrayRes);
 
@@ -714,7 +670,7 @@ public class FetchIssuesForITAdmin {
 
 //DOne ----> complete
     // fetchDnacClientHealthCount
-    @RequestMapping(value = "BullsEye/fetchDnacClientHealthCount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/BullsEye/fetchDnacClientHealthCount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String fetchDnacClientHealthCount(@RequestParam(value = "application", required = false) String application,
@@ -822,7 +778,7 @@ public class FetchIssuesForITAdmin {
 
     //Done---> Complete
     // fetchDnacClientHealth
-    @RequestMapping(value = "BullsEye/fetchDnacClientHealth", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/BullsEye/fetchDnacClientHealth", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String fetchDnacClientHealth(@RequestParam(value = "health", required = true) String health,
@@ -896,7 +852,7 @@ public class FetchIssuesForITAdmin {
 
     // fetchDnacClientHealth 96 work in progress
     //Done ---Complete
-    @RequestMapping(value = "BullsEye/fetchDnacClientHealthDay", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/BullsEye/fetchDnacClientHealthDay", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String fetchDnacClientHealthDay(@RequestParam(value = "type", required = true) String type,
@@ -998,7 +954,7 @@ public class FetchIssuesForITAdmin {
 
 
 //Done--completed
-    @RequestMapping(value = "BullsEye/fetchDnacNetworkHealthDay", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/BullsEye/fetchDnacNetworkHealthDay", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String fetchDnacNetworkHealthDay(
@@ -1085,7 +1041,7 @@ public class FetchIssuesForITAdmin {
 
 
 //Done --complete
-    @RequestMapping(value = "BullsEye/getalertsall", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/BullsEye/getalertsall", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String getAlertsall(@RequestParam(value = "sevtype", required = false) String sevtype,
@@ -1159,7 +1115,7 @@ try {
 
     //Done--complete
 
-    @RequestMapping(value = "BullsEye/gettopalerts", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/BullsEye/gettopalerts", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String topalerts(@RequestParam(value = "alertName", required = false) String name,
@@ -1248,7 +1204,7 @@ try {
 
 
 //Done ----but check when we have data in thousand eye alert
-    @RequestMapping(value = "BullsEye/getApplicationTrend", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/BullsEye/getApplicationTrend", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String getApplicationTrend(@RequestParam(value = "appName", required = true) String name) {
@@ -1329,565 +1285,6 @@ try {
         return "";
     }
 
-
-//anushk
-
-//    private synchronized JSONObject getThousandEyeAlerts(String startTime, String endTime, String agentName,
-//                                                         String application, String domainName) {
-//        JSONObject rtnString = new JSONObject();
-//        System.out.println("Agent_name in getalerts: " + agentName);
-//        JSONArray _jsonDnac = new FetchIssues().getDnacData(agentName, startTime, endTime, application);
-//        System.out.println("Data from Dnac: " + _jsonDnac);
-//        try {
-//            MongoDBConnection mongoDB = new MongoDBConnection();
-//            DB db = mongoDB.getMongoConnection();
-//            DBCollection collection = db.getCollection("ms_thousandeye_alert");
-//            BasicDBObject gtQuery = new BasicDBObject();
-//            BasicDBObject andQuery = new BasicDBObject();
-//            List<BasicDBObject> orDateQuery = new ArrayList<BasicDBObject>();
-//            List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
-//            String dt = dateFormat(startTime);
-//            gtQuery.put("alert.dateStart", new BasicDBObject("$gt", dt).append("$lt", endTime));
-//            obj.add(gtQuery);
-//            // obj.add(new BasicDBObject("alert.dateStart", new BasicDBObject("$lte",
-//            // endTime)));
-//            //
-//            BasicDBObject andQueryStartDate = new BasicDBObject();
-//
-//            BasicDBObject datEndDBobject = new BasicDBObject("alert.dateEnd", new BasicDBObject("$exists", false));
-//
-//            BasicDBObject subscriberIdIsNull = new BasicDBObject("alert.dateEnd", new BasicDBObject("$gt", startTime));
-//            orDateQuery.add(datEndDBobject);
-//            orDateQuery.add(subscriberIdIsNull);
-//
-//            BasicDBObject firstOr = new BasicDBObject("$or", orDateQuery);
-//            obj.add(firstOr);
-//
-//            Document regexQuery = new Document();
-//            regexQuery.append("$regex", ".*" + Pattern.quote(domainName) + ".*").append("$options", "i");
-//            obj.add(new BasicDBObject("alert.agents.agentName", regexQuery));
-//
-//            Document regexQuery1 = new Document();
-//            regexQuery1.append("$regex", ".*" + Pattern.quote(application) + ".*").append("$options", "i");
-//            obj.add(new BasicDBObject("alert.testName", regexQuery1));
-//
-//            andQuery.put("$and", obj);
-//            DBCursor cursor = collection.find(andQuery);
-//            JSONArray jsonarray = new JSONArray();
-//            System.out.println(cursor.count());
-//            while (cursor.hasNext()) {
-//                DBObject doc = cursor.next();
-//                jsonarray.put((new JSONObject(doc.toString())));
-//            }
-//            System.out.println(jsonarray.toString());
-//            JSONArray appIssuesArr = new JSONArray();
-//            checkAlerts(startTime, endTime, application);
-//            if (application != null && !application.isEmpty()) {
-//                appIssuesArr = getApplicationIssues(startTime, endTime, agentName, application);
-//            }
-//            ITAdminBean bean = processJSONData(jsonarray, agentName, application, appIssuesArr, domainName, startTime,
-//                    endTime);
-//
-//            // JSONArray _jsonDnac = new FetchIssues().getDnacData(agentName,startTime,
-//            // endTime, application);
-//
-//            bean = processDnacJSONDataAdmin(bean, _jsonDnac);
-//            System.out.println("Final Bean:: " + bean.toString());
-//
-//            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-//            String json = ow.writeValueAsString(bean);
-//            // System.out.println("JSON: "+json);
-//            rtnString = new JSONObject(json);
-//            List<String> issuesList = createIssuesList(rtnString);
-//            String rca = droolsRulesEngine(issuesList);
-//            System.out.println("issuesList: " + issuesList);
-//            System.out.println("Root Cause: " + rca);
-//            rtnString.put("rca", new JSONObject().put("value", rca));
-//            System.out.println("final JSON Reponse: " + rtnString.toString());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return rtnString;
-//    }
-
-//    public String droolsRulesEngine(List<String> issuesList) {
-//        System.out.println("Alerts:: " + issuesList);
-//        KieSession kieSession = kieContainer.newKieSession();
-//        BullseyeDroolsModel bullseyeDroolsModel = new BullseyeDroolsModel(issuesList);
-//        kieSession.insert(bullseyeDroolsModel);
-//        kieSession.fireAllRules();
-//        kieSession.dispose();
-//        // return new JSONObject().put("The RCA for this application is ",
-//        // bullseyeDroolsModel.getRca()).toString();
-//        return bullseyeDroolsModel.getRca();
-//    }
-
-//    private List<String> createIssuesList(JSONObject rtnString) {
-//        List<String> issueList = new ArrayList<>();
-//        try {
-//            // boolean awsFlag = false;
-//            JSONArray teEndPointJSONArray = rtnString.getJSONArray("thousand_endpoint");
-//            // JSONObject teEndPointJSON = rtnString.getJSONObject("thousand_endpoint");
-//            // JSONObject teEnterpriseJSON = rtnString.getJSONObject("thousand_enterprise");
-//            JSONArray teEnterpriseJSONArray = rtnString.getJSONArray("thousand_enterprise");
-//            JSONArray dnacJSONArray = rtnString.getJSONArray("dnac_endpoint");
-//            // JSONObject dnacJSON = rtnString.getJSONObject("dnac_endpoint");
-//
-//            if (awsFlag) {
-//                JSONObject awsJSON = rtnString.getJSONObject("cloudWatch");
-//                awsJSON.keys().forEachRemaining(key -> {
-//                    Object value = awsJSON.get(key);
-//                    String issueName = null;
-//                    if (!value.equals("True") && key.toString().equalsIgnoreCase("cpu_utilization")) {
-//                        issueName = "AWS_CPU_resources";
-//                    } else if (!value.equals("True") && key.toString().equalsIgnoreCase("memory_utilization")) {
-//                        issueName = "AWS_Memory_resources";
-//                    }
-//                    if (issueName != null && !issueList.contains(key)) {
-//                        // issueList.add("TE_endpoint_signal_quality");
-//                        issueList.add(issueName);
-//                    }
-//                });
-//
-//            }
-//            for (int i = 0; i < teEndPointJSONArray.length(); i++) {
-//                JSONObject teEndPointJSON = teEndPointJSONArray.getJSONObject(i);
-//                teEndPointJSON.keys().forEachRemaining(key -> {
-//                    Object value = teEndPointJSON.get(key);
-//                    String issueName = null;
-//                    System.out.println(value + "Key:: " + key);
-//                    if (!value.equals("True") && key.toString().equalsIgnoreCase("cpu_utilization")) {
-//                        issueName = "TE_endpoint_cpu_utilization";
-//                    } else if (!value.equals("True") && key.toString().equalsIgnoreCase("memory_utilization")) {
-//                        issueName = "TE_endpoint_memory_utilization";
-//                    } else if (!value.equals("True") && key.toString().equalsIgnoreCase("signal_quality")) {
-//                        issueName = "TE_endpoint_signal_quality";
-//                    } else if (!value.equals("True") && key.toString().equalsIgnoreCase("throughput")) {
-//                        issueName = "TE_endpoint_throughput";
-//                    } else if (!value.equals("True") && key.toString().equalsIgnoreCase("pageloadtime")) {
-//                        issueName = "TE_endpoint_pageloadtime";
-//                    } else if (!value.equals("True") && key.toString().equalsIgnoreCase("jitter")) {
-//                        issueName = "TE_endpoint_Jitter";
-//                    } else if (!value.equals("True") && (key.toString().equalsIgnoreCase("error"))) {
-//                        issueName = "TE_endpoint_SSL_Error";
-//                    } else if (!value.equals("True") && key.toString().equalsIgnoreCase("packetLoss")) {
-//                        issueName = "TE_endpoint_packet_loss";
-//                    } else if (!value.equals("True") && key.toString().equalsIgnoreCase("latency")) {
-//                        issueName = "TE_endpoint_Latency";
-//                    } else if (!value.equals("True") && key.toString().equalsIgnoreCase("client")) {
-//                        issueName = "TE_endpoint_Error_4xx";
-//                    } else if (!value.equals("True") && key.toString().equalsIgnoreCase("server")) {
-//                        issueName = "TE_endpoint_Error_5xx";
-//                    }
-//
-//                    // "TE_endpoint_cpu_utilization" "TE_endpoint_packet_loss" "TE_endpoint_Latency"
-//
-//                    if (issueName != null && !issueList.contains(issueName)) {
-//                        // issueList.add("TE_endpoint_signal_quality");
-//                        issueList.add(issueName);
-//                    }
-//                });
-//            }
-//
-//            for (int i = 0; i < teEnterpriseJSONArray.length(); i++) {
-//                JSONObject teEnterpriseJSON = teEnterpriseJSONArray.getJSONObject(i);
-//                teEnterpriseJSON.keys().forEachRemaining(key -> {
-//                    Object value = teEnterpriseJSON.get(key);
-//                    String issueName = null;
-//                    if (!value.equals("True") && key.toString().equalsIgnoreCase("pageloadtime")) {
-//                        issueName = "TE_Ent_agent_pageloadtime";
-//                    } else if (!value.equals("True") && key.toString().equalsIgnoreCase("latency")) {
-//                        issueName = "TE_Ent_agent_Latency";
-//                    } else if (!value.equals("True") && key.toString().equalsIgnoreCase("loss")) {
-//                        issueName = "TE_Ent_agent_packet_loss";
-//                    } else if (!value.equals("True") && key.toString().equalsIgnoreCase("jitter")) {
-//                        issueName = "TE_Ent_agent_jitter";
-//                    } else if (!value.equals("True") && key.toString().equalsIgnoreCase("ssl")) {
-//                        issueName = "TE_Ent_agent_ssl_error";
-//                    }
-//                    if (issueName != null && !issueList.contains(issueName)) {
-//                        issueList.add(issueName);
-//                    }
-//                });
-//            }
-//            for (int i = 0; i < dnacJSONArray.length(); i++) {
-//                JSONObject dnacJSON = dnacJSONArray.getJSONObject(i);
-//                dnacJSON.keys().forEachRemaining(key -> {
-//                    Object value = dnacJSON.get(key);
-//                    String issueName = null;
-//                    if (!value.equals("True") && key.toString().equalsIgnoreCase("ap_health")) {
-//                        issueName = "DNAC_AP_Health";
-//                    } else if (!value.equals("True") && key.toString().equalsIgnoreCase("client_health")) {
-//                        issueName = "DNAC_Client_health";
-//                    }
-//                    if (issueName != null && !issueList.contains(issueName)) {
-//                        issueList.add(issueName);
-//                    }
-//                });
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            // TODO: handle exception
-//        }
-//        return issueList;
-//    }
-
-//    public int processDNACClientHealth(String apMac, long startTime, long endTime) {
-//        // CreateReports reports = new CreateReports();
-//
-//        int overallHealth = -1;
-//        try {
-//            String _token = reports.getAuthTokenFromDNAC();
-//            HttpHeaders _headers = reports.createHeaders(_token);
-//            // String _url =
-//            // "https://10.6.1.25/dna/intent/api/v1/device-health?deviceRole=AP&startTime="+startTime+"&endTime="+endTime+"&siteId="+siteId;
-////	String _url = dnac_health_api+startTime+"&endTime="+endTime+"&siteId="+siteId;
-//            String _url = dnac_health_api + startTime + "&endTime=" + endTime;
-//            ResponseEntity<String> response = service.CallGetRequest(_headers, "", _url);
-//            if (response.getStatusCode() == HttpStatus.OK) {
-//                String _body = response.getBody();
-//                JSONObject jsonData = new JSONObject(_body);
-//                JSONArray respArr = jsonData.getJSONArray("response");
-//                for (int i = 0; i < respArr.length(); i++) {
-//                    if (respArr.getJSONObject(i).getString("macAddress").equalsIgnoreCase(apMac)) {
-//                        overallHealth = respArr.getJSONObject(i).getInt("overallHealth");
-//                    }
-//
-//                }
-//            }
-//        } catch (Exception e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//
-//        return overallHealth;
-//    }
-
-//    private ITAdminBean processDnacJSONDataAdmin(ITAdminBean bean, JSONArray _jsonDnac) {
-//        // TODO Auto-generated method stub
-//        // DnacEndpoint endpoint_dnac = bean.getDnacEndpoint();
-//        List<DnacEndpoint> dnacDataList = new ArrayList<DnacEndpoint>();
-//        DateTimeUtil timeUtil = new DateTimeUtil();
-//        System.out.println("Length of data recieved from DNAC: " + _jsonDnac.length());
-//        if ((_jsonDnac.length()) == 0) {
-//            dnacDataList.clear();
-//            ;
-//            bean.setDnacEndpoint(dnacDataList);
-//            return bean;
-//        }
-//        try {
-//            for (int i = 0; i < _jsonDnac.length(); i++) {
-//                DnacEndpoint endpoint_dnac = new DnacEndpoint();
-//                JSONObject _json = _jsonDnac.getJSONObject(i);
-//                int averageHealthScore_min = Integer.parseInt(_json.getString("averageHealthScore_min"));
-////	String apMac = _json.getString("apMac");
-//                String connectedDeviceName = _json.getString("connectedDeviceName");
-//                JSONObject _jsonConnected = getMacFromMongoDB(connectedDeviceName);
-//                String apMac = _jsonConnected.getString("macAddress");
-////	String siteId = _json.getString("siteId");
-//                String start_Time = _json.getString("start_Time");
-//                String end_Time = _json.getString("end_Time");
-//                long startTime = timeUtil.convertLongDate(start_Time);
-//                long endTime = timeUtil.convertLongDate(end_Time);
-//                endpoint_dnac.setIssueTime(start_Time + "|" + end_Time);
-////	int overallHealth =processDNACClientHealth(apMac, startTime, endTime, siteId);
-//                int overallHealth = processDNACClientHealth(apMac, startTime, endTime);
-//                if (overallHealth == -1)
-//                    endpoint_dnac.setAp_health("Device Not Found");
-//                else if (overallHealth > 7) {
-//                    endpoint_dnac.setAp_health("True");
-////	}else if(overallHealth>7) {
-////	endpoint_dnac.setAp_health("True");
-//                } else
-//                    endpoint_dnac.setAp_health(overallHealth + "");
-//                if (averageHealthScore_min > 7) {
-//                    endpoint_dnac.setClient_health("True");
-////	}else if(averageHealthScore_min>4 ) {
-////	endpoint_dnac.setClient_health("True");
-//                } else {
-//                    endpoint_dnac.setClient_health(averageHealthScore_min + "");
-//                }
-//                dnacDataList.add(endpoint_dnac);
-//                // String rssi_median = _json.getString("rssi_median");
-//                // String snr_median = _json.getString("snr_median");
-//
-//            }
-//            bean.setDnacEndpoint(dnacDataList);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            // TODO: handle exception
-//        }
-//        return bean;
-//    }
-
-//    private JSONObject getMacFromMongoDB(String connectedDeviceName) {
-//        // TODO Auto-generated method stub
-//        DB db = null;
-//        JSONObject _json = null;
-//        System.out.println("ConnectedDeviceName:" + connectedDeviceName);
-//        if (connectedDeviceName == null) {
-//            connectedDeviceName = "";
-//        }
-//        System.out.println("ConnectedDeviceName:" + connectedDeviceName);
-//        try {
-//            MongoDBConnection mongoDB = new MongoDBConnection();
-//            db = mongoDB.getMongoConnection();
-//            DBCollection collection = db.getCollection("ms_inventory");
-//            DBCursor cursor = collection.find(new BasicDBObject("hostname", connectedDeviceName));
-//            while (cursor.hasNext()) {
-//                DBObject doc = cursor.next();
-//                _json = new JSONObject(doc.toString());
-//            }
-//            System.out.println("getMacFromMongoDB: " + _json.toString());
-//
-//        } catch (NullPointerException e) {
-//            e.printStackTrace();
-//            System.out.println("Device not found in  inventory!");
-//            // TODO: handle exception
-//        } catch (IOException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//        return _json;
-//    }
-
-//    private synchronized JSONArray getApplicationIssues(String startTime, String endTime, String enterpriseAgentName,
-//                                                        String application) {
-//        JSONArray jsonarray = new JSONArray();
-//        DB db = null;
-//        try {
-//            Properties prop = new Properties();
-//            InputStream input=getClass().getClassLoader().getResourceAsStream("com/vel/resources/constant.properties");
-//            prop.load(input);
-//            String Enterprise_Agent = prop.getProperty("Enterprise_Agent");
-//
-//
-//            MongoDBConnection mongoDB = new MongoDBConnection();
-//            db = mongoDB.getMongoConnection();
-//            DBCollection collection = db.getCollection("ms_thousandeye_alert");
-//            BasicDBObject gtQuery = new BasicDBObject();
-//            BasicDBObject andQuery = new BasicDBObject();
-//            List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
-//            List<BasicDBObject> orDateQuery = new ArrayList<BasicDBObject>();
-//
-//            String dt = dateFormat(startTime); // 10 12
-//            gtQuery.put("alert.dateStart", new BasicDBObject("$gt", dt).append("$lt", endTime));
-//            obj.add(gtQuery);
-//
-//            // obj.add(new BasicDBObject("alert.dateStart", new BasicDBObject("$lte",
-//            // endTime)));
-//            BasicDBObject datEndDBobject = new BasicDBObject("alert.dateEnd", new BasicDBObject("$exists", false));
-//            BasicDBObject subscriberIdIsNull = new BasicDBObject("alert.dateEnd", new BasicDBObject("$gt", startTime));
-//            orDateQuery.add(datEndDBobject);
-//            orDateQuery.add(subscriberIdIsNull);
-//            BasicDBObject firstOr = new BasicDBObject("$or", orDateQuery);
-//            obj.add(firstOr);
-//
-//            Document regexQuery = new Document();
-//            //
-//            regexQuery.append("$regex", ".*" + Pattern.quote(Enterprise_Agent) + ".*").append("$options", "i");
-//            obj.add(new BasicDBObject("alert.agents.agentName", regexQuery));
-//
-//            Document regexQuery1 = new Document();
-//            regexQuery1.append("$regex", ".*" + Pattern.quote(application) + ".*").append("$options", "i");
-//            obj.add(new BasicDBObject("alert.testName", regexQuery1));
-//
-//            andQuery.put("$and", obj);
-//
-//            // gtQuery.put("alert.dateStart", new BasicDBObject("$gt",
-//            // startTime).append("$lt", endTime));
-//            // obj.add(gtQuery);
-//            // obj.add(new BasicDBObject("alert.agents.agentName", Enterprise_Agent));
-//            // Document regexQuery = new Document();
-//            // regexQuery.append("$regex", ".*" + Pattern.quote(application.toLowerCase()) +
-//            // ".*");
-//            // obj.add(new BasicDBObject("alert.testName", regexQuery));
-//            // andQuery.put("$and", obj);
-//            DBCursor cursor = collection.find(andQuery);
-//            System.out.println(cursor.count());
-//            while (cursor.hasNext()) {
-//                DBObject doc = cursor.next();
-//                jsonarray.put((new JSONObject(doc.toString())));
-//            }
-//            System.out.println("getApplicationIssues: " + jsonarray.toString());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            if (db != null)
-//                db.getMongo().close();
-//        }
-//        return jsonarray;
-//    }
-
-//    private synchronized ITAdminBean processJSONData(JSONArray arrData, String agentName, String application,
-//                                                     JSONArray appIssuesArr, String domainName, String startTime, String endTime) {
-//        ITAdminBean bean = new ITAdminBean();
-//        try {
-//            JSONArray _jsonResponse = arrData;
-//            CloudWatch cloudWatch = new CloudWatch();
-//            List<ThousandEndpoint> thousandEndpointList = new ArrayList<ThousandEndpoint>();
-//            List<ThousandEnterprise> thousandEnterpriseList = new ArrayList<ThousandEnterprise>();
-//
-//            Vm vm = new Vm();
-//            UserInfo userInfo = new UserInfo();
-//            List<DnacEndpoint> endPoint = new ArrayList<DnacEndpoint>();
-//
-////System.out.println("Json type")
-//            for (int i = 0; i < _jsonResponse.length(); i++) {
-//                JSONObject _jObj = _jsonResponse.getJSONObject(i);
-//                JSONObject _alertJson = _jObj.getJSONObject("alert");
-//                JSONArray _agentsArray = _alertJson.getJSONArray("agents");
-//                System.out.println("_agentsArray: " + _agentsArray);
-////	if((_agentsArray.length())==0) {
-////
-////
-////
-////	thousandEndpointList.clear();
-////	}
-//                for (int j = 0; j < _agentsArray.length(); j++) {
-//                    ThousandEndpoint thousandEndpoint = new ThousandEndpoint();
-//                    String _agentName = _agentsArray.getJSONObject(j).getString("agentName");
-//                    if (_agentName.equalsIgnoreCase(domainName)) {
-//                        String issueName = "";
-//                        String _startTime = "";
-//                        String _dateEnd = "";
-//                        if (_agentsArray.getJSONObject(j).has("metricsAtStart")) {
-//                            issueName = _agentsArray.getJSONObject(j).getString("metricsAtStart");
-//                            _startTime = _agentsArray.getJSONObject(j).getString("dateStart");
-//                            if (dateCompare(_startTime, endTime)) {
-//                                break;
-//                            }
-//                            if (_agentsArray.getJSONObject(j).has("dateEnd")) {
-//                                _dateEnd = _agentsArray.getJSONObject(j).getString("dateEnd");
-//                                if (dateCompare(startTime, _dateEnd)) {
-//                                    break;
-//                                }
-//                            } else if (_alertJson.has("dateEnd")) {
-//                                _dateEnd = _alertJson.getString("dateEnd");
-//                            } else {
-//                                _dateEnd = "NA";
-//                            }
-//                        } /*
-//                         * else { issueName = _alertJson.getString("ruleName"); _startTime
-//                         * =_alertJson.getString("dateStart"); }
-//                         */
-//                        thousandEndpoint.setIssueTime(_startTime + " | " + _dateEnd);
-//                        if (issueName.contains("CPU") || issueName.contains("Memory") || issueName.contains("health")) {
-//                            String[] issues = issueName.split(":");
-//                            if (issues[0].contains("CPU")) {
-//                                thousandEndpoint.setCpuUtilization(issues[1].trim());
-//                            }
-//                            // else {
-//                            // thousandEndpoint.setCpuUtilization("True");
-//                            // }
-//
-//                            if (issues[0].contains("Memory")) {
-//                                thousandEndpoint.setMemoryUtilization(issues[1].trim());
-//                            }
-//                            // else {
-//                            //
-//                            // thousandEndpoint.setMemoryUtilization("True");
-//                            // }
-//
-//                        } else if (issueName.contains("Throughput")) {
-//                            String[] issues = issueName.split(":");
-//                            thousandEndpoint.setThroughput(issues[1].trim());
-//                        } else if (issueName.contains("Page Load")) {
-//                            String[] issues = issueName.split(":");
-//                            thousandEndpoint.setPageloadtime(issues[1].trim());
-//                        } else if (issueName.toLowerCase().contains("jitter")) {
-//                            String[] issues = issueName.split(":");
-//                            thousandEndpoint.setJitter(issues[1].trim());
-//                        } else if (issueName.toLowerCase().contains("packet loss")) {
-//                            String[] issues = issueName.split(":");
-//                            thousandEndpoint.setPacketLoss(issues[1].trim());
-//                        } else if (issueName.toLowerCase().contains("latency")) {
-//                            String[] issues = issueName.split(":");
-//                            thousandEndpoint.setLatency(issues[1].trim());
-//                        } else if (issueName.contains("Error")) {
-//                            String[] issues = issueName.split(":");
-//                            thousandEndpoint.setError(issues[1].trim());
-//                        } else if (issueName.contains("Response Code")) {
-//                            thousandEndpoint.setError(issueName);
-//                        }
-//
-//                        else {
-//                            // thousandEndpoint.setPageloadtime("True");
-//                        }
-//                        vm.setTime(_startTime + " - " + _dateEnd);
-//                    }
-//                    thousandEndpointList.add(thousandEndpoint);
-//                }
-//            }
-//            bean.setThousandEndpoint(thousandEndpointList);
-//
-//            System.err.println("appIssuesArr Enterprise: " + appIssuesArr);
-//            for (int i = 0; i < appIssuesArr.length(); i++) {
-//                JSONObject _jObj = appIssuesArr.getJSONObject(i);
-//                JSONObject _alertJson = _jObj.getJSONObject("alert");
-//                JSONArray _agentsArray = _alertJson.getJSONArray("agents");
-//                for (int j = 0; j < _agentsArray.length(); j++) {
-//                    ThousandEnterprise thousandEnterprise = new ThousandEnterprise();
-//                    JSONObject _json = new JSONObject();
-//                    String issueName = "";
-//                    String _startTime = "";
-//                    String _dateEnd = "";
-//                    if (_agentsArray.getJSONObject(j).has("metricsAtStart")) {
-//                        issueName = _agentsArray.getJSONObject(j).getString("metricsAtStart");
-//                        _startTime = _agentsArray.getJSONObject(j).getString("dateStart");
-//
-//                        if (_alertJson.has("dateEnd")) {
-//                            // _dateEnd = _agentsArray.getJSONObject(j).getString("dateEnd");
-//                            _dateEnd = _alertJson.getString("dateEnd");
-//                            _json.put("dateEnd", _dateEnd);
-//                        } else {
-//                            _dateEnd = "NA";
-//                            _json.put("dateEnd", "NA");
-//                        }
-//                    } else {
-//                        issueName = _alertJson.getString("ruleName");
-//                        _startTime = _alertJson.getString("dateStart");
-//                        if (_alertJson.has("dateEnd")) {
-//                            _dateEnd = _alertJson.getString("dateEnd");
-//                        }
-//                    }
-//                    thousandEnterprise.setIssueTime(_startTime + " | " + _dateEnd);
-//                    if (issueName.contains("Page Load")) {
-//                        String[] issues = issueName.split(":");
-//                        thousandEnterprise.setPageloadtime(issues[1].trim());
-//                    } else if (issueName.contains("Packet Loss")) {
-//                        String[] issues = issueName.split(":");
-//                        thousandEnterprise.setLoss(issues[1].trim());
-//                    } else if (issueName.contains("Jitter")) {
-//                        String[] issues = issueName.split(":");
-//                        thousandEnterprise.setJitter(issues[1].trim());
-//                    } else if (issueName.contains("Latency")) {
-//                        String[] issues = issueName.split(":");
-//                        thousandEnterprise.setLatency(issues[1].trim());
-//                    } else if (issueName.contains("Throughput")) {
-//                        String[] issues = issueName.split(":");
-//                        thousandEnterprise.setThroughput(issues[1].trim());
-//                    } else if (issueName.contains("Response")) {
-//                        String[] issues = issueName.split(":");
-//                        thousandEnterprise.setResponseTime(issues[1].trim());
-//                    } // Response Time:
-//                    thousandEnterpriseList.add(thousandEnterprise);
-//                }
-//            }
-//            bean.setThousandEnterprise(thousandEnterpriseList);
-//            if (awsFlag)
-//                bean.setCloudWatch(cloudWatch);
-//            else
-//                bean.setCloudWatch(new CloudWatch("", ""));
-//            bean.setVm(vm);
-//            bean.setDnacEndpoint(endPoint);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return bean;
-//    }
-
     public String dateFormat(String l_date) {
         String dt1 = "";
         try {
@@ -1922,150 +1319,5 @@ try {
         FetchIssuesForITAdmin obj = new FetchIssuesForITAdmin();
         System.out.println(obj.dateFormat1("2023-01-19 11:15:00"));
     }
-
-//    public boolean dateCompare(String date1, String date2) {
-//        try {
-//            SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss");// 2023-01-19 11:15:00
-//            Date dt1 = sdf1.parse(date1);
-//            Date dt2 = sdf1.parse(date2);
-//            int i = dt1.compareTo(dt2);
-//            if (i > 0) {
-//                return true;
-//            }
-//        } catch (Exception e) {
-//            // TODO: handle exception
-//        }
-//        return false;
-//    }
-
-    // ENterprise Clients -TE
-//    private void checkAlerts(String startTime, String endTime, String application) throws Exception {
-//        JSONArray jsonarray = new JSONArray();
-//        String te_api_key="";
-//        String te_alert_api="";
-//        try {
-//            Properties prop = new Properties();
-//            InputStream input=getClass().getClassLoader().getResourceAsStream("com/vel/resources/constant.properties");
-//            prop.load(input);
-//            String Enterprise_Agent = prop.getProperty("Enterprise_Agent");
-//
-//
-//            Properties props = new Properties();
-//            InputStream inputs=getClass().getClassLoader().getResourceAsStream("com/vel/te/scheduler/constants.properties");
-//            prop.load(inputs);
-//            te_api_key = prop.getProperty("te_api_key");
-//            te_alert_api = prop.getProperty("te_alert_api");
-//
-//            MongoDBConnection mongoDB = new MongoDBConnection();
-//            DB db = mongoDB.getMongoConnection();
-//            DBCollection collection = db.getCollection("ms_thousandeye_alert");
-//            BasicDBObject gtQuery = new BasicDBObject();
-//            BasicDBObject andQuery = new BasicDBObject();
-//            List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
-//            List<BasicDBObject> orDateQuery = new ArrayList<BasicDBObject>();
-//
-//            String dt = dateFormat(startTime); // 10 12
-//            gtQuery.put("alert.dateStart", new BasicDBObject("$gt", dt).append("$lt", endTime));
-//            obj.add(gtQuery);
-//
-//            // obj.add(new BasicDBObject("alert.dateStart", new BasicDBObject("$lte",
-//            // endTime)));
-//            BasicDBObject datEndDBobject = new BasicDBObject("alert.dateEnd", new BasicDBObject("$exists", false));
-//            BasicDBObject subscriberIdIsNull = new BasicDBObject("alert.dateEnd", new BasicDBObject("$gt", startTime));
-//            orDateQuery.add(datEndDBobject);
-//            orDateQuery.add(subscriberIdIsNull);
-//            BasicDBObject firstOr = new BasicDBObject("$or", orDateQuery);
-//            obj.add(firstOr);
-//            // BasicDBObject db_Obj = new BasicDBObject();
-//            Document regexQuery = new Document();
-//            regexQuery.append("$regex", ".*" + Pattern.quote(Enterprise_Agent) + ".*").append("$options", "i");
-//            obj.add(new BasicDBObject("alert.agents.agentName", regexQuery));
-//            Document regexQuery1 = new Document();
-//            regexQuery1.append("$regex", ".*" + Pattern.quote(application) + ".*").append("$options", "i");
-//            obj.add(new BasicDBObject("alert.testName", regexQuery1));
-//            andQuery.put("$and", obj);
-//            DBCursor cursor = collection.find(andQuery);
-//            System.out.println(cursor.count());
-//            while (cursor.hasNext()) {
-//                DBObject doc = cursor.next();
-//                jsonarray.put((new JSONObject(doc.toString())));
-//            }
-//            System.out.println("getApplicationIssues: " + jsonarray.toString());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        FetchIssuesForITAdmin fs = new FetchIssuesForITAdmin();
-//        for (int i = 0; i < jsonarray.length(); i++) {
-//            JSONObject _jObj = jsonarray.getJSONObject(i);
-//            String newEventId = _jObj.getString("newEventId");
-//            System.out.println("Alert Id to update : " + newEventId);
-//            fs.checkUpdate(newEventId,te_alert_api,te_api_key);
-//        }
-//
-//    }
-
-//    public void checkUpdate(String newEventId, String te_alert_api, String te_api_key) throws Exception {
-////
-//        FetchIssuesForITAdmin fs = new FetchIssuesForITAdmin();
-//        HttpHeaders _headerSet = new HttpHeaders();
-//        _headerSet.setContentType(MediaType.APPLICATION_JSON);
-//        _headerSet.set("Authorization", te_api_key);
-//        String _url = te_alert_api + newEventId + ".json";
-//        ResponseEntity<String> response = service.CallGetRequest(_headerSet, "", _url);
-//        if (response.getStatusCode() == HttpStatus.OK) {
-//            JSONObject _json = new JSONObject(response.getBody());
-//            JSONArray alertsArr = _json.getJSONArray("alert");
-//            for (int i = 0; i < alertsArr.length(); i++) {
-//                JSONObject alertobj = alertsArr.getJSONObject(i);
-//                if (alertobj.has("dateEnd")) {
-//                    String _dateEndUTC = alertobj.getString("dateEnd");
-//                    System.out.println("Date in UTC is :" + _dateEndUTC);
-//                    String dateEnd = timeutil.convertUTC2IST(_dateEndUTC);
-//                    System.out.println("Date in IST is: " + dateEnd);
-//                    alertobj.remove("dateEnd");
-//                    alertobj.put("dateEnd", dateEnd);
-//                    fs.updateRecord(newEventId, alertobj);
-//                    System.out.println(newEventId + " :: Record updated :" + alertobj);
-//
-//                }
-//
-//            }
-//
-//        }
-//
-//    }
-
-//    private void updateRecord(String newEventId, JSONObject dateEnd) {
-//        MongoDBConnection mongoDB = new MongoDBConnection();
-//        DBCollection collection = null;
-//        try {
-//            DB db = mongoDB.getMongoConnection();
-//            collection = db.getCollection("ms_thousandeye_alert");
-//            BasicDBObject searchQuery = new BasicDBObject();
-//            searchQuery.append("newEventId", newEventId);
-//            BasicDBObject updateQuery = new BasicDBObject();
-//            // updateQuery.append("$set",new
-//            // BasicDBObject().append("alert.$[element].agents.$[element].dateEnd",
-//            // dateEnd));
-//            updateQuery.append("$set", new BasicDBObject().append("alert", JSON.parse(dateEnd.toString())));
-//            collection.update(searchQuery, updateQuery);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-
-//    public void updateRecord(String newEventId, JSONObject dateEnd) {
-//        try {
-//            ThousandEyeAlert alert = thousandEyeAlertRepo.findByNewEventId(newEventId);
-//            if (alert != null) {
-//                alert.setAlert(dateEnd.toString()); // Assuming you have a field named "alert" in the entity
-//                thousandEyeAlertService.save(alert);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
 
 }
