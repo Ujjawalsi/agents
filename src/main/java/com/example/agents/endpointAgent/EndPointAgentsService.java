@@ -1,5 +1,6 @@
 package com.example.agents.endpointAgent;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,8 @@ public class EndPointAgentsService {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-   // @Scheduled(cron = "0 */15 * * * ?")
-	@Scheduled(cron = "0 */1 * * * ?")
+    @Scheduled(cron = "0 */15 * * * ?")
+//	@Scheduled(cron = "0 */1 * * * ?")
 //
     private void executeAgentsAPI() {
         HttpHeaders headers = new HttpHeaders();
@@ -77,20 +78,58 @@ public class EndPointAgentsService {
 
 	public String getDomainName(String checkIssuesWithUser) {
 		String _domainName = null;
-		try{
-		String name = checkIssuesWithUser.replace(".", " ");
-		List<EndpointAgentModel> models = endpointAgentRepository.findByName(name);
-			System.out.println(models.size());
+		List<EndpointAgentModel> list = new ArrayList<>();
+		String userName = null;
+		try {
+//		String name = checkIssuesWithUser.replace(".", " ");
+//		List<EndpointAgentModel> models = endpointAgentRepository.findByName(name);
 
-		if (!models.isEmpty()) {
-			EndpointAgentModel endpointAgent = models.get(0);// Assuming there's only one matching entry
+			List<EndpointAgentModel> models1 = endpointAgentRepository.findAll();
+			for (EndpointAgentModel endPointModel : models1) {
+				try {
+					// Parse JSON using Jackson
+					ObjectMapper objectMapper = new ObjectMapper();
+					JsonNode rootNode = objectMapper.readTree(endPointModel.getAgentData());
+
+					// Extract userName
+					userName = rootNode
+							.path("clients")
+							.get(0)
+							.path("userProfile")
+							.path("userName")
+							.asText();
+
+					// Print userName
+					System.out.println("User Name: " + userName);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				List<String> userNameArray = List.of(checkIssuesWithUser.split(""));
+				List<String> userNameList = List.of(userName.split(""));
+				if (userNameList.containsAll(userNameArray)) {
+					list.add(endPointModel);
+				} else {
+					JSONObject jsonObject = new JSONObject(endPointModel.getAgentData());
+					String string = jsonObject.getString("agentName");
+					List<String> agentNameList = List.of(string.split(""));
+					if (agentNameList.containsAll(userNameArray)) {
+						list.add(endPointModel);
+					}
+
+				}
+			}
+
+			System.out.println(list.size());
+
+		EndpointAgentModel endpointAgent = list.get(0);// Assuming there's only one matching entry
 			String jsonDocument = endpointAgent.getAgentData();
 			System.out.println(jsonDocument);
 
 			JSONObject jsonObject = new JSONObject(jsonDocument);
 			_domainName = jsonObject.getString("agentName");
 			System.out.println(_domainName);
-		}
+
 	} catch (Exception e) {
 		e.printStackTrace();
 	}
