@@ -81,8 +81,6 @@ public class EndPointAgentsService {
 		List<EndpointAgentModel> list = new ArrayList<>();
 		String userName = null;
 		try {
-//		String name = checkIssuesWithUser.replace(".", " ");
-//		List<EndpointAgentModel> models = endpointAgentRepository.findByName(name);
 
 			List<EndpointAgentModel> models1 = endpointAgentRepository.findAll();
 			for (EndpointAgentModel endPointModel : models1) {

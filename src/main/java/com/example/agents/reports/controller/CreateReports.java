@@ -43,8 +43,7 @@ public class CreateReports {
     @Autowired
     private DnacClientService dnacClientService;
 
-//    @Scheduled(cron = "0 */15 * ? * *")
-@Scheduled(cron = "0 */1 * * * ?")
+    @Scheduled(cron = "0 */15 * ? * *")
 public void create() {
         System.out.println("Auto Scheduler Start :: ::  ");
         createReportInDNAC("Scheduler BullsEye");
@@ -395,7 +394,6 @@ public void create() {
 
     private JSONObject downloadReportContent(String _reportId, HttpHeaders _headers, String _executionId) throws Exception {
         JSONObject responseJson = null;
-//		String _url = "https://{ip}/dna/intent/api/v1/data/reports/"+_reportId+"/executions/"+_executionId;
         String _url = Constant.dnac_report_api+_reportId+"/executions/"+_executionId;
         ResponseEntity<String> response = service.CallGetRequest(_headers, "", _url);
         System.out.println("downloadReportContent:: "+response);
@@ -428,18 +426,6 @@ public void create() {
         String _responseString=null;
         String _token = null;
         try {
-            if(Constant.dnac_user_name == null || Constant.dnac_password == null) {
-//                Properties prop = new Properties();
-//                InputStream input=getClass().getClassLoader().getResourceAsStream("com/example/agents/vel/resources/constant.properties");
-//                prop.load(input);
-//                dnac_user_name = prop.getProperty("dnac_user_name");
-//                dnac_password = prop.getProperty("dnac_password");
-//                dnac_auth_api = prop.getProperty("dnac_auth_api");
-
-//                dnac_user_name = Constant.dnac_user_name;
-//                dnac_password=Constant.dnac_password;
-//                dnac_auth_api=Constant.dnac_auth_api;
-            }
             HttpHeaders _httpHeaders = null;
             _httpHeaders = prepareAuthHeaders(Constant.dnac_user_name,Constant.dnac_password);
             _response =service.CallPostRequest(_httpHeaders, "", Constant.dnac_auth_api);

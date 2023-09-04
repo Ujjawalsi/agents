@@ -10,28 +10,6 @@ import lombok.Getter;
 public class Constant {
 
 
-
-//    @Value("${dnac.user.name.second}")
-//    public String dnacUserName;
-//
-//    @Value("${dnac.password.second}")
-//    private String dnacPassword;
-//
-//    @Value("${app.domain.name}")
-//    private String userName;
-//
-//    @Value("${app.agent.name}")
-//    private String password;
-
-
-//
-//    @Value("${awsFlag}")
-//    private static boolean awsFlag;
-
-//    @Value("${dnac_health_api}")
-//    public static String dnac_health_api;
-
-
     public  static final String USERNAME = "admin";
     public static final String PASSWORD = "Pass2018";
     public static final boolean awsFlag = false;
@@ -57,11 +35,6 @@ public class Constant {
     public static final String ldapUser="Asheesh Sharma";
     public static final String ldapPassword="Prashant@2023";
 
-
-
-
-//    public  String name = userName;
-//    public String pass = password;
 
 
 

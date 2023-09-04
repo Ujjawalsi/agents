@@ -1,26 +1,5 @@
 package com.example.agents.reports.controller;
 
-//@RestController
-//public class CallbackPost {
-//
-//    @Autowired
-//    private ThousandEyeAlertService thousandEyeAlertService;
-//
-//
-//@PostMapping("/reports-callback")
-//    public ResponseEntity<String> readURL(@RequestHeader(value = "Authorization", required = false) HttpServletRequest l_request) {
-//    System.out.println("servlet --->>" + l_request);
-//        System.out.println("======== " + l_request.getHeaderNames());
-//        thousandEyeAlertService.process(l_request);
-//        return new ResponseEntity<>("Amazing.....>", HttpStatus.OK);
-//
-//    }
-//
-//
-//}
-
-
-
 import com.example.agents.reports.service.ThousandEyeAlertService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;

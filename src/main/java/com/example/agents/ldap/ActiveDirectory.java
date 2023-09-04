@@ -90,19 +90,6 @@ public class ActiveDirectory {
                 password = null;
         }
 
-//        Properties prop = new Properties();
-//
-//        try {
-//            InputStream input = ActiveDirectory.class.getClassLoader()
-//                    .getResourceAsStream("com/example/agents/ldap/ldap.properties");
-//            prop.load(input);
-//
-//            PROVIDER_URL = prop.getProperty("PROVIDER_URL");
-//
-//        } catch (Exception e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
         PROVIDER_URL = Constant.PROVIDER_URL;
 
         // bind by using the specified username/password
@@ -312,17 +299,6 @@ public class ActiveDirectory {
 
         // kpmg changes
         public User(String user_name, String arr[]) throws NamingException {
-//            Properties prop = new Properties();
-//            InputStream input = ActiveDirectory.class.getClassLoader()
-//                    .getResourceAsStream("com/example/agents/ldap/ldap.properties");
-//            try {
-//                prop.load(input);
-//            } catch (IOException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-
-//            String Domain = prop.getProperty("DOMAIN");
             String Domain = Constant.DOMAIN;
 
 //

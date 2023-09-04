@@ -86,15 +86,7 @@ public class DnacNetworkHealthDataService {
 		String _responseString=null;
 		String _token = null;
 		try {
-//			if(Constant.dnac_user_name == null || dnac_password == null) {
-//				Properties prop = new Properties();
-//				InputStream input=getClass().getClassLoader().getResourceAsStream("com/example/agents/vel/resources/constant.properties");
-//				prop.load(input);
-//				dnac_user_name = prop.getProperty("dnac_user_name");
-//				dnac_password = prop.getProperty("dnac_password");
-//				dnac_auth_api = prop.getProperty("dnac_auth_api");
-//			}
-			HttpHeaders _httpHeaders = null;
+            HttpHeaders _httpHeaders = null;
 			_httpHeaders = prepareAuthHeaders(dnac_user_name,dnac_password);
 			_response =service.CallPostRequest(_httpHeaders, "", dnac_auth_api);
 			_responseString =_response.getBody();

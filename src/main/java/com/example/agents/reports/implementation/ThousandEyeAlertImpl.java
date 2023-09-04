@@ -89,7 +89,6 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
 
     @Override
     public void save(ThousandEyeAlert thousandEyeAlert) {
-        System.out.println(thousandEyeAlert);
         thousandEyeAlertRepo.save(thousandEyeAlert);
         System.out.println("Inserted into db");
 
@@ -232,15 +231,11 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
         JSONObject rtnString = new JSONObject();
         System.out.println("Agent_name in getalerts: " + agentName);
 
-//        JSONArray _jsonDnac = new FetchIssues().getDnacData(agentName, startTime, endTime, application);
         List<DnacClient>_jsonDnac = dnacClientService.getDnacData(agentName,startTime,endTime,application);
         System.out.println("Data from Dnac: " + _jsonDnac);
 
         try {
-//            JSONArray jsonarray = new JSONArray();
             List<ThousandEyeAlert> thousandEyeAlertList = new ArrayList<>();
-//            List<ThousandEyeAlert> alerts = thousandEyeAlertRepo.findAlertsByFilters(startTime, endTime, agentName, application, domainName);
-//            List<ThousandEyeAlert> alerts = thousandEyeAlertRepo.findByAgentNameAndTestName(domainName,application);
             List<ThousandEyeAlert>thousandEyeAlerts = thousandEyeAlertRepo.findByTestName(application);
             for (ThousandEyeAlert alert : thousandEyeAlerts){
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -252,18 +247,13 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
                         String agentNameFinal = agentNode.get("agentName").asText();
                         System.out.println("Agent Name: " + agentNameFinal);
                         if (agentNameFinal.equalsIgnoreCase(domainName) && !jsonObject.has("dateEnd")){
-                         //   jsonarray.put(alert);
                             thousandEyeAlertList.add(alert);
                         } else if (agentNameFinal.equalsIgnoreCase(domainName) && jsonObject.has("dateEnd")) {
                             String dateEnd = rootNode.get("dateEnd").asText();
                             Date dateEndFinal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateEnd);
                             Date startTimeFinal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(startTime);
-                            System.out.println(dateEndFinal);
-                            System.out.println(startTimeFinal);
-
                             //need to change from before to after
-                            if (dateEndFinal.before(startTimeFinal)){
-                                //jsonarray.put(alert);
+                            if (dateEndFinal.after(startTimeFinal)){
                                 thousandEyeAlertList.add(alert);
                             }
 
@@ -272,40 +262,19 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
                     }
                 }
             }
-//            System.out.println(alerts.size());
-
-
-//            for (ThousandEyeAlert alert : alerts) {
-//                jsonarray.put(new JSONObject(alert.toString()));
-//            }
-            System.out.println(thousandEyeAlertList.size());
-            System.out.println(thousandEyeAlertList.toString());
-
             JSONArray appIssuesArr = new JSONArray();
             checkAlerts(startTime, endTime, application);
             if (application != null && !application.isEmpty()) {
                 appIssuesArr = getApplicationIssues(startTime, endTime, agentName, application);
 
             }
-            System.out.println(appIssuesArr.length());
-
             ITAdminBean bean = processJSONData(thousandEyeAlertList, agentName, application, appIssuesArr, domainName, startTime,
                     endTime);
             bean = processDnacJSONDataAdmin(bean, _jsonDnac);
             System.out.println("Final Bean:: " + bean.toString());
-
-
             com.fasterxml.jackson.databind.ObjectWriter ow= new ObjectMapper().writer().withDefaultPrettyPrinter();
             String json = ow.writeValueAsString(bean);
-
-
-//            ObjectWriter ow = (ObjectWriter) new ObjectMapper().writer().withDefaultPrettyPrinter();
-//            String json = ((com.fasterxml.jackson.databind.ObjectWriter) ow).writeValueAsString(bean);
             rtnString = new JSONObject(json);
-
-
-
-
             List<String> issuesList = createIssuesList(rtnString);
             System.out.println(issuesList);
             String rca = droolsRulesEngine(issuesList);
@@ -374,22 +343,10 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
         String te_api_key = "";
         String te_alert_api = "";
         try {
-//            Properties prop = new Properties();
-//            InputStream input = getClass().getClassLoader().getResourceAsStream("classpath:com/vel/common/connector/service/constants.properties");
-//            prop.load(input);
-//            String Enterprise_Agent = prop.getProperty("Enterprise_Agent");
             String Enterprise_Agent = Constant.Enterprise_Agent;
-
-//            Properties props = new Properties();
-//            InputStream inputs = getClass().getClassLoader().getResourceAsStream("classpath:com/vel/common/connector/service/constants.properties");
-//            prop.load(inputs);
-//            te_api_key = prop.getProperty("te_api_key");
-//            te_alert_api = prop.getProperty("te_alert_api");
             te_api_key=Constant.te_api_key;
             te_alert_api=Constant.te_alert_api;
             try {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//                List<ThousandEyeAlert> alerts = thousandEyeAlertRepo.findAlertsByTimeRangeAndApplication(startTime, endTime, application);
                 List<ThousandEyeAlert> thousandEyeAlerts = thousandEyeAlertRepo.findByTimeGapAndTestName(startTime,endTime,application);
                 System.out.println(thousandEyeAlerts.size());
                 System.out.println("getApplicationIssues: " + thousandEyeAlerts);
@@ -413,14 +370,13 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
                                 System.out.println(startTimeFinal);
 
                                 //need to change from before to after
-                                if (dateEndFinal.before(startTimeFinal)){
+                                if (dateEndFinal.after(startTimeFinal)){
                                     jsonarray.put(alert);
                                 }
                             }
                         }
                     }
                 }
-                System.out.println(jsonarray.toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -473,15 +429,8 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
     public JSONArray getApplicationIssues(String startTime, String endTime, String enterpriseAgentName,
                                           String application) throws IOException {
         JSONArray jsonarray = new JSONArray();
-
-//        Properties prop = new Properties();
-//        InputStream input=getClass().getClassLoader().getResourceAsStream("classpath:com/vel/common/connector/service/constants.properties");
-//        prop.load(input);
-//        String Enterprise_Agent = prop.getProperty("Enterprise_Agent");
         String Enterprise_Agent = Constant.Enterprise_Agent;
         try {
-//            List<ThousandEyeAlert> alerts = thousandEyeAlertRepo.findApplicationIssues(startTime, endTime,
-//                    Enterprise_Agent, application);
             List<ThousandEyeAlert> thousandEyeAlerts = thousandEyeAlertRepo.findByTimeGapAndTestName(startTime, endTime, application);
             for (ThousandEyeAlert alert: thousandEyeAlerts) {
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -501,7 +450,7 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
                                 System.out.println(dateEndFinal);
                                 System.out.println(startTimeFinal);
                                 //need to change from before to after
-                                if (dateEndFinal.before(startTimeFinal)){
+                                if (dateEndFinal.after(startTimeFinal)){
                                     jsonarray.put(alert.getAlert());
                                 }
                             }
@@ -530,18 +479,10 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
             List<ThousandEnterprise> thousandEnterpriseList = new ArrayList<ThousandEnterprise>();
 
             Vm vm = new Vm();
-            UserInfo userInfo = new UserInfo();
             List<DnacEndpoint> endPoint = new ArrayList<DnacEndpoint>();
             for (ThousandEyeAlert alert : _jsonResponse) {
-//                JSONObject _jObj = _jsonResponse.getJSONObject(i);
               JSONObject _jObj =new JSONObject(alert.getAlert());
-
-                System.out.println(_jObj);
-
-//                JSONObject _alertJson = _jObj.getJSONObject("alert");
                 JSONArray _agentsArray = _jObj.getJSONArray("agents");
-                System.out.println("_agentsArray: " + _agentsArray);
-
                 for (int j = 0; j < _agentsArray.length(); j++) {
                     ThousandEndpoint thousandEndpoint = new ThousandEndpoint();
                     String _agentName = _agentsArray.getJSONObject(j).getString("agentName");
@@ -565,27 +506,16 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
                             } else {
                                 _dateEnd = "NA";
                             }
-                        } /*
-                         * else { issueName = _alertJson.getString("ruleName"); _startTime
-                         * =_alertJson.getString("dateStart"); }
-                         */
+                        }
                         thousandEndpoint.setIssueTime(_startTime + " | " + _dateEnd);
                         if (issueName.contains("CPU") || issueName.contains("Memory") || issueName.contains("health")) {
                             String[] issues = issueName.split(":");
                             if (issues[0].contains("CPU")) {
                                 thousandEndpoint.setCpuUtilization(issues[1].trim());
                             }
-                            // else {
-                            // thousandEndpoint.setCpuUtilization("True");
-                            // }
-
                             if (issues[0].contains("Memory")) {
                                 thousandEndpoint.setMemoryUtilization(issues[1].trim());
                             }
-                            // else {
-                            //
-                            // thousandEndpoint.setMemoryUtilization("True");
-                            // }
 
                         } else if (issueName.contains("Throughput")) {
                             String[] issues = issueName.split(":");
@@ -610,7 +540,6 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
                         }
 
                         else {
-                            // thousandEndpoint.setPageloadtime("True");
                         }
                         vm.setTime(_startTime + " - " + _dateEnd);
                     }
@@ -635,7 +564,6 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
                         _startTime = _agentsArray.getJSONObject(j).getString("dateStart");
 
                         if (_alertJson.has("dateEnd")) {
-                            // _dateEnd = _agentsArray.getJSONObject(j).getString("dateEnd");
                             _dateEnd = _alertJson.getString("dateEnd");
                             _json.put("dateEnd", _dateEnd);
                         } else {
@@ -708,7 +636,6 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
 
     private ITAdminBean processDnacJSONDataAdmin(ITAdminBean bean, List<DnacClient> _jsonDnac) {
         // TODO Auto-generated method stub
-        // DnacEndpoint endpoint_dnac = bean.getDnacEndpoint();
         List<DnacEndpoint> dnacDataList = new ArrayList<DnacEndpoint>();
         DateTimeUtil timeUtil = new DateTimeUtil();
         System.out.println("Length of data recieved from DNAC: " + _jsonDnac.size());
@@ -722,43 +649,30 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
         try {
             for (DnacClient dnacClient : _jsonDnac) {
                 DnacEndpoint endpoint_dnac = new DnacEndpoint();
-//                JSONObject _json = _jsonDnac.getJSONObject(i);
                 JSONObject _json=  new JSONObject(dnacClient.getJsonDocument());
                 System.out.println(_json);
                 int averageHealthScore_min = Integer.parseInt(_json.getString("averageHealthScore_min"));
-//	String apMac = _json.getString("apMac");
                 String connectedDeviceName = _json.getString("connectedDeviceName");
                 JSONObject _jsonConnected = getMacFromPostgres(connectedDeviceName);
                 String apMac = _jsonConnected.getString("macAddress");
-//	String siteId = _json.getString("siteId");
-//                String start_Time = _json.getString("start_Time");
                 Date start_Time = dnacClient.getStartTime();
-//                String end_Time = _json.getString("end_Time");
                 Date end_Time = dnacClient.getEndTime();
                 long startTime = timeUtil.convertLongDate(String.valueOf(start_Time));
                 long endTime = timeUtil.convertLongDate(String.valueOf(end_Time));
                 endpoint_dnac.setIssueTime(start_Time + "|" + end_Time);
-//	int overallHealth =processDNACClientHealth(apMac, startTime, endTime, siteId);
                 int overallHealth = processDNACClientHealth(apMac, startTime, endTime);
                 if (overallHealth == -1)
                     endpoint_dnac.setAp_health("Device Not Found");
                 else if (overallHealth > 7) {
                     endpoint_dnac.setAp_health("True");
-//	}else if(overallHealth>7) {
-//	endpoint_dnac.setAp_health("True");
                 } else
                     endpoint_dnac.setAp_health(overallHealth + "");
                 if (averageHealthScore_min > 7) {
                     endpoint_dnac.setClient_health("True");
-//	}else if(averageHealthScore_min>4 ) {
-//	endpoint_dnac.setClient_health("True");
                 } else {
                     endpoint_dnac.setClient_health(averageHealthScore_min + "");
                 }
                 dnacDataList.add(endpoint_dnac);
-                // String rssi_median = _json.getString("rssi_median");
-                // String snr_median = _json.getString("snr_median");
-
             }
             bean.setDnacEndpoint(dnacDataList);
         } catch (Exception e) {
@@ -797,15 +711,10 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
 
 
     public int processDNACClientHealth(String apMac, long startTime, long endTime) {
-        // CreateReports reports = new CreateReports();
-
         int overallHealth = -1;
         try {
             String _token = reports.getAuthTokenFromDNAC();
             HttpHeaders _headers = reports.createHeaders(_token);
-            // String _url =
-            // "https://10.6.1.25/dna/intent/api/v1/device-health?deviceRole=AP&startTime="+startTime+"&endTime="+endTime+"&siteId="+siteId;
-//	String _url = dnac_health_api+startTime+"&endTime="+endTime+"&siteId="+siteId;
             String _url = Constant.dnac_health_api + startTime + "&endTime=" + endTime;
             ResponseEntity<String> response = service.CallGetRequest(_headers, "", _url);
             if (response.getStatusCode() == HttpStatus.OK) {
@@ -816,7 +725,6 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
                     if (respArr.getJSONObject(i).getString("macAddress").equalsIgnoreCase(apMac)) {
                         overallHealth = respArr.getJSONObject(i).getInt("overallHealth");
                     }
-
                 }
             }
         } catch (Exception e) {
@@ -832,13 +740,9 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
     private List<String> createIssuesList(JSONObject rtnString) {
         List<String> issueList = new ArrayList<>();
         try {
-            // boolean awsFlag = false;
             JSONArray teEndPointJSONArray = rtnString.getJSONArray("thousand_endpoint");
-            // JSONObject teEndPointJSON = rtnString.getJSONObject("thousand_endpoint");
-            // JSONObject teEnterpriseJSON = rtnString.getJSONObject("thousand_enterprise");
             JSONArray teEnterpriseJSONArray = rtnString.getJSONArray("thousand_enterprise");
             JSONArray dnacJSONArray = rtnString.getJSONArray("dnac_endpoint");
-            // JSONObject dnacJSON = rtnString.getJSONObject("dnac_endpoint");
 
             if (Constant.awsFlag) {
                 JSONObject awsJSON = rtnString.getJSONObject("cloudWatch");
@@ -947,8 +851,6 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
         kieSession.insert(bullseyeDroolsModel);
         kieSession.fireAllRules();
         kieSession.dispose();
-        // return new JSONObject().put("The RCA for this application is ",
-        // bullseyeDroolsModel.getRca()).toString();
         return bullseyeDroolsModel.getRca();
     }
 

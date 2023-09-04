@@ -52,10 +52,4 @@ public class InventoryDataModel {
 	{
 		
 	}
-
-    // Getters and setters
-
-    // Constructors
-
-    // Other methods
 }

@@ -499,12 +499,6 @@ public class FetchIssues {
                 networkPathList.add(nwpath);
                 bean.setNetworkPathToApplication(networkPathList);
             }
-            //			bean.setCount(totCount);
-//			ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-//			String json = ow.writeValueAsString(bean);
-//			System.out.println("JSON: "+json);
-//			rtnString = new JSONObject(json);
-//			System.out.println("final JSON Reponse: "+rtnString.toString());
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -605,8 +599,6 @@ public class FetchIssues {
 
                 }
                 endpointPrfList.add(endPoint);
-//				String rssi_median = _json.getString("rssi_median");
-//				String snr_median = _json.getString("snr_median");
 
             }
 

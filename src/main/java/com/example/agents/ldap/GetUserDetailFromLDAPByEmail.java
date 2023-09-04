@@ -24,14 +24,6 @@ public class GetUserDetailFromLDAPByEmail {
     public String getEmailDetailFromLdap(String l_email) {
         String userName="";
         try {
-//            Properties prop = new Properties();
-//            InputStream input= AuthenticateUserAPI.class.getClassLoader().getResourceAsStream("com/example/agents/ldap/ldap.properties");
-//            prop.load(input);
-//            String domain = prop.getProperty("DOMAIN");
-//            String ldapUser = prop.getProperty("ldapUser");
-//            String ldapPassword = prop.getProperty("ldapPassword");
-//            String domain = DOMAIN;
-//            String ldapUser =Constant.ldapUser;
             LdapContext context = ActiveDirectory.getConnection(ldapUser, ldapPassword, DOMAIN);
             context.addToEnvironment(Context.REFERRAL, "follow");
             userName =ActiveDirectory.getUserID(DOMAIN,l_email, context);

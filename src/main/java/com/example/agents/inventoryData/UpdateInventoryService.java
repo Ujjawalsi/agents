@@ -46,7 +46,7 @@ public class UpdateInventoryService {
 //    @Value("${dnac_inventory_api}")
 //    String dnac_inventory_api;
 
-  //  @Scheduled(cron = "0 10 11 * * *")
+//    @Scheduled(cron = "0 10 11 * * *")
   @Scheduled(cron = "0 */1 * * * ?")
     public void updateDeviceInventory() {
         System.out.println("Updating Device Inventory!!");

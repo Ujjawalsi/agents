@@ -108,7 +108,7 @@ public class FetchIssuesForITAdmin {
         root.setLevel(Level.INFO);
     }
 
-    //Mostly Done --- please check before or after ....during final run
+
     @RequestMapping(value = "BullsEye/fetchIssuesAdmin", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
@@ -118,16 +118,6 @@ public class FetchIssuesForITAdmin {
                                            @RequestParam(value = "end_time", required = true) String end_time,
                                            @RequestParam(value = "email", required = true) String email) {
         String checkIssuesWithUser = "";
-//        Properties prop = new Properties();
-//        InputStream input=AuthenticateUserAPI.class.getClassLoader().getResourceAsStream("com/example/agents/ldap/ldap.properties");
-//        try {
-//            prop.load(input);
-//        } catch (IOException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//        String flag = prop.getProperty("isLdap");
-
         if (Constant.flag.equals("true")) {
             GetUserDetailFromLDAPByEmail l = new GetUserDetailFromLDAPByEmail();
             checkIssuesWithUser = l.getEmailDetailFromLdap(email);
@@ -139,17 +129,10 @@ public class FetchIssuesForITAdmin {
         }
         System.out.println("checkIssuesWithUser: " + checkIssuesWithUser);
 
-//        String domainName = new FetchIssues().getDomainName(checkIssuesWithUser);
       String domainName = endPointAgentsService.getDomainName(checkIssuesWithUser);
-
-        System.out.println("domainName: " + domainName);
         if (domainName == null) {
             return new JSONArray().toString();
         }
-
-        System.out.println("Getting allerts to check!!");
-        List<DnacEndpoint> dnacDataList = new ArrayList<DnacEndpoint>();
-        ITAdminBean admin_bean = new ITAdminBean();
         JSONObject processedRes = thousandEyeAlertService.getThousandEyeAlerts(start_time, end_time, checkIssuesWithUser, application,
                 domainName);
         JSONObject endPointAgentJson = processTEEndPointData(processedRes.getJSONArray("thousand_endpoint"));
@@ -343,7 +326,6 @@ public class FetchIssuesForITAdmin {
 
 
     // fetchAgentsSummaryCount
-    //Done -----> Done
     @RequestMapping(value = "/BullsEye/fetchAgentsSummaryCount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
@@ -389,7 +371,6 @@ public class FetchIssuesForITAdmin {
     }
 
 
-//Complete Done
     // fetchAgentsSummary
     @RequestMapping(value = "/BullsEye/fetchAgentsSummary", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -444,7 +425,6 @@ public class FetchIssuesForITAdmin {
 
 
 
-//Done --> Complete
     @GetMapping("/BullsEye/fetchUsageSummaryCount")
     public ResponseEntity<String> fetchUsageSummaryCount(
             @RequestParam(value = "start_time", required = true) String start_time,
@@ -511,7 +491,6 @@ public class FetchIssuesForITAdmin {
 
 
     // fetchUsageSummary
-    //Done ----> Completed
     @RequestMapping(value = "/BullsEye/fetchUsageSummary", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
@@ -558,7 +537,6 @@ public class FetchIssuesForITAdmin {
 
 
     // fetchAgentsMonitorsCount
-    //Done -----complete
     @GetMapping("/BullsEye/fetchAgentsMonitorsCount")
     public ResponseEntity<String> fetchAgentsMonitorsCount(
             @RequestParam(value = "start_time", required = true) String start_time,
@@ -617,8 +595,6 @@ public class FetchIssuesForITAdmin {
         return new ResponseEntity<>(jobjRes.toString(), HttpStatus.OK);
     }
 
-
-    //Done ---complete
     @GetMapping("/BullsEye/fetchAgentsMonitors")
     public ResponseEntity<String> fetchAgentsMonitors(
             @RequestParam(value = "type", required = true) String type,
@@ -666,9 +642,6 @@ public class FetchIssuesForITAdmin {
     }
 
 
-
-
-//DOne ----> complete
     // fetchDnacClientHealthCount
     @RequestMapping(value = "/BullsEye/fetchDnacClientHealthCount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -775,8 +748,6 @@ public class FetchIssuesForITAdmin {
         return j_obj2.toString();
     }
 
-
-    //Done---> Complete
     // fetchDnacClientHealth
     @RequestMapping(value = "/BullsEye/fetchDnacClientHealth", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -851,7 +822,6 @@ public class FetchIssuesForITAdmin {
     }
 
     // fetchDnacClientHealth 96 work in progress
-    //Done ---Complete
     @RequestMapping(value = "/BullsEye/fetchDnacClientHealthDay", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
@@ -952,8 +922,6 @@ public class FetchIssuesForITAdmin {
     }
 
 
-
-//Done--completed
     @RequestMapping(value = "/BullsEye/fetchDnacNetworkHealthDay", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
@@ -1039,8 +1007,6 @@ public class FetchIssuesForITAdmin {
     }
 
 
-
-//Done --complete
     @RequestMapping(value = "/BullsEye/getalertsall", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
@@ -1110,10 +1076,6 @@ try {
 
 
     }
-
-
-
-    //Done--complete
 
     @RequestMapping(value = "/BullsEye/gettopalerts", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -1202,8 +1164,6 @@ try {
 
     }
 
-
-//Done ----but check when we have data in thousand eye alert
     @RequestMapping(value = "/BullsEye/getApplicationTrend", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
@@ -1231,7 +1191,6 @@ try {
             Date prevdate = currentDate;
             int result = aheaddate.compareTo(currentDateString);
             String previous = dateFormat.format(prevdate);
-            List<JSONObject> alerts = new ArrayList<>();
 
             boolean breakthrough = false;
 
@@ -1241,7 +1200,6 @@ try {
                 aheaddate = calendar.getTime();
                 JSONObject jobj = new JSONObject();
                 String ahead = dateFormat.format(aheaddate);
-                JSONObject intquery = new JSONObject();
      	List<ThousandEyeAlert> filterListByNameaAndTime = new ArrayList<>();
         List<ThousandEyeAlert> thousandEyeAlerts= thousandEyeAlertService.findByTimeGap(ahead, startdate);
                 for (ThousandEyeAlert alert: thousandEyeAlerts) {
