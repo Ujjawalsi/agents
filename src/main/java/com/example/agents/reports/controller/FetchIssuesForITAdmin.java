@@ -1285,39 +1285,4 @@ try {
         return "";
     }
 
-    public String dateFormat(String l_date) {
-        String dt1 = "";
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");// 2023-02-09 00:00:00
-            Date dt = sdf.parse(l_date);
-            System.out.println("dt: " + dt);
-            SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 2023-01-19 11:15:00
-            dt1 = sdf1.format(dt);
-            System.out.println("dt1: " + dt1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return dt1;
-    }
-
-    public String dateFormat1(String date1) {
-        String date = "";
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// 2023-02-09 00:00:00
-        try {
-            Date dt = sdf.parse(date1);
-            SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");// 2023-Jan-19 11:15:00
-            date = sdf1.format(dt);
-            return date;
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return date;
-    }
-
-    public static void main(String args[]) {
-        FetchIssuesForITAdmin obj = new FetchIssuesForITAdmin();
-        System.out.println(obj.dateFormat1("2023-01-19 11:15:00"));
-    }
-
 }

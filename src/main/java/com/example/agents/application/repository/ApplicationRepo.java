@@ -12,6 +12,6 @@ import java.util.List;
 @Repository
 public interface ApplicationRepo extends JpaRepository<Application, Long> {
 
-    @Query(value = "SELECT * FROM applications WHERE app_name LIKE '%:appName%'", nativeQuery = true)
+    @Query(value = "SELECT * FROM applications WHERE app_name = :appName", nativeQuery = true)
     List<Application> findByAppName(@Param("appName") String appName);
 }
