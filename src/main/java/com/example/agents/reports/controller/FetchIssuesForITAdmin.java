@@ -1,5 +1,6 @@
 package com.example.agents.reports.controller;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -453,6 +454,8 @@ public class FetchIssuesForITAdmin {
                  root = objectMapper.readTree(jsonDocument);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
             JsonNode usageNode = root.get("usage");
             JsonNode quotaNode = usageNode.get("quota");
@@ -683,6 +686,8 @@ public class FetchIssuesForITAdmin {
                 rootNode = objectMapper.readTree(String.valueOf(j_obj));
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
 
             String jsonDocument = rootNode.get("jsonDocument").asText();
@@ -690,6 +695,8 @@ public class FetchIssuesForITAdmin {
             try {
                 innerNode = objectMapper.readTree(jsonDocument);
             } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
 
@@ -789,6 +796,8 @@ public class FetchIssuesForITAdmin {
                 rootNode = objectMapper.readTree(String.valueOf(jobj));
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
 
             String jsonDocument = rootNode.get("jsonDocument").asText();
@@ -796,6 +805,8 @@ public class FetchIssuesForITAdmin {
             try {
                 innerNode = objectMapper.readTree(jsonDocument);
             } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
 
@@ -863,6 +874,8 @@ public class FetchIssuesForITAdmin {
                     rootNode = objectMapper.readTree(String.valueOf(jObj));
                 } catch (JsonProcessingException e) {
                     throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
 
                 String jsonDocument = rootNode.get("jsonDocument").asText();
@@ -870,6 +883,8 @@ public class FetchIssuesForITAdmin {
                 try {
                     innerNode = objectMapper.readTree(jsonDocument);
                 } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
 
@@ -960,6 +975,8 @@ public class FetchIssuesForITAdmin {
                 try {
                     rootNode = objectMapper.readTree(jObj);
                 } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
                 int count_fair = rootNode.get("fairCount").asInt();

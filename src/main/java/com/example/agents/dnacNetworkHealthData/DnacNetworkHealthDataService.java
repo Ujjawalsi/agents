@@ -36,7 +36,7 @@ public class DnacNetworkHealthDataService {
     @Autowired
     private DnacNetworkHealthDataRepository dnacRepository;
 
-    @Scheduled(cron = "0 */1 * * * ?") // Run every 15 minutes
+    @Scheduled(cron = "0 */15 * * * ?") // Run every 15 minutes
     private void getNetworkHealth() {
         try {
             String token = getAuthTokenFromDNAC();

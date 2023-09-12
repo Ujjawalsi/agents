@@ -103,7 +103,7 @@ public class BUSAPIConnectorImpl implements IBUSAPIConnectorService{
 			restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 			//		HttpEntity<String> entity = new HttpEntity<String>(l_input, l_headers);
 			HttpEntity<String> entity = new HttpEntity<String>(l_headers);
-			System.out.println("Entity get ::  "+entity);
+//			System.out.println("Entity get ::  "+entity);
 			response = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
 			//System.out.println("response::sddsdssssssssssssssssssssss "+response);
 

@@ -43,7 +43,7 @@ public class TeUsageService {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-  @Scheduled(cron = "0 */1 * * * ?") // Schedule as required
+  @Scheduled(cron = "0 */15 * * * ?") // Schedule as required
     private void excuteUsageAPI() throws Exception {
         HttpHeaders _headerSet = new HttpHeaders();
         _headerSet.setContentType(MediaType.APPLICATION_JSON);

@@ -17,6 +17,7 @@ import com.example.agents.vel.common.connector.service.IBUSAPIConnectorService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -103,14 +104,14 @@ public class EndPointAgentsService {
 					e.printStackTrace();
 				}
 
-				List<String> userNameArray = List.of(checkIssuesWithUser.split(""));
-				List<String> userNameList = List.of(userName.split(""));
+				List<String> userNameArray = Arrays.asList(checkIssuesWithUser.split(""));
+				List<String> userNameList = Arrays.asList(userName.split(""));
 				if (userNameList.containsAll(userNameArray)) {
 					list.add(endPointModel);
 				} else {
 					JSONObject jsonObject = new JSONObject(endPointModel.getAgentData());
 					String string = jsonObject.getString("agentName");
-					List<String> agentNameList = List.of(string.split(""));
+					List<String> agentNameList = Arrays.asList(string.split(""));
 					if (agentNameList.containsAll(userNameArray)) {
 						list.add(endPointModel);
 					}

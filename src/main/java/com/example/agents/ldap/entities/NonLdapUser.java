@@ -1,8 +1,7 @@
 package com.example.agents.ldap.entities;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
-
 import java.util.List;
 
 @Data
@@ -18,5 +17,9 @@ public class NonLdapUser {
     private String userName;
     @Column(unique = true)
     private String password;
+
+    @ElementCollection
+    @CollectionTable(name = "non_ldap_user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
     private List<String> role;
 }

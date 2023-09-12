@@ -1,7 +1,7 @@
 package com.example.agents.reports.service;
 
 import com.example.agents.reports.entities.ThousandEyeAlert;
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

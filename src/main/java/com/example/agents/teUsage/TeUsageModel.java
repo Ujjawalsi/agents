@@ -1,6 +1,7 @@
 package com.example.agents.teUsage;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
+
 
 import java.time.LocalDateTime;
 

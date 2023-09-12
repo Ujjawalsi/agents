@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -73,8 +74,8 @@ public class DnacClientImpl implements DnacClientService {
             for (DnacClient client: dnacClients) {
                 JSONObject jsonObject = new JSONObject(client.getJsonDocument());
                 String username = jsonObject.getString("username");
-                List<String> userNameList = List.of(username.split(""));
-                List<String> agentNameList = List.of(agentName.split(""));
+                List<String> userNameList = Arrays.asList(username.split(""));
+                List<String> agentNameList = Arrays.asList(agentName.split(""));
                 if (userNameList.containsAll(agentNameList)) {
                     jsonarray.add(client);
                 }

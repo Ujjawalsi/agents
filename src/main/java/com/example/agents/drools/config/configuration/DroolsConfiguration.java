@@ -19,13 +19,14 @@ public class DroolsConfiguration {
     @Bean
     public KieContainer kieContainer() {
         KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
-        KieFileSystem write = kieFileSystem.write(ResourceFactory.newClassPathResource("rule.drl"));
+        KieFileSystem write = kieFileSystem.write(ResourceFactory.newClassPathResource("rules.xlsx"));
         System.out.println(write);
         KieBuilder kb = kieServices.newKieBuilder(kieFileSystem);
         kb.buildAll();
         KieModule kieModule = kb.getKieModule();
         return kieServices.newKieContainer(kieModule.getReleaseId());
     }
+
 }
 
 

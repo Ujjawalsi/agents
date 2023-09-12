@@ -16,7 +16,7 @@ import com.example.agents.thousandeye.itadmin.bean.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.example.agents.vel.common.connector.service.impl.BUSAPIConnectorImpl;
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.kie.api.runtime.KieContainer;

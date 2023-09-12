@@ -61,10 +61,10 @@ public class DepositRateController {
     public String test(){
         KieSession kieSession = kieContainer.newKieSession();
         System.out.println(kieSession);
-////      List<String> issuesList = Arrays.asList("TE_endpoint_memory_utilization","TE_endpoint_memory_utilization","Any KPI breach", "TE_endpoint_cpu_utilization", "TE_endpoint_pageloadtime", "Any KPI breach");
+//    List<String> issuesList = Arrays.asList("TE_endpoint_memory_utilization","TE_endpoint_memory_utilization","Any KPI breach", "TE_endpoint_cpu_utilization", "TE_endpoint_pageloadtime", "Any KPI breach");
 //      List<String> issuesList = Arrays.asList("TE_endpoint_Jitter","Any KPI breach","TE_endpoint_memory_utilization","TE_endpoint_packet_loss","TE_endpoint_throughput","TE_endpoint_SSL_Error","TE_endpoint_Latency","DNAC_AP_Health" , "DNAC_Client_health");
 ////        System.out.println(issuesList1.size());
-        List<String> issuesList = Arrays.asList();
+       List<String> issuesList = Arrays.asList();
         boolean empty = issuesList.isEmpty();
         System.out.println(empty);
         BullseyeDroolsModel bullseyeDroolsModel = new BullseyeDroolsModel(issuesList);
