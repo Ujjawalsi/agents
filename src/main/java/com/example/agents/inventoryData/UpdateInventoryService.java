@@ -101,9 +101,6 @@ public class UpdateInventoryService {
         String responseString = null;
         String token = null;
         try {
-            if (dnac_user_name == null || dnac_password == null) {
-                // Load properties from file
-            }
             HttpHeaders httpHeaders = prepareAuthHeaders(dnac_user_name, dnac_password);
             response = service.CallPostRequest(httpHeaders, "", dnac_auth_api);
             responseString = response.getBody();
