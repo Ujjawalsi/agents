@@ -12,7 +12,7 @@ public class InventoryDataModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "data", columnDefinition = "jsonb")
+    @Column(name = "data", length = 10000)
     private String data;
 
     @Column(name = "created_at")
