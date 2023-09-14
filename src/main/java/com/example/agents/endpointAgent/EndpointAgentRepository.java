@@ -10,9 +10,6 @@ import java.util.List;
 
 public interface EndpointAgentRepository extends JpaRepository<EndpointAgentModel, Long> {
 
-    @Query(value = "SELECT * FROM ms_endpoint_agents WHERE UPPER(CAST(agent_data AS JSON)->>'agentName') = UPPER(:name)", nativeQuery = true)
-    List<EndpointAgentModel> findByName(@Param("name") String name);
-
 
 }
 

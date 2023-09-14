@@ -1,6 +1,6 @@
 package com.example.agents.dnacNetworkHealthData;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,19 +17,23 @@ import java.util.Date;
 import java.util.List;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static com.example.agents.constant.Constant.*;
 
 @Component
 @EnableScheduling
 public class DnacNetworkHealthDataService {
-//	@Value("${dnac_auth_api}")
-//    String dnac_auth_api;
-//	@Value("${dnac_user_name}")
-//    String dnac_user_name;
-//	@Value("${dnac_password}")
-//	String dnac_password;
-//	@Value("${dnac_network_health_api}")
-//	String dnac_network_health_api;
+
+    @Value("${dnac.user.name}")
+    private String dnacUserName;
+
+    @Value("${dnac.password}")
+    private String dnacPassword;
+
+    @Value("${dnac.auth.api}")
+    private String dnacAuthApi;
+
+    @Value("${dnac.network.health.api}")
+    private String dnacNetworkHealthApi;
+
     @Autowired
     private IBUSAPIConnectorService service;
 
@@ -41,7 +45,7 @@ public class DnacNetworkHealthDataService {
         try {
             String token = getAuthTokenFromDNAC();
             HttpHeaders httpHeader = createHeaders(token);
-            ResponseEntity<String> response = service.CallGetRequest(httpHeader, "", dnac_network_health_api);
+            ResponseEntity<String> response = service.CallGetRequest(httpHeader, "", dnacNetworkHealthApi);
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 String responseBody = response.getBody();
@@ -87,8 +91,8 @@ public class DnacNetworkHealthDataService {
 		String _token = null;
 		try {
             HttpHeaders _httpHeaders = null;
-			_httpHeaders = prepareAuthHeaders(dnac_user_name,dnac_password);
-			_response =service.CallPostRequest(_httpHeaders, "", dnac_auth_api);
+			_httpHeaders = prepareAuthHeaders(dnacUserName,dnacPassword);
+			_response =service.CallPostRequest(_httpHeaders, "", dnacAuthApi);
 			_responseString =_response.getBody();
 			System.out.println("_responseString for AUth :: "+_responseString);
 			JSONObject _json = new JSONObject(_responseString);

@@ -32,9 +32,7 @@ public class EndPointAgentsService {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    @Scheduled(cron = "0 */15 * * * ?")
-//	@Scheduled(cron = "0 */1 * * * ?")
-//
+@Scheduled(cron = "0 */15 * * * ?")
     private void executeAgentsAPI() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

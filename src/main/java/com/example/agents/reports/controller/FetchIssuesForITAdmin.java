@@ -6,8 +6,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
-
 import com.example.agents.agentsandmonitors.AgentsAndMonitorsModel;
 import com.example.agents.agentsandmonitors.AgentsAndMonitorsService;
 import com.example.agents.application.entities.Application;
@@ -16,7 +14,6 @@ import com.example.agents.dnacNetworkHealthData.DnacNetworkHealthDataModel;
 import com.example.agents.dnacNetworkHealthData.DnacNetworkHealthDataService;
 import com.example.agents.endpointAgent.EndPointAgentsService;
 import com.example.agents.endpointAgent.EndpointAgentModel;
-import com.example.agents.constant.Constant;
 import com.example.agents.reports.entities.ThousandEyeAlert;
 import com.example.agents.reports.repository.ThousandEyeAlertRepo;
 import com.example.agents.reports.service.DnacClientService;
@@ -30,7 +27,6 @@ import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -43,34 +39,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.example.agents.customDate.DateTimeUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import com.example.agents.thousandeye.itadmin.bean.DnacEndpoint;
-import com.example.agents.thousandeye.itadmin.bean.ITAdminBean;
 import com.example.agents.vel.common.connector.service.impl.BUSAPIConnectorImpl;
 import com.example.agents.ldap.GetUserDetailFromLDAPByEmail;
-
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 
 @Component
 @Controller
-//@PropertySource("classpath:com/example/agents/vel/common/connector/service/constants.properties")
 public class FetchIssuesForITAdmin {
 
-//    @Value("${dnac_health_api}")
-//    String dnac_health_api;
-//    @Value("${awsFlag}")
-//    boolean awsFlag;
-
-//	Properties prop = new Properties();
-//	InputStream input=getClass().getClassLoader().getResourceAsStream("com/vel/te/scheduler/constants.properties");
-//	prop.load(input);
-
-//    @Autowired
-//    private KieContainer kieContainer;
+    @Value("${user.flag}")
+    private String userFlag;
     @Autowired
     CreateReports reports;
 
@@ -119,7 +100,7 @@ public class FetchIssuesForITAdmin {
                                            @RequestParam(value = "end_time", required = true) String end_time,
                                            @RequestParam(value = "email", required = true) String email) {
         String checkIssuesWithUser = "";
-        if (Constant.flag.equals("true")) {
+        if (userFlag.equals("true")) {
             GetUserDetailFromLDAPByEmail l = new GetUserDetailFromLDAPByEmail();
             checkIssuesWithUser = l.getEmailDetailFromLdap(email);
         }else {

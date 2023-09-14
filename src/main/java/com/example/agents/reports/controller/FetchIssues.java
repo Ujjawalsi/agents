@@ -1,11 +1,7 @@
 package com.example.agents.reports.controller;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import com.example.agents.constant.Constant;
 import com.example.agents.endpointAgent.EndPointAgentsService;
 import com.example.agents.endpointAgent.EndpointAgentModel;
 import com.example.agents.reports.entities.DnacClient;
@@ -16,11 +12,10 @@ import com.example.agents.reports.service.ThousandEyeAlertService;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
 import com.example.agents.customDate.DateTimeUtil;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -29,21 +24,22 @@ import com.example.agents.thousandeye.bean.EndpointPerformance;
 import com.example.agents.thousandeye.bean.GatewayConnectivity;
 import com.example.agents.thousandeye.bean.NetworkPathToApplication;
 import com.example.agents.thousandeye.bean.ThousandEyeAlertBean;
-import com.example.agents.drools.config.model.BullseyeDroolsModel;
-import com.example.agents.ldap.controller.AuthenticateUserAPI;
 import com.example.agents.ldap.GetUserDetailFromLDAPByEmail;
-
-
 import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
 public class FetchIssues {
-//    @Value("${Enterprise_Agent}")
-//    String enterprise_Agent;
+    @Value("${user.flag}")
+    private String userFlag;
+
+    @Value("${Enterprise.Agent}")
+    private String enterpriseAgent;
+
+    @Value("${domain.name}")
+    private String domainName;
 
     @Autowired
     private ThousandEyeAlertService thousandEyeAlertService;
@@ -83,7 +79,7 @@ public class FetchIssues {
                                      @RequestParam(value="end_time", required=true) String end_time,
                                      @RequestParam(value="email", required=true) String email
     ) throws JsonProcessingException {
-        System.out.println("enterprise_Agent: "+ Constant.Enterprise_Agent);
+        System.out.println("enterprise_Agent: "+ enterpriseAgent);
         TimeZone timeZone = TimeZone.getTimeZone("IST");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         simpleDateFormat.setTimeZone(timeZone);
@@ -538,8 +534,8 @@ public class FetchIssues {
     ) {
         JSONArray jsonarray = new JSONArray();
         String user = user_name;
-         String flag =Constant.flag;
-             String domain = Constant.DOMAIN;
+         String flag =userFlag;;
+             String domain = domainName;
             if (flag.equals("true")) {
                 GetUserDetailFromLDAPByEmail l = new GetUserDetailFromLDAPByEmail();
                 user_name = l.getEmailDetailFromLdap(user_name+"@"+domain);

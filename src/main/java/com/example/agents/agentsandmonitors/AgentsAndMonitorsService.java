@@ -19,13 +19,6 @@ import com.example.agents.vel.common.connector.service.IBUSAPIConnectorService;
 @Component
 @EnableScheduling
 public class AgentsAndMonitorsService {
-
-//    @Value("${te_agents_api}")
-//    private String te_agents_api;
-
-//    @Value("${te_api_key}")
-//    private String te_api_key;
-
     @Autowired
     IBUSAPIConnectorService service;
 

@@ -6,7 +6,6 @@ import com.example.agents.drools.config.model.BullseyeDroolsModel;
 import com.example.agents.inventoryData.InventoryDataModel;
 import com.example.agents.inventoryData.InventoryDataRepository;
 import com.example.agents.reports.controller.CreateReports;
-import com.example.agents.constant.Constant;
 import com.example.agents.reports.entities.DnacClient;
 import com.example.agents.reports.entities.ThousandEyeAlert;
 import com.example.agents.reports.repository.ThousandEyeAlertRepo;
@@ -22,6 +21,7 @@ import org.json.JSONObject;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,6 +37,28 @@ import java.util.*;
 
 @Service
 public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
+
+
+    @Value("${USER.NAME}")
+    private String userName;
+
+    @Value("${USER.PASSWORD}")
+    private String userPassword;
+
+    @Value("${aws.Flag}")
+    private boolean awsFlag;
+
+    @Value("${dnac.health.api}")
+    private String dnacHealthApi;
+
+    @Value("${Enterprise.Agent}")
+    private String enterpriseAgent;
+
+    @Value("${te.api.key}")
+    private String teApiKey;
+
+   @Value("${te.alert.api}")
+   private String teAlertApi;
 
 
 
@@ -130,7 +152,7 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
             String[] _userPassword = _decodePass.split(":");
             String _username = _userPassword[0];
             String _password = _userPassword[1];
-           if (_username.equalsIgnoreCase(Constant.USERNAME) && _password.equalsIgnoreCase(Constant.PASSWORD)) {
+           if (_username.equalsIgnoreCase(userName) && _password.equalsIgnoreCase(userPassword)) {
             _body = getBody(l_request);
             JSONObject _json = new JSONObject(_body);
             String eventType = _json.getString("eventType");
@@ -343,9 +365,9 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
         String te_api_key = "";
         String te_alert_api = "";
         try {
-            String Enterprise_Agent = Constant.Enterprise_Agent;
-            te_api_key=Constant.te_api_key;
-            te_alert_api=Constant.te_alert_api;
+            String Enterprise_Agent = enterpriseAgent;
+            te_api_key=teApiKey;
+            te_alert_api=teAlertApi;
             try {
                 List<ThousandEyeAlert> thousandEyeAlerts = thousandEyeAlertRepo.findByTimeGapAndTestName(startTime,endTime,application);
                 System.out.println(thousandEyeAlerts.size());
@@ -429,7 +451,7 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
     public JSONArray getApplicationIssues(String startTime, String endTime, String enterpriseAgentName,
                                           String application) throws IOException {
         JSONArray jsonarray = new JSONArray();
-        String Enterprise_Agent = Constant.Enterprise_Agent;
+        String Enterprise_Agent = enterpriseAgent;
         try {
             List<ThousandEyeAlert> thousandEyeAlerts = thousandEyeAlertRepo.findByTimeGapAndTestName(startTime, endTime, application);
             for (ThousandEyeAlert alert: thousandEyeAlerts) {
@@ -601,7 +623,7 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
                 }
             }
             bean.setThousandEnterprise(thousandEnterpriseList);
-            if (Constant.awsFlag)
+            if (awsFlag)
                 bean.setCloudWatch(cloudWatch);
             else
                 bean.setCloudWatch(new CloudWatch("", ""));
@@ -715,7 +737,7 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
         try {
             String _token = reports.getAuthTokenFromDNAC();
             HttpHeaders _headers = reports.createHeaders(_token);
-            String _url = Constant.dnac_health_api + startTime + "&endTime=" + endTime;
+            String _url = dnacHealthApi+ startTime + "&endTime=" + endTime;
             ResponseEntity<String> response = service.CallGetRequest(_headers, "", _url);
             if (response.getStatusCode() == HttpStatus.OK) {
                 String _body = response.getBody();
@@ -744,7 +766,7 @@ public class ThousandEyeAlertImpl implements ThousandEyeAlertService {
             JSONArray teEnterpriseJSONArray = rtnString.getJSONArray("thousand_enterprise");
             JSONArray dnacJSONArray = rtnString.getJSONArray("dnac_endpoint");
 
-            if (Constant.awsFlag) {
+            if (awsFlag) {
                 JSONObject awsJSON = rtnString.getJSONObject("cloudWatch");
                 awsJSON.keys().forEachRemaining(key -> {
                     Object value = awsJSON.get(key);

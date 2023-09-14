@@ -52,10 +52,4 @@ public class EndpointAgentModel {
 	public EndpointAgentModel() {
 		//super();
 	}
-
-    // Getters and setters
-
-    // Constructors
-
-    // Other methods
 }

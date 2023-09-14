@@ -1,6 +1,4 @@
 package com.example.agents.reports.controller;
-
-import com.example.agents.constant.Constant;
 import com.example.agents.reports.entities.DnacClient;
 import com.example.agents.reports.service.DnacClientService;
 import com.example.agents.customDate.DateTimeUtil;
@@ -8,6 +6,7 @@ import com.example.agents.vel.common.connector.service.IBUSAPIConnectorService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,28 +21,24 @@ import java.util.*;
 @Component
 @EnableScheduling
 public class CreateReports {
+    @Value("${dnac.user.name}")
+    private String dnacUserName;
 
-//    @Value("${dnac_auth_api}")
-//    String dnac_auth_api;
+    @Value("${dnac.password}")
+    private String dnacPassword;
 
-//    @Value("${dnac_user_name}")
-//    String dnac_user_name;
+    @Value("${dnac.report.api}")
+    private String dnacReportApi;
 
-//    @Value("${dnac_password}")
-//    String dnac_password;
-
-//    @Value("${dnac_report_api}")
-//    String dnac_report_api;
-
-//	@Value("${user_ssid}")
-//	String user_ssid;
+    @Value("${dnac.auth.api}")
+    private String dnacAuthApi;
 
     @Autowired
     IBUSAPIConnectorService service;
     @Autowired
     private DnacClientService dnacClientService;
 
-    @Scheduled(cron = "0 */15 * ? * *")
+    @Scheduled(cron = "0 */1 * ? * *")
 public void create() {
         System.out.println("Auto Scheduler Start :: ::  ");
         createReportInDNAC("Scheduler BullsEye");
@@ -283,8 +278,8 @@ public void create() {
         try {
             String _token = getAuthTokenFromDNAC();
             HttpHeaders _headers  = createHeaders(_token);
-            String _url = Constant.dnac_report_api;
-            System.out.println("dnac_report_api:: "+Constant.dnac_auth_api);
+            String _url = dnacReportApi;
+            System.out.println("dnac_report_api:: "+dnacReportApi);
             ResponseEntity<String> response = service.CallPostRequest(_headers, jsonPayLoad, _url);
             if(response.getStatusCode() ==HttpStatus.OK) {
                 String _body = response.getBody();
@@ -353,7 +348,7 @@ public void create() {
     private void deleteReportFromDnac(String _reportId, HttpHeaders _headers) throws Exception {
         JSONObject responseJson = null;
 //		String _url = "https://{ip}/dna/intent/api/v1/data/reports/"+_reportId;
-        String _url = Constant.dnac_report_api+_reportId;
+        String _url = dnacReportApi+_reportId;
         ResponseEntity<String> response = service.CallDeleteRequest(_headers, _url);
         System.out.println("deleteReportFromDnac:: "+response);
         if(response.getStatusCode() ==HttpStatus.OK) {
@@ -372,7 +367,7 @@ public void create() {
     }
     private String getExecutionId(String _reportId, HttpHeaders _headers) throws Exception {
         String _executionId = null;
-        String _url = Constant.dnac_report_api;//"https://{ip}/dna/intent/api/v1/data/reports/";
+        String _url = dnacReportApi;//"https://{ip}/dna/intent/api/v1/data/reports/";
         ResponseEntity<String> response = service.CallGetRequest(_headers, _reportId, _url);
         if(response.getStatusCode() ==HttpStatus.OK) {
             String _body = response.getBody();
@@ -394,7 +389,7 @@ public void create() {
 
     private JSONObject downloadReportContent(String _reportId, HttpHeaders _headers, String _executionId) throws Exception {
         JSONObject responseJson = null;
-        String _url = Constant.dnac_report_api+_reportId+"/executions/"+_executionId;
+        String _url = dnacReportApi+_reportId+"/executions/"+_executionId;
         ResponseEntity<String> response = service.CallGetRequest(_headers, "", _url);
         System.out.println("downloadReportContent:: "+response);
         if(response.getStatusCode() ==HttpStatus.OK) {
@@ -427,8 +422,8 @@ public void create() {
         String _token = null;
         try {
             HttpHeaders _httpHeaders = null;
-            _httpHeaders = prepareAuthHeaders(Constant.dnac_user_name,Constant.dnac_password);
-            _response =service.CallPostRequest(_httpHeaders, "", Constant.dnac_auth_api);
+            _httpHeaders = prepareAuthHeaders(dnacUserName,dnacPassword);
+            _response =service.CallPostRequest(_httpHeaders, "", dnacAuthApi);
             _responseString =_response.getBody();
             System.out.println("_responseString for AUth :: "+_responseString);
             JSONObject _json = new JSONObject(_responseString);

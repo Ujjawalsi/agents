@@ -1,28 +1,29 @@
 package com.example.agents.ldap.controller;
-
-import com.example.agents.constant.Constant;
 import com.example.agents.ldap.service.NonLdapUserService;
 import com.example.agents.ldap.ActiveDirectory;
 import com.example.agents.ldap.ActiveDirectory.User;
 import com.example.agents.ldap.entities.NonLdapUser;
 import com.example.agents.user.auth.model.UserBodyModel;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.naming.NamingException;
 import javax.naming.ldap.LdapContext;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
-import java.util.Properties;
 
 @RestController
 @CrossOrigin
 @RequestMapping("api/v1/auth")
 public class AuthenticateUserAPI {
+
+    @Value("${user.flag}")
+    private String userFlag;
+
+    @Value("${domain.name}")
+    private String domainName;
 
 
     @Autowired
@@ -36,8 +37,8 @@ public class AuthenticateUserAPI {
         System.out.println(body.toString());
         User user = null;
         try {
-            if (Constant.flag.equals("true")) {
-                LdapContext context = ActiveDirectory.getConnection(body.getUserName(), body.getPassword(), Constant.DOMAIN);
+            if (userFlag.equals("true")) {
+                LdapContext context = ActiveDirectory.getConnection(body.getUserName(), body.getPassword(), domainName);
                 user = ActiveDirectory.getUser(body.getUserName(), context);
             }
             else {
