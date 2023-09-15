@@ -406,8 +406,9 @@ public class FetchIssuesForITAdmin {
     }
 
 
-
-    @GetMapping("/BullsEye/fetchUsageSummaryCount")
+    @RequestMapping(value = "/BullsEye/fetchUsageSummaryCount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @CrossOrigin(origins = "*")
     public ResponseEntity<String> fetchUsageSummaryCount(
             @RequestParam(value = "start_time", required = true) String start_time,
             @RequestParam(value = "end_time", required = true) String end_time) {
@@ -521,8 +522,10 @@ public class FetchIssuesForITAdmin {
 
 
     // fetchAgentsMonitorsCount
-    @GetMapping("/BullsEye/fetchAgentsMonitorsCount")
-    public ResponseEntity<String> fetchAgentsMonitorsCount(
+    @RequestMapping(value = "/BullsEye/fetchAgentsMonitorsCount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @CrossOrigin(origins = "*")
+    public String fetchAgentsMonitorsCount(
             @RequestParam(value = "start_time", required = true) String start_time,
             @RequestParam(value = "end_time", required = true) String end_time) {
 
@@ -539,7 +542,6 @@ public class FetchIssuesForITAdmin {
         JSONObject jobj3 = new JSONObject();
 
         for (AgentsAndMonitorsModel agentMonitor : agentsAndMonitorsModelList) {
-
             List<String> agentStates = new ArrayList<>();
             JSONObject jsonObject1 = new JSONObject(agentMonitor.getJsonDocument());
             JSONArray agents = jsonObject1.getJSONArray("agents");
@@ -575,12 +577,15 @@ public class FetchIssuesForITAdmin {
             jobj3.put("no_agents_info", no_agents);
             jobjRes.put("agentState", jobj3);
         }
+        System.out.println(jobjRes.toString());
 
-        return new ResponseEntity<>(jobjRes.toString(), HttpStatus.OK);
+       return jobjRes.toString();
     }
 
-    @GetMapping("/BullsEye/fetchAgentsMonitors")
-    public ResponseEntity<String> fetchAgentsMonitors(
+    @RequestMapping(value = "/BullsEye/fetchAgentsMonitors", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @CrossOrigin(origins = "*")
+    public String fetchAgentsMonitors(
             @RequestParam(value = "type", required = true) String type,
             @RequestParam(value = "start_time", required = true) String start_time,
             @RequestParam(value = "end_time", required = true) String end_time) {
@@ -622,7 +627,7 @@ public class FetchIssuesForITAdmin {
 
         jobjRes.put(type, jArrayRes);
 
-        return new ResponseEntity<>(jobjRes.toString(), HttpStatus.OK);
+        return jobjRes.toString();
     }
 
 
