@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ApplicationImpl implements ApplicationService {
@@ -15,7 +16,8 @@ public class ApplicationImpl implements ApplicationService {
     private ApplicationRepo applicationRepo;
     @Override
     public List<Application> findByName(String appName) {
-        return applicationRepo.findByAppName(appName);
+        List<Application> all = applicationRepo.findAll();
+    return all.stream().filter(application -> application.getAppName().equalsIgnoreCase(appName)).collect(Collectors.toList());
     }
 
     @Override
