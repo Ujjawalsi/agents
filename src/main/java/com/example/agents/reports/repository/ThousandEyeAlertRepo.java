@@ -16,30 +16,30 @@ public interface ThousandEyeAlertRepo extends JpaRepository<ThousandEyeAlert, Lo
     ThousandEyeAlert findByNewEventId(String newEventId);
 
     @Query(value = "SELECT * FROM ms_thousandeye_alert WHERE alert IS NOT NULL AND " +
-            "SUBSTRING(alert, '\"dateStart\":\"(.*?)\"') <= :endTime AND " +
-            "SUBSTRING(alert, '\"testName\":\"(.*?)\"') = :application", nativeQuery = true)
+            "AND CAST(alert AS JSON)->>'dateStart' <= :endTime AND " +
+            "AND CAST(alert AS JSON)->>'testName' = :application", nativeQuery = true)
     List<ThousandEyeAlert> findAlertsByCriteria(@Param("endTime") String endTime,@Param("application") String application);
 
-
-    @Query(value = "SELECT * FROM ms_thousandeye_alert WHERE alert IS NOT NULL AND " +
-            "SUBSTRING(alert, '\"dateStartZoned\":\"(.*?)\"') >= :startTime AND " +
-            "SUBSTRING(alert, '\"dateStartZoned\":\"(.*?)\"') <= :endTime", nativeQuery = true)
+    @Query(value = "SELECT * FROM public.ms_thousandeye_alert WHERE alert IS NOT NULL " +
+            "AND CAST(alert AS JSON)->>'dateStartZoned' <= :endTime " +
+            "AND CAST(alert AS JSON)->>'dateStartZoned' >= :startTime",
+            nativeQuery = true)
     List<ThousandEyeAlert> findByTimeRange(@Param("startTime") String startTime, @Param("endTime") String endTime);
 
 
     @Query(value = "SELECT * FROM ms_thousandeye_alert WHERE alert IS NOT NULL AND " +
-            "SUBSTRING(alert, '\"dateStartZoned\":\"(.*?)\"') >= :ahead AND " +
-            "SUBSTRING(alert, '\"dateStartZoned\":\"(.*?)\"') <= :startdate", nativeQuery = true)
+            "AND CAST(alert AS JSON)->>'dateStartZoned' >= :ahead AND " +
+            "AND CAST(alert AS JSON)->>'dateStartZoned' <= :startdate", nativeQuery = true)
     List<ThousandEyeAlert> findByTimingGap(@Param("ahead") String ahead, @Param("startdate") String startdate);
 
     @Query(value = "SELECT * FROM ms_thousandeye_alert WHERE alert IS NOT NULL AND " +
-            "SUBSTRING(alert, '\"testName\":\"(.*?)\"') = :application", nativeQuery = true)
+            "AND CAST(alert AS JSON)->>'testName'= :application", nativeQuery = true)
     List<ThousandEyeAlert> findByTestName(@Param("application") String application);
 
     @Query(value = "SELECT * FROM ms_thousandeye_alert WHERE alert IS NOT NULL AND " +
-            "SUBSTRING(alert, '\"dateStart\":\"(.*?)\"') >= :startTime AND " +
-            "SUBSTRING(alert, '\"dateStart\":\"(.*?)\"') <= :endTime AND " +
-            "SUBSTRING(alert, '\"testName\":\"(.*?)\"') = :application", nativeQuery = true)
+            "AND CAST(alert AS JSON)->>'dateStart' >= :startTime AND " +
+            "AND CAST(alert AS JSON)->>'dateStart' <= :endTime AND " +
+            "AND CAST(alert AS JSON)->>'testName' = :application", nativeQuery = true)
     List<ThousandEyeAlert> findByTimeGapAndTestName(@Param("startTime") String startTime,@Param("endTime")String endTime, @Param("application")String application);
 
 }
