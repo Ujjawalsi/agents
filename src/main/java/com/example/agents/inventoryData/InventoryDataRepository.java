@@ -12,7 +12,7 @@ public interface InventoryDataRepository extends JpaRepository<InventoryDataMode
 
 
     @Query(value = "SELECT * FROM ms_inventory WHERE data IS NOT NULL AND " +
-            "SUBSTRING(data, '\"hostname\":\"(.*?)\"') = :connectedDeviceName", nativeQuery = true)
+            "CAST(alert AS JSON)->>'hostname' = :connectedDeviceName", nativeQuery = true)
     List<InventoryDataModel> findByHostname(@Param("connectedDeviceName")String connectedDeviceName);
 }
 

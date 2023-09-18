@@ -110,7 +110,6 @@ public class SearchUserInAD
             {
                 SearchResult sr = (SearchResult)answer.next();
                 totalResults++;
-                System.out.println(">>>" + sr.getName());
                 Attributes attrs = sr.getAttributes();
                 System.err.println(">>>>>>" + attrs.get("cn").get());
 //				System.err.println(">>>>>>" + attrs.get("sn").get());

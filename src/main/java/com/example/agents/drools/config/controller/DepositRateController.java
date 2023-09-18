@@ -43,15 +43,11 @@ public class DepositRateController {
     }
     @RequestMapping(value = "/getInterestRate", method = RequestMethod.GET, produces = "application/json")
     public String testDrools(@RequestParam(required = true) String alerts) {
-        System.out.println("Alerts:: "+ alerts);
         KieSession kieSession = kieContainer.newKieSession();
         List<String> al = Arrays.asList(alerts.split(","));
-        System.out.println(al+" List:: "+ al.size());
         BullseyeDroolsModel bullseyeDroolsModel = new BullseyeDroolsModel(al);
         FactHandle insert = kieSession.insert(bullseyeDroolsModel);
-        System.out.println(insert);
         int i = kieSession.fireAllRules();
-        System.out.println(i);
         kieSession.dispose();
         return new JSONObject().put("The RCA for this application is ", bullseyeDroolsModel.getRca()).toString();
     }

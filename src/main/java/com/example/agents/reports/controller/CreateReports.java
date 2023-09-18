@@ -279,7 +279,6 @@ public void create() {
             String _token = getAuthTokenFromDNAC();
             HttpHeaders _headers  = createHeaders(_token);
             String _url = dnacReportApi;
-            System.out.println("dnac_report_api:: "+dnacReportApi);
             ResponseEntity<String> response = service.CallPostRequest(_headers, jsonPayLoad, _url);
             if(response.getStatusCode() ==HttpStatus.OK) {
                 String _body = response.getBody();
@@ -291,13 +290,11 @@ public void create() {
                 _body = _body.replaceAll("\"type\":\"TIME_RANGE\",", "");
                 JSONObject jsonData = new JSONObject(_body);
                 String _reportId =  jsonData.getString("reportId");
-                System.out.println(_reportId);
                 Thread.sleep(1000);
                 JSONObject _obj = getReportContent(_reportId, _headers);
 
                 JSONArray clientArr = _obj.getJSONArray("client_details");
                 JSONArray dateTimeArr = _obj.getJSONArray("filters");
-                System.out.println("dateTimeArr: "+dateTimeArr);
                 String startTime = "";
                 String endTime = "";
 
@@ -311,8 +308,6 @@ public void create() {
                         endTime = dateTimeJson.getJSONArray("values").getString(0);
                     }
                 }
-                System.out.println(startTime+ " time: "+endTime);
-
                 List<DnacClient> dataList = new ArrayList<>();
 
                 for (int i = 0; i < clientArr.length(); i++) {
@@ -329,13 +324,7 @@ public void create() {
 
                     dataList.add(data);
                 }
-
-                System.out.println("Save--->>>>");
-
                 dnacClientService.save(dataList);
-
-
-                System.out.println("Record Inserted Successfully....");
                 deleteReportFromDnac(_reportId, _headers);
             }
         } catch (Exception e) {
@@ -347,21 +336,16 @@ public void create() {
     }
     private void deleteReportFromDnac(String _reportId, HttpHeaders _headers) throws Exception {
         JSONObject responseJson = null;
-//		String _url = "https://{ip}/dna/intent/api/v1/data/reports/"+_reportId;
         String _url = dnacReportApi+_reportId;
         ResponseEntity<String> response = service.CallDeleteRequest(_headers, _url);
-        System.out.println("deleteReportFromDnac:: "+response);
         if(response.getStatusCode() ==HttpStatus.OK) {
             String _body = response.getBody();
             responseJson = new JSONObject(_body);
         }
-        System.out.println("Report Deleted: "+responseJson);
-
     }
 
     public JSONObject getReportContent(String _reportId, HttpHeaders _headers) throws Exception {
         String _executionId = getExecutionId(_reportId, _headers);
-        System.out.println("_executionId: "+ _executionId);
         Thread.sleep(200000);
         return downloadReportContent(_reportId, _headers, _executionId);
     }
@@ -391,7 +375,6 @@ public void create() {
         JSONObject responseJson = null;
         String _url = dnacReportApi+_reportId+"/executions/"+_executionId;
         ResponseEntity<String> response = service.CallGetRequest(_headers, "", _url);
-        System.out.println("downloadReportContent:: "+response);
         if(response.getStatusCode() ==HttpStatus.OK) {
             String _body = response.getBody();
             responseJson = new JSONObject(_body);
@@ -425,7 +408,6 @@ public void create() {
             _httpHeaders = prepareAuthHeaders(dnacUserName,dnacPassword);
             _response =service.CallPostRequest(_httpHeaders, "", dnacAuthApi);
             _responseString =_response.getBody();
-            System.out.println("_responseString for AUth :: "+_responseString);
             JSONObject _json = new JSONObject(_responseString);
             _token= _json.get("Token").toString();
         } catch (Exception e) {

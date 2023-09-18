@@ -12,7 +12,6 @@ public class GetUserDetailFromLDAPByEmail {
             LdapContext context = ActiveDirectory.getConnection(ldapUser, ldapPassword, DOMAIN);
             context.addToEnvironment(Context.REFERRAL, "follow");
             userName =ActiveDirectory.getUserID(DOMAIN,l_email, context);
-            System.out.println("userName= "+userName);
 
 
         } catch (Exception e) {

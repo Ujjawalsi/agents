@@ -79,10 +79,6 @@ public class FetchIssuesForITAdmin {
 
     @Autowired
     private AgentsAndMonitorsService agentsAndMonitorsService;
-    //	@Autowired
-//	IBUSAPIConnectorService service;
-    BUSAPIConnectorImpl service = new BUSAPIConnectorImpl();
-    DateTimeUtil timeutil = new DateTimeUtil();
 
     static Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 
@@ -109,8 +105,6 @@ public class FetchIssuesForITAdmin {
         if (checkIssuesWithUser == "" || checkIssuesWithUser == null) {
             return new JSONArray().toString();
         }
-        System.out.println("checkIssuesWithUser: " + checkIssuesWithUser);
-
       String domainName = endPointAgentsService.getDomainName(checkIssuesWithUser);
         if (domainName == null) {
             return new JSONArray().toString();
@@ -129,12 +123,10 @@ public class FetchIssuesForITAdmin {
         processedRes.put("thousand_enterprise", enterpriseAgentJson);
         processedRes.remove("dnac_endpoint");
         processedRes.put("dnac_endpoint", dnacJson);
-        System.out.println("processedRes=== " + processedRes);
         return new JSONArray().put(processedRes).toString();
     }
 
     private JSONObject processDnacOutputData(JSONArray jsonArray) {
-        // {"client_health":"1","ap_health":"True"}
         JSONObject finalDnacArray = new JSONObject();
         JSONArray clientHealthArray = new JSONArray();
         JSONArray apHealthArray = new JSONArray();
@@ -163,8 +155,6 @@ public class FetchIssuesForITAdmin {
     }
 
     private JSONObject processTEEnterpriseData(JSONArray jsonArray) {
-        // {"loss":"2%","jitter":"True","latency":"257.6 ms","throughput":"0
-        // kbps","pageloadtime":"True"}
         JSONObject finalTEEnterpriseJson = new JSONObject();
         JSONArray packetLossArray = new JSONArray();
         JSONArray jitterArray = new JSONArray();
@@ -246,7 +236,6 @@ public class FetchIssuesForITAdmin {
             String jitter = jobj.getString("jitter");
 
             String issueTime = jobj.getString("issueTime");
-            // System.out.println("cpu: "+cpu);
             if (!cpu.equalsIgnoreCase("True")) {
                 JSONObject cpuJson = new JSONObject();
                 cpuJson.put("cpu_utilization", jobj.getString("cpu_utilization"));
@@ -343,13 +332,7 @@ public class FetchIssuesForITAdmin {
 
         JSONObject json_final = new JSONObject();
         json_final.put("endpoint_agent_count", json1);
-
-        System.out.println("disabled: " + disabled_agents + " enabled: " + enabled_agents + " free " + free);
-
         return new ResponseEntity<>(json_final.toString(), HttpStatus.OK);
-
-
-
     }
 
 
@@ -397,10 +380,6 @@ public class FetchIssuesForITAdmin {
         } else if (type.equalsIgnoreCase("overall")) {
             jobj2.put(type, jsonOverAll);
         }
-
-        System.out.println("json_array_disabled: " + disabled_agent);
-        System.out.println("json_array_enabled: " + enabled_agent);
-
         return new ResponseEntity<>(jobj2.toString(), HttpStatus.OK);
 
     }
@@ -428,8 +407,6 @@ public class FetchIssuesForITAdmin {
         for (TeUsageModel usageSummary : teUsageModelsList) {
             String jsonDocument = usageSummary.getJsonDocument();
             System.out.println(jsonDocument);
-
-            //Json Filtering According to use
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode root = null;
             try {
@@ -471,10 +448,6 @@ public class FetchIssuesForITAdmin {
     }
 
 
-
-
-
-
     // fetchUsageSummary
     @RequestMapping(value = "/BullsEye/fetchUsageSummary", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -509,8 +482,6 @@ public class FetchIssuesForITAdmin {
 
                 JsonNode quotaNode = usageNode.get(type);
                 jobjre.put(type, quotaNode);
-                System.out.println(type + "-------" + quotaNode.toString());
-                System.out.println("jobjre-------" + jobjre.toString());
             }
 
         } catch (Exception e) {
@@ -549,7 +520,6 @@ public class FetchIssuesForITAdmin {
             for (int i = 0; i < agents.length(); i++) {
                 JSONObject agent = agents.getJSONObject(i);
                 String agentState = agent.optString("agentState", "NoAgent");
-                System.out.println("Agent State: " + agentState);
                 agentStates.add(agentState);
             }
 
@@ -597,9 +567,6 @@ public class FetchIssuesForITAdmin {
         LocalDateTime endTime = LocalDateTime.parse(formattedTimestampStr1, formatter);
 
         List<AgentsAndMonitorsModel> agentsAndMonitorsModelList = agentsAndMonitorsService.findByTimeRange(startime,endTime);
-        System.out.println(agentsAndMonitorsModelList.size());
-
-
         JSONObject jobjRes = new JSONObject();
         JSONArray jArrayRes = new JSONArray();
 
@@ -608,7 +575,6 @@ public class FetchIssuesForITAdmin {
        for (AgentsAndMonitorsModel agentMonitor : agentsAndMonitorsModelList) {
 
            JSONObject jsonObject = new JSONObject(agentMonitor.getJsonDocument());
-           System.out.println(jsonObject);
             JSONArray agents = jsonObject.getJSONArray("agents");
             for (int j = 0; j < agents.length(); j++) {
                 JSONObject jsonObject1 = agents.getJSONObject(j);
@@ -842,15 +808,12 @@ public class FetchIssuesForITAdmin {
             Calendar calendar1 = Calendar.getInstance();
             calendar1.setTime(date);
             calendar1.add(Calendar.MINUTE, -15);
-            System.out.println(calendar1);
             Date endDDate = calendar1.getTime();
             Date olddate = date;
             Date newdate = endDDate;
 
             date = endDDate;
-            System.out.println(date);
             jArray= dnacClientService.getDnacOneDayClientData(olddate,newdate);
-            System.out.println(jArray.length());
             for (int j = 0; j < jArray.length(); j++) {
                 JSONObject jObj = jArray.getJSONObject(j);
 
@@ -876,9 +839,6 @@ public class FetchIssuesForITAdmin {
 
                 String deviceType = innerNode.get("deviceType").asText();
                 int healthScore = innerNode.get("averageHealthScore_min").asInt();
-
-                System.out.println("Device Type: " + deviceType);
-                System.out.println("Average Health Score Min: " + healthScore);
                 if (deviceType.equalsIgnoreCase(type)) {
                     if (healthScore < 4) {
                         total_device++;
@@ -917,8 +877,6 @@ public class FetchIssuesForITAdmin {
             jarr.put(jRes);
 
         }
-        System.out.println("jarr  ===" + jarr.toString());
-
         return jarr.toString();
     }
 
@@ -952,8 +910,6 @@ public class FetchIssuesForITAdmin {
             Date newdate = endDDate;
             date = endDDate;
            dataModelList =    dnacNetworkHealthDataService.getDnacOneDayNetworkData(olddate,newdate);
-            System.out.println(dataModelList.size());
-
             for (DnacNetworkHealthDataModel model : dataModelList) {
                 String jObj =  model.getResponse();
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -1003,9 +959,6 @@ public class FetchIssuesForITAdmin {
             jarr.put(jRes);
 
         }
-        System.out.println("jarr  ===" + jarr.toString());
-
-
         return jarr.toString();
     }
 
@@ -1204,7 +1157,7 @@ try {
                 JSONObject jobj = new JSONObject();
                 String ahead = dateFormat.format(aheaddate);
      	List<ThousandEyeAlert> filterListByNameaAndTime = new ArrayList<>();
-        List<ThousandEyeAlert> thousandEyeAlerts= thousandEyeAlertService.findByTimeGap(ahead, startdate);
+        List<ThousandEyeAlert> thousandEyeAlerts= thousandEyeAlertService.findByTimeGap(ahead, previous);
                 for (ThousandEyeAlert alert: thousandEyeAlerts) {
                JSONObject jsonObject  =  new JSONObject(alert.getAlert());
                     String testName = jsonObject.getString("testName");

@@ -53,7 +53,6 @@ public class DnacNetworkHealthDataService {
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				String formattedDate = simpleDateFormat.format(new Date());
 				Date timeStamp = simpleDateFormat.parse(formattedDate);
-				System.out.println(timeStamp);
 
                 DnacNetworkHealthDataModel dnacData = new DnacNetworkHealthDataModel();
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -63,9 +62,6 @@ public class DnacNetworkHealthDataService {
                 if (responseArray != null && responseArray.isArray() && responseArray.size() > 0) {
                     JsonNode responseObject = responseArray.get(0); // Assuming you only want the first item
                     String responseJson = objectMapper.writeValueAsString(responseObject);
-
-                    // Now you have the "response" JSON as a string
-                    System.out.println("Response JSON: " + responseJson);
                 dnacData.setResponse(responseJson);
                 dnacData.setTimeStamp(timeStamp);
 
@@ -94,14 +90,12 @@ public class DnacNetworkHealthDataService {
 			_httpHeaders = prepareAuthHeaders(dnacUserName,dnacPassword);
 			_response =service.CallPostRequest(_httpHeaders, "", dnacAuthApi);
 			_responseString =_response.getBody();
-			System.out.println("_responseString for AUth :: "+_responseString);
 			JSONObject _json = new JSONObject(_responseString);
 			_token= _json.get("Token").toString();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("token"+_token);
 		return _token;
 	}
     

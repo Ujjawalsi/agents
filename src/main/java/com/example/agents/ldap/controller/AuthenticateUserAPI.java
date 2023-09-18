@@ -48,7 +48,6 @@ public class AuthenticateUserAPI {
                     List<String> roleArray = (List<String>) role;
                        String[] roleStringArray = roleArray.toArray(new String[0]);
                     user = ActiveDirectory.getUserr(body.getUserName(), roleStringArray);
-                    System.out.println(user.getRole().toString());
                     return new ResponseEntity<>(user, HttpStatus.OK);
 
                 } else {

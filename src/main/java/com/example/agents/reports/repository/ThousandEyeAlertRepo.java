@@ -16,8 +16,8 @@ public interface ThousandEyeAlertRepo extends JpaRepository<ThousandEyeAlert, Lo
     ThousandEyeAlert findByNewEventId(String newEventId);
 
     @Query(value = "SELECT * FROM ms_thousandeye_alert WHERE alert IS NOT NULL AND " +
-            "AND CAST(alert AS JSON)->>'dateStart' <= :endTime AND " +
-            "AND CAST(alert AS JSON)->>'testName' = :application", nativeQuery = true)
+            "CAST(alert AS JSON)->>'dateStart' <= :endTime AND " +
+            "CAST(alert AS JSON)->>'testName' = :application", nativeQuery = true)
     List<ThousandEyeAlert> findAlertsByCriteria(@Param("endTime") String endTime,@Param("application") String application);
 
     @Query(value = "SELECT * FROM public.ms_thousandeye_alert WHERE alert IS NOT NULL " +
@@ -28,18 +28,18 @@ public interface ThousandEyeAlertRepo extends JpaRepository<ThousandEyeAlert, Lo
 
 
     @Query(value = "SELECT * FROM ms_thousandeye_alert WHERE alert IS NOT NULL AND " +
-            "AND CAST(alert AS JSON)->>'dateStartZoned' >= :ahead AND " +
-            "AND CAST(alert AS JSON)->>'dateStartZoned' <= :startdate", nativeQuery = true)
+            "CAST(alert AS JSON)->>'dateStartZoned' <= :ahead AND " +
+            "CAST(alert AS JSON)->>'dateStartZoned' >= :startdate", nativeQuery = true)
     List<ThousandEyeAlert> findByTimingGap(@Param("ahead") String ahead, @Param("startdate") String startdate);
 
     @Query(value = "SELECT * FROM ms_thousandeye_alert WHERE alert IS NOT NULL AND " +
-            "AND CAST(alert AS JSON)->>'testName'= :application", nativeQuery = true)
+            "CAST(alert AS JSON)->>'testName'= :application", nativeQuery = true)
     List<ThousandEyeAlert> findByTestName(@Param("application") String application);
 
     @Query(value = "SELECT * FROM ms_thousandeye_alert WHERE alert IS NOT NULL AND " +
-            "AND CAST(alert AS JSON)->>'dateStart' >= :startTime AND " +
-            "AND CAST(alert AS JSON)->>'dateStart' <= :endTime AND " +
-            "AND CAST(alert AS JSON)->>'testName' = :application", nativeQuery = true)
+            "CAST(alert AS JSON)->>'dateStart' >= :startTime AND " +
+            "CAST(alert AS JSON)->>'dateStart' <= :endTime AND " +
+            "CAST(alert AS JSON)->>'testName' = :application", nativeQuery = true)
     List<ThousandEyeAlert> findByTimeGapAndTestName(@Param("startTime") String startTime,@Param("endTime")String endTime, @Param("application")String application);
 
 }

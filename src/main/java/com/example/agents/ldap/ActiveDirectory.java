@@ -99,10 +99,8 @@ public class ActiveDirectory {
         if (password != null)
             props.put(Context.SECURITY_CREDENTIALS, password);
         String ldapURL = "ldap://" + ((serverName == null) ? domainName : serverName + "." + domainName) + '/';
-        System.out.println("ldapURL:: " + ldapURL);
         props.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         props.put(Context.PROVIDER_URL, PROVIDER_URL);
-        System.out.println("hdhhdhdhdhdhd" + PROVIDER_URL);
         try {
             return new InitialLdapContext(props, null);
         } catch (javax.naming.CommunicationException e) {
@@ -213,12 +211,9 @@ public class ActiveDirectory {
 //                NamingEnumeration<SearchResult> answer = context.search( toDC(domainName), "(& (mail=manoj.gupta@velocis.in)(objectClass=user))", controls);
                 if (answer.hasMore()) {
                     Attributes attr = answer.next().getAttributes();
-                    System.out.println("Attr: " + attr);
                     Attribute user = attr.get("userPrincipalName");
-                    System.out.println("Attr: " + user);
                     Attribute uidAtt = attr.get("sAMAccountName");
                     uid = uidAtt != null ? uidAtt.get().toString() : "";
-                    System.out.println("uid: " + uid);
                 }
             }
         } catch (NamingException e) {
@@ -291,7 +286,6 @@ public class ActiveDirectory {
             Attribute email = attr.get("mail");
             mail = email != null ? email.get().toString() : "";
             name = (String) attr.get("givenname").get();
-            System.out.println("======== " + attr.get("memberOf").getAll());
             getCN(attr.get("memberOf").getAll());
 //            role = getCN((String) attr.get("memberOf").get());
             userName = user_name;
@@ -322,7 +316,6 @@ public class ActiveDirectory {
         private void getCN(NamingEnumeration<?> all) throws NamingException {
             while (all.hasMore()) {
                 String a = (String) all.next();
-                System.out.println("************ " + a);
                 String roles = getCN(a);
                 role.add(roles);
 //                 SearchResult rslt = (SearchResult) all.next();

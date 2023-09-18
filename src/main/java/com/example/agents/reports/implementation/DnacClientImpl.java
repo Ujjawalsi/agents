@@ -56,7 +56,6 @@ public class DnacClientImpl implements DnacClientService {
     @Override
     public List<DnacClient> getDnacData(String agentName, String startTime, String endTime, String application) {
         List<DnacClient> jsonarray = new ArrayList<>();
-        System.out.println("username to get table from: "+agentName);
         try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date start_Time = null;

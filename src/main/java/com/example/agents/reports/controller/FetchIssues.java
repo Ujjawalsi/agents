@@ -79,13 +79,10 @@ public class FetchIssues {
                                      @RequestParam(value="end_time", required=true) String end_time,
                                      @RequestParam(value="email", required=true) String email
     ) throws JsonProcessingException {
-        System.out.println("enterprise_Agent: "+ enterpriseAgent);
         TimeZone timeZone = TimeZone.getTimeZone("IST");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         simpleDateFormat.setTimeZone(timeZone);
-
         String domainName = endPointAgentsService.getDomainName(agent_name);
-        System.out.println(domainName);
         if (domainName==null)
             domainName=agent_name;
         ThousandEyeAlertBean bean = getThousandEyeAlerts(start_time, end_time, ""+agent_name, application, domainName);
@@ -93,20 +90,15 @@ public class FetchIssues {
         bean = processDnacJSONData(bean, _jsonDnac);
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         String json = ow.writeValueAsString(bean);
-        System.out.println("JSON: "+json);
         JSONObject rtnString = new JSONObject(json);
         List<String>issuesList = createIssuesListEU(rtnString);
-        System.out.println("IssuesList: "+issuesList);
         String rca = thousandEyeAlertService.droolsRulesEngine(issuesList);
-        System.out.println("Root Cause: "+rca);
         rtnString.put("rca", new JSONObject().put("value", rca));
-        System.out.println("final JSON Reponse: "+rtnString.toString());
         return new JSONArray().put(rtnString).toString();
     }
 
     private List<String> createIssuesListEU(JSONObject rtnString) {
         List<String> issueList = new ArrayList<>();
-        System.out.println("rtnString:: "+rtnString);
         try {
             JSONArray endpoint_Performance = rtnString.getJSONArray("Endpoint Performance");
             JSONArray application_Infrastructure = rtnString.getJSONArray("Application Infrastructure");
@@ -116,10 +108,8 @@ public class FetchIssues {
             endpoint_Performance.forEach(item -> {
                 JSONObject obj = (JSONObject) item;
                 Object o = obj.get("issue_name");
-                System.out.println("Issue in End Point: "+o.toString());
                 if (!JSONObject.NULL.equals(o)) {
                     String issue_name = (String) o;
-                    System.out.println("issue_name " + issue_name);
                     if( issue_name.contains("CPU")) {
                         issue_name= "TE_endpoint_cpu_utilization";
                     }
@@ -139,7 +129,6 @@ public class FetchIssues {
             gateway_Connectivity.forEach(item -> {
                 JSONObject obj = (JSONObject) item;
                 Object o = obj.get("issue_name");
-                System.out.println("Issue in End Point: "+o.toString());
                 if (!JSONObject.NULL.equals(o)) {
                     String issue_name = (String) o;
                     if( issue_name.contains("Low Throughput")) {
@@ -147,7 +136,6 @@ public class FetchIssues {
                     }
 
                     if(!issueList.contains(issue_name)) {
-                        System.out.println("Adding to issueList: "+ issue_name);
                         issueList.add(issue_name);
                     }
                 }
@@ -155,7 +143,6 @@ public class FetchIssues {
             application_Infrastructure.forEach(item -> {
                 JSONObject obj = (JSONObject) item;
                 Object o = obj.get("issue_name");
-                System.out.println("Issue in End Point: "+o.toString());
                 if (!JSONObject.NULL.equals(o)) {
                     String issue_name = (String) o;
                     if( issue_name.contains("Page Load")) {
@@ -163,7 +150,6 @@ public class FetchIssues {
                     }
 
                     if(!issueList.contains(issue_name)) {
-                        System.out.println("Adding to issueList: "+ issue_name);
                         issueList.add(issue_name);
                     }
                 }
@@ -171,10 +157,8 @@ public class FetchIssues {
             network_Path_Application.forEach(item -> {
                 JSONObject obj = (JSONObject) item;
                 Object o = obj.get("issue_name");
-                System.out.println("Issue in End Point: "+o.toString());
                 if (!JSONObject.NULL.equals(o)) {
                     String issue_name = (String) o;
-                    System.out.println("issue_name " + issue_name);
                     if( issue_name.contains("Packet Loss")) {
                         issue_name= "TE_endpoint_packet_loss";
                     }
@@ -185,7 +169,6 @@ public class FetchIssues {
                         issue_name="TE_endpoint_Latency";
                     }
                     if(!issueList.contains(issue_name)) {
-                        System.out.println("Adding to issueList: "+ issue_name);
                         issueList.add(issue_name);
                     }
                 }
@@ -201,7 +184,6 @@ public class FetchIssues {
         ThousandEyeAlertBean bean = new ThousandEyeAlertBean();
         try {
             List<ThousandEyeAlert> alertList = thousandEyeAlertService.findAlertsByCriteria(endTime,application);
-            System.out.println(alertList.size());
             List<ThousandEyeAlert> jsonarray = new ArrayList<>();
 
 
@@ -213,30 +195,24 @@ public class FetchIssues {
                 if (agentsNode != null && agentsNode.isArray()) {
                     for (JsonNode agentNode : agentsNode) {
                         String agentNameFinal = agentNode.get("agentName").asText();
-                        System.out.println("Agent Name: " + agentNameFinal);
                         if (agentNameFinal.equalsIgnoreCase(agentName) && !jsonObject.has("dateEnd")){
                             jsonarray.add(alert);
                         } else if (agentNameFinal.equalsIgnoreCase(agentName) && jsonObject.has("dateEnd")) {
                             String dateEnd = rootNode.get("dateEnd").asText();
                             Date dateEndFinal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateEnd);
                             Date startTimeFinal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(startTime);
-                            System.out.println(dateEndFinal);
-                            System.out.println(startTimeFinal);
-
                             //need to change from before to after
-                            if (dateEndFinal.before(startTimeFinal)){
+                            if (dateEndFinal.after(startTimeFinal)){
                                 jsonarray.add(alert);
                             }
                         }
                     }
                 }
             }
-
             JSONArray appIssuesArr = new JSONArray();
             if (application != null && !application.isEmpty()) {
                 appIssuesArr = getApplicationIssues(startTime, endTime, agentName, application);
             }
-
             return processJSONData(jsonarray, agentName, application, appIssuesArr, domainName);
         } catch (Exception e) {
             e.printStackTrace();
@@ -263,7 +239,6 @@ public class FetchIssues {
                 if (agentsNode != null && agentsNode.isArray()) {
                     for (JsonNode agentNode : agentsNode) {
                         String agentNameFinal = agentNode.get("agentName").asText();
-                        System.out.println("Agent Name: " + agentNameFinal);
                         if (agentNameFinal.equalsIgnoreCase(agentName)){
                             jsonarray.add(alert);
                         } else if (agentNameFinal.equalsIgnoreCase(domainName)) {
@@ -298,25 +273,20 @@ public class FetchIssues {
                 if (agentsNode != null && agentsNode.isArray()) {
                     for (JsonNode agentNode : agentsNode) {
                         String agentNameFinal = agentNode.get("agentName").asText();
-                        System.out.println("Agent Name: " + agentNameFinal);
                         if (agentNameFinal.equalsIgnoreCase(enterpriseAgentName) && !jsonObject.has("dateEnd")){
                             jsonarray.put(alert);
                         } else if (agentNameFinal.equalsIgnoreCase(enterpriseAgentName) && jsonObject.has("dateEnd")) {
                             String dateEnd = rootNode.get("dateEnd").asText();
                             Date dateEndFinal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateEnd);
                             Date startTimeFinal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(startTime);
-                            System.out.println(dateEndFinal);
-                            System.out.println(startTimeFinal);
-
                             //need to change from before to after
-                            if (dateEndFinal.before(startTimeFinal)){
+                            if (dateEndFinal.after(startTimeFinal)){
                                 jsonarray.put(alert);
                             }
                         }
                     }
                 }
             }
-            System.out.println("getApplicationIssues: " + jsonarray.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -324,13 +294,7 @@ public class FetchIssues {
     }
 
 
-
-
-
-
-    //	private JSONObject processJSONData(JSONArray arrData, String agentName, String application, JSONArray appIssuesArr) {
     private ThousandEyeAlertBean processJSONData(List<ThousandEyeAlert> arrData, String agentName, String application, JSONArray appIssuesArr, String domainName) {
-//		JSONObject rtnString = new JSONObject();
         int totCount = 0;
         ThousandEyeAlertBean bean = new ThousandEyeAlertBean();
         try {
@@ -341,10 +305,6 @@ public class FetchIssues {
             List<GatewayConnectivity> gatewayConnectList = new ArrayList<GatewayConnectivity>();
             for (ThousandEyeAlert alert : _jsonResponse) {
                 JSONObject _jObj =new JSONObject(alert.getAlert());
-
-                System.out.println(_jObj);
-
-//                JSONObject _alertJson = _jObj.getJSONObject("alert");
                 JSONArray _agentsArray = _jObj.getJSONArray("agents");
                 System.out.println("_agentsArray: " + _agentsArray);
                 System.out.println("_agentsArray: "+_agentsArray);
@@ -355,11 +315,7 @@ public class FetchIssues {
                     GatewayConnectivity gatewayApp = new GatewayConnectivity();
                     JSONObject _json = new JSONObject();
                     String _agentName = _agentsArray.getJSONObject(j).getString("agentName");
-//					if(_agentName.contains("\\")) {
-//						_agentName = _agentName.split("\\\\")[1];
-//					}
                     if(_agentName.equalsIgnoreCase(domainName)) {
-                        //CPU/Memory/Client health/(Throughput)
                         String issueName = "";
                         String _startTime = "";
                         String _dateEnd = "";
@@ -498,13 +454,8 @@ public class FetchIssues {
         }catch (Exception e) {
             e.printStackTrace();
         }
-//		return rtnString;
         return bean;
     }
-
-
-
-
 
 
     @RequestMapping(value="/BullsEye/fetchDnacIssues", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -517,7 +468,6 @@ public class FetchIssues {
                                        @RequestParam(value="email", required=true) String email
     ) {
         DateTimeUtil _util = new DateTimeUtil();
-
         start_time = _util.convertIST2UTC(start_time);
         end_time = _util.convertIST2UTC(end_time);
         dnacClientService.getDnacData(user_name, start_time, end_time, email);
@@ -544,24 +494,15 @@ public class FetchIssues {
             if(user_name == "" || user_name == null) {
                 user_name= user;
             }
-            System.out.println("user_name : "+user_name);
             String domainName = endPointAgentsService.getDomainName(user_name);
             if (domainName==null)
                 domainName=user_name;
-            System.out.println("domainName : "+domainName);
-
             List<EndpointAgentModel> endPointAgentList = endPointAgentService.findByAgentNameContainingIgnoreCase(domainName);
-        System.out.println(endPointAgentList);
             for (EndpointAgentModel agent: endPointAgentList) {
                 JSONObject jsonObject = new JSONObject(agent.getAgentData());
                  jsonarray.put(jsonObject);
-
-
             }
-
-
         return jsonarray.toString();
-
     }
 
     private ThousandEyeAlertBean processDnacJSONData(ThousandEyeAlertBean bean, List<DnacClient> _jsonDnac) {
@@ -572,15 +513,8 @@ public class FetchIssues {
                 if(endpointPrfList.size()>0)
                     endpointPrfList.remove(0);
                 EndpointPerformance endPoint = new EndpointPerformance();
-//                JSONObject _json = _jsonDnac.getJSONObject(i);
                 JSONArray _json = new JSONArray(dnacClient.getJsonDocument());
                 int averageHealthScore_min = Integer.parseInt(_json.getString(Integer.parseInt("averageHealthScore_min")));
-//				if(averageHealthScore_min>5 && averageHealthScore_min < 8) {
-//					endPoint.setStartTime(_json.getString("start_Time"));
-//					endPoint.setDateEnd(_json.getString("end_Time"));
-//					endPoint.setIssueName("Fair Health: "+ averageHealthScore_min);
-//					endPoint.setMessage("Endpoint for the given time is not performing optimally");
-//				}else
                 if(averageHealthScore_min>7) {
                     endPoint.setStartTime(_json.getString(Integer.parseInt("start_Time")));
                     endPoint.setDateEnd(_json.getString(Integer.parseInt("end_Time")));

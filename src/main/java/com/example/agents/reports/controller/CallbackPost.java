@@ -20,9 +20,7 @@ public class CallbackPost {
         if (l_request != null) {
             Enumeration<String> authorizationHeader = l_request.getHeaderNames();
             if (authorizationHeader != null) {
-                System.out.println("Authorization Header: " + authorizationHeader);
                 thousandEyeAlertService.process(l_request);
-
                 return new ResponseEntity<>("Completed Successfully", HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Authorization header missing", HttpStatus.BAD_REQUEST);

@@ -59,7 +59,6 @@ public class EndPointAgentsService {
 				endpointAgentRepository.deleteAll();
 
 	            endpointAgentRepository.saveAll(endpointAgents);
-	            System.out.println("Working scenario");
 	        }
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -84,20 +83,14 @@ public class EndPointAgentsService {
 			List<EndpointAgentModel> models1 = endpointAgentRepository.findAll();
 			for (EndpointAgentModel endPointModel : models1) {
 				try {
-					// Parse JSON using Jackson
 					ObjectMapper objectMapper = new ObjectMapper();
 					JsonNode rootNode = objectMapper.readTree(endPointModel.getAgentData());
-
-					// Extract userName
 					userName = rootNode
 							.path("clients")
 							.get(0)
 							.path("userProfile")
 							.path("userName")
 							.asText();
-
-					// Print userName
-					System.out.println("User Name: " + userName);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -116,17 +109,10 @@ public class EndPointAgentsService {
 
 				}
 			}
-
-			System.out.println(list.size());
-
 		EndpointAgentModel endpointAgent = list.get(0);// Assuming there's only one matching entry
 			String jsonDocument = endpointAgent.getAgentData();
-			System.out.println(jsonDocument);
-
 			JSONObject jsonObject = new JSONObject(jsonDocument);
 			_domainName = jsonObject.getString("agentName");
-			System.out.println(_domainName);
-
 	} catch (Exception e) {
 		e.printStackTrace();
 	}
