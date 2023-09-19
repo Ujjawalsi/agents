@@ -92,7 +92,7 @@ public class FetchIssuesForITAdmin {
     }
 
 
-    @RequestMapping(value = "BullsEye/fetchIssuesAdmin", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fetchIssuesAdmin", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String fetchIssuesFromTEITadmin(@RequestParam(value = "application", required = false) String application,
@@ -309,7 +309,7 @@ public class FetchIssuesForITAdmin {
 
 
     // fetchAgentsSummaryCount
-    @RequestMapping(value = "/BullsEye/fetchAgentsSummaryCount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fetchAgentsSummaryCount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public ResponseEntity<String> fetchAgentsSummaryCount(@RequestParam(value = "start_time", required = false) String start_time,
@@ -349,7 +349,7 @@ public class FetchIssuesForITAdmin {
 
 
     // fetchAgentsSummary
-    @RequestMapping(value = "/BullsEye/fetchAgentsSummary", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fetchAgentsSummary", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public ResponseEntity<String> fetchAgentsSummary(@RequestParam(value = "type", required = true) String type // type_values:
@@ -397,7 +397,7 @@ public class FetchIssuesForITAdmin {
     }
 
 
-    @RequestMapping(value = "/BullsEye/fetchUsageSummaryCount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fetchUsageSummaryCount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public ResponseEntity<String> fetchUsageSummaryCount(
@@ -461,7 +461,7 @@ public class FetchIssuesForITAdmin {
 
 
     // fetchUsageSummary
-    @RequestMapping(value = "/BullsEye/fetchUsageSummary", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fetchUsageSummary", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String fetchUsageSummary(@RequestParam(value = "type", required = false) String type,
@@ -505,7 +505,7 @@ public class FetchIssuesForITAdmin {
 
 
     // fetchAgentsMonitorsCount
-    @RequestMapping(value = "/BullsEye/fetchAgentsMonitorsCount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fetchAgentsMonitorsCount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String fetchAgentsMonitorsCount(
@@ -564,7 +564,7 @@ public class FetchIssuesForITAdmin {
        return jobjRes.toString();
     }
 
-    @RequestMapping(value = "/BullsEye/fetchAgentsMonitors", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fetchAgentsMonitors", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String fetchAgentsMonitors(
@@ -610,7 +610,7 @@ public class FetchIssuesForITAdmin {
 
 
     // fetchDnacClientHealthCount
-    @RequestMapping(value = "/BullsEye/fetchDnacClientHealthCount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fetchDnacClientHealthCount", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String fetchDnacClientHealthCount(@RequestParam(value = "application", required = false) String application,
@@ -720,7 +720,7 @@ public class FetchIssuesForITAdmin {
     }
 
     // fetchDnacClientHealth
-    @RequestMapping(value = "/BullsEye/fetchDnacClientHealth", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fetchDnacClientHealth", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String fetchDnacClientHealth(@RequestParam(value = "health", required = true) String health,
@@ -797,7 +797,7 @@ public class FetchIssuesForITAdmin {
     }
 
     // fetchDnacClientHealth 96 work in progress
-    @RequestMapping(value = "/BullsEye/fetchDnacClientHealthDay", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fetchDnacClientHealthDay", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String fetchDnacClientHealthDay(@RequestParam(value = "type", required = true) String type,
@@ -893,7 +893,7 @@ public class FetchIssuesForITAdmin {
     }
 
 
-    @RequestMapping(value = "/BullsEye/fetchDnacNetworkHealthDay", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fetchDnacNetworkHealthDay", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String fetchDnacNetworkHealthDay(
@@ -975,7 +975,7 @@ public class FetchIssuesForITAdmin {
     }
 
 
-    @RequestMapping(value = "/BullsEye/getalertsall", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/getalertsall", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String getAlertsall(@RequestParam(value = "sevtype", required = false) String sevtype,
@@ -1045,7 +1045,7 @@ try {
 
     }
 
-    @RequestMapping(value = "/BullsEye/gettopalerts", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/gettopalerts", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String topalerts(@RequestParam(value = "alertName", required = false) String name,
@@ -1132,7 +1132,7 @@ try {
 
     }
 
-    @RequestMapping(value = "/BullsEye/getApplicationTrend", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/getApplicationTrend", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String getApplicationTrend(@RequestParam(value = "appName", required = true) String name) {

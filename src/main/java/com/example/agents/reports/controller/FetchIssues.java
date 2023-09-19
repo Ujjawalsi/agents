@@ -75,7 +75,7 @@ public class FetchIssues {
         //				issue.getUTCTime(14,"LAPTOP-EU8R3HO0");
     }
     //http://10.18.1.53:8080/BullsEye/fetchIssues?l_time=15&host_name=LAPTOP-EU8R3HO0&application=&start_time=2022-09-19%2013:00:00&end_time=2022-09-19%2017:29:48&email=
-    @RequestMapping(value="/BullsEye/fetchIssues", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value="/fetchIssues", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String  fetchIssuesFromTE(@RequestParam(value="application", required=false) String application,
@@ -469,7 +469,7 @@ public class FetchIssues {
     }
 
 
-    @RequestMapping(value="/BullsEye/fetchDnacIssues", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value="/fetchDnacIssues", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String  fetchIssuesFromDnac(@RequestParam(value="application", required=false) String application,
@@ -487,7 +487,7 @@ public class FetchIssues {
     }
 
 
-    @RequestMapping(value="/BullsEye/fetchUserInfo", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value="/fetchUserInfo", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @CrossOrigin(origins = "*")
     public String  fetchUserInfo(

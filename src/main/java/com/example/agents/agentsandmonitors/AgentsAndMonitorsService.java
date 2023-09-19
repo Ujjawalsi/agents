@@ -27,7 +27,7 @@ public class AgentsAndMonitorsService {
 
     private static final Logger logger = LoggerFactory.getLogger(AgentsAndMonitorsService.class);
 
-  @Scheduled(cron = "0 */3 * * * ?")
+  @Scheduled(cron = "0 */15 * * * ?")
     private void excuteAgentsAndMonitorsAPI() throws Exception {
         HttpHeaders _headerSet = new HttpHeaders();
         _headerSet.setContentType(MediaType.APPLICATION_JSON);
