@@ -96,17 +96,12 @@ public class BUSAPIConnectorImpl implements IBUSAPIConnectorService{
 	@Override
 	public ResponseEntity<String> CallGetRequest(HttpHeaders l_headers, String l_input,String l_URL)  throws Exception{
 		final String uri = l_URL+l_input;
-		System.out.println("GET request URL: "+uri);
 		ResponseEntity<String> response = null;
 		try {
 			RestTemplate restTemplate = new RestTemplate();
 			restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-			//		HttpEntity<String> entity = new HttpEntity<String>(l_input, l_headers);
 			HttpEntity<String> entity = new HttpEntity<String>(l_headers);
-//			System.out.println("Entity get ::  "+entity);
 			response = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
-			//System.out.println("response::sddsdssssssssssssssssssssss "+response);
-
 		} catch (Exception e) {
 			JSONObject _j = new JSONObject();
 			_j.put("code", "99");
@@ -128,9 +123,7 @@ public class BUSAPIConnectorImpl implements IBUSAPIConnectorService{
 			RestTemplate restTemplate = new RestTemplate();
 			restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 			HttpEntity<String> entity = new HttpEntity<String>(l_input, l_headers);
-			System.out.println("Entity put ::  "+entity);
 			response = restTemplate.exchange(uri, HttpMethod.PUT, entity, String.class);
-			System.out.println(response);
 		}catch(Exception ex){
 			JSONObject _j = new JSONObject();
 			_j.put("code", "99");
@@ -148,9 +141,7 @@ public class BUSAPIConnectorImpl implements IBUSAPIConnectorService{
 			RestTemplate restTemplate = new RestTemplate();
 			restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 			HttpEntity<String> entity = new HttpEntity<String>(l_input, l_headers);
-			System.out.println("Entity post ::  "+entity);
 			response=restTemplate.exchange(uri, HttpMethod.POST, entity, String.class);
-			System.out.println(response);
 		} catch (Exception ex) {
 			JSONObject _j = new JSONObject();
 			_j.put("code", "99");
@@ -168,9 +159,7 @@ public class BUSAPIConnectorImpl implements IBUSAPIConnectorService{
 			RestTemplate restTemplate = new RestTemplate();
 			restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 			HttpEntity<String> entity = new HttpEntity<String>(l_headers);
-			System.out.println("Entity post ::  "+entity);
 			response=restTemplate.exchange(l_URL, HttpMethod.DELETE, entity, String.class);
-			System.out.println("CallDelete Response: "+response);
 		} catch (Exception ex) {
 			JSONObject _j = new JSONObject();
 			_j.put("code", "99");

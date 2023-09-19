@@ -360,7 +360,6 @@ public void create() {
             _body = _body.replaceAll("\"type\":\"SINGLE_SELECT_ARRAY\",", "");
             _body = _body.replaceAll("\"type\":\"MULTI_SELECT\",", "");
             _body = _body.replaceAll("\"type\":\"TIME_RANGE\",", "");
-            System.out.println("executionID body: "+_body);
             JSONObject _json = new JSONObject(_body);
             JSONArray responseArr = _json.getJSONArray("executions");
             if(responseArr.length()>0)
