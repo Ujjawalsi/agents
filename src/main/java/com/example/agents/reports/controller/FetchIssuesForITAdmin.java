@@ -20,6 +20,8 @@ import com.example.agents.reports.service.DnacClientService;
 import com.example.agents.reports.service.ThousandEyeAlertService;
 import com.example.agents.teUsage.TeUsageModel;
 import com.example.agents.teUsage.TeUsageService;
+import com.example.agents.userSearchHistory.entities.UserSearchHistory;
+import com.example.agents.userSearchHistory.services.UserSearchHistoryService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.json.JSONArray;
@@ -80,6 +82,9 @@ public class FetchIssuesForITAdmin {
     @Autowired
     private AgentsAndMonitorsService agentsAndMonitorsService;
 
+    @Autowired
+    private UserSearchHistoryService userSearchHistoryService;
+
     static Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 
     static {
@@ -123,6 +128,13 @@ public class FetchIssuesForITAdmin {
         processedRes.put("thousand_enterprise", enterpriseAgentJson);
         processedRes.remove("dnac_endpoint");
         processedRes.put("dnac_endpoint", dnacJson);
+
+        UserSearchHistory userSearchHistory = new UserSearchHistory();
+        userSearchHistory.setApplicationName(application);
+        userSearchHistory.setHostName(agent_name);
+        userSearchHistory.setDomainName(domainName);
+        userSearchHistoryService.addUser(userSearchHistory);
+
         return new JSONArray().put(processedRes).toString();
     }
 

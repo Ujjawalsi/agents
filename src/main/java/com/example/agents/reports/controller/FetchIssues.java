@@ -9,6 +9,8 @@ import com.example.agents.reports.entities.ThousandEyeAlert;
 import com.example.agents.reports.service.DnacClientService;
 import com.example.agents.reports.service.EndPointAgentService;
 import com.example.agents.reports.service.ThousandEyeAlertService;
+import com.example.agents.userSearchHistory.entities.UserSearchHistory;
+import com.example.agents.userSearchHistory.services.UserSearchHistoryService;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -53,6 +55,9 @@ public class FetchIssues {
     @Autowired
     private EndPointAgentsService endPointAgentsService;
 
+    @Autowired
+    private UserSearchHistoryService userSearchHistoryService;
+
     static Logger root = (Logger) LoggerFactory
             .getLogger(Logger.ROOT_LOGGER_NAME);
 
@@ -79,6 +84,7 @@ public class FetchIssues {
                                      @RequestParam(value="end_time", required=true) String end_time,
                                      @RequestParam(value="email", required=true) String email
     ) throws JsonProcessingException {
+
         TimeZone timeZone = TimeZone.getTimeZone("IST");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         simpleDateFormat.setTimeZone(timeZone);
@@ -94,6 +100,11 @@ public class FetchIssues {
         List<String>issuesList = createIssuesListEU(rtnString);
         String rca = thousandEyeAlertService.droolsRulesEngine(issuesList);
         rtnString.put("rca", new JSONObject().put("value", rca));
+        UserSearchHistory userSearchHistory = new UserSearchHistory();
+        userSearchHistory.setApplicationName(application);
+        userSearchHistory.setHostName(agent_name);
+        userSearchHistory.setDomainName(domainName);
+        userSearchHistoryService.addUser(userSearchHistory);
         return new JSONArray().put(rtnString).toString();
     }
 
